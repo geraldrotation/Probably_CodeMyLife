@@ -1,0 +1,61 @@
+## Interface: 50400
+## Title: Probably - CodeMyLife
+## Author: CodeMyLife
+## Dependencies: Probably
+
+## Libs
+libs\Tables.lua
+libs\PQR_Data.lua
+libs\PQR_PQI.lua
+libs\UI_Bar.lua
+libs\Bubba_Healing_Engine.lua
+libs\library.lua
+
+## Class Libs
+classlibs\deathknight.lua
+classlibs\druid.lua
+classlibs\hunter.lua
+classlibs\mage.lua
+classlibs\monk.lua
+classlibs\paladin.lua
+classlibs\priest.lua
+classlibs\rogue.lua
+classlibs\shaman.lua
+classlibs\warlock.lua
+classlibs\warrior.lua
+
+## Rotations
+rotations\deathknight\blood.lua
+rotations\deathknight\frost.lua
+rotations\deathknight\unholy.lua
+rotations\druid\feral.lua
+rotations\druid\guardian.lua
+rotations\druid\moonkin.lua
+rotations\druid\restoration.lua
+rotations\hunter\beastmaster.lua
+rotations\hunter\marskmanship.lua
+rotations\hunter\survival.lua
+rotations\mage\arcane.lua
+rotations\mage\fire.lua
+rotations\mage\frost.lua
+rotations\monk\brewmaster.lua
+rotations\monk\mistweaver.lua
+rotations\monk\windwalker.lua
+rotations\paladin\holy.lua
+rotations\paladin\protection.lua
+rotations\paladin\retribution.lua
+rotations\priest\discipline.lua
+rotations\priest\holy.lua
+rotations\priest\shadow.lua
+rotations\rogue\assassination.lua
+rotations\rogue\combat.lua
+rotations\rogue\subtlety.lua
+rotations\shaman\enhancement.lua
+rotations\shaman\elemental.lua
+rotations\shaman\restoration.lua
+rotations\warrior\arms.lua
+rotations\warrior\fury.lua
+rotations\warrior\protection.lua
+rotations\warlock\affliction.lua
+rotations\warlock\demonology.lua
+rotations\warlock\destruction.lua
