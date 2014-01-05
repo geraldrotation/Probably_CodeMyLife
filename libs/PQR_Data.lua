@@ -62,7 +62,7 @@ function DataLoader()
 		end
 	end)
 
-	ProbablyEngine.module.player.behind = {}
+	ProbablyEngine.module.player.notbehind = {}
 	ProbablyEngine.module.player.los = {}
 	ProbablyEngine.module.player.notinfront = {}
 	ProbablyEngine.listener.register("UNIT_SPELLCAST_SENT", function(...)
@@ -73,7 +73,7 @@ function DataLoader()
 	  	local Events = ...
 	  	if Events == SPELL_FAILED_NOT_BEHIND then
 			if ProbablyEngine.module.player.spellcasttarget then
-				ProbablyEngine.module.player.behind[ProbablyEngine.module.player.spellcasttarget] = GetTime()
+				ProbablyEngine.module.player.notbehind[ProbablyEngine.module.player.spellcasttarget] = GetTime()
 	  		end
 	  	end
 		if Events == SPELL_FAILED_LINE_OF_SIGHT then

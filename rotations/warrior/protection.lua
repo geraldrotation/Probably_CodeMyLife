@@ -64,19 +64,13 @@ ProbablyEngine.rotation.register_custom(73, "CodeMyLife Protection", {
 --------------------------------------------------Interrupts-------------------------------------------- 
     {{
             {"6552","target.range <= 5"}, -- Pummel
-            { "23920",{ -- Spell Reflect
-                "player.spell(6552).cooldown",
-            }},
-            { "23920",{ -- Spell Reflect
-                "target.range > 4"
-            }},            
+            { "23920"},     
             { "102060",{ -- Disrupting Shout
                 "player.spell(102060).exists",
                 "player.spell(6552).cooldown",
                 "player.spell(23920).cooldown",
                 "target.range <= 5",
             }},
-
         }, "modifier.interrupts"
     }, 
 --------------------------------------------------DPS Rotation-------------------------------------------- 
@@ -114,23 +108,72 @@ ProbablyEngine.rotation.register_custom(73, "CodeMyLife Protection", {
     -- berserker_rage,if=buff.enrage.down&rage<=rage.max-10
     {"18499",{
         "!player.buff(12880)",
-        "player.rage < 85",
+        "player.rage < 80",
         "target.range <= 5",
     }},
     -- shield_block
     {"2565",{
+        "ActiveMitigationSelector.pqivalue = 3",
+        "!player.buff(132404)",
+        "target.threat > 100",
         "ShieldBlock.novaHealing(0)",
+        "player.rage > 60",
+        "target.range <= 5",
+    }},
+    -- shield_block
+    {"2565",{
+        "ActiveMitigationSelector.pqivalue = 1",
+        "player.mitigation = 1",
+        "!player.buff(132404)",
+        "target.threat > 100",
+        "ShieldBlock.novaHealing(0)",
+        "player.rage > 60",
+        "target.range <= 5",
+    }},
+    -- shield_block
+    {"2565",{
+        "ActiveMitigationSelector.pqivalue = 1",
+        "player.mitigation = 3",
+        "!player.buff(132404)",
+       "target.threat > 100",
+        "ShieldBlock.novaHealing(0)",
+        "player.rage > 60",
+        "target.range <= 5",
+    }},        
+    -- shield_barrier,if=incoming_damage_1500ms>health.max*0.3|rage>rage.max-20
+    {"112048",{
+        "ActiveMitigationSelector.pqivalue = 2",
+        "!player.buff(112048)",
+        "target.threat > 100",
+        "ShieldBarrier.novaHealing(0)",
+        "player.rage > 60",
+        "target.range <= 5",
+    }},    
+    -- shield_barrier,if=incoming_damage_1500ms>health.max*0.3|rage>rage.max-20
+    {"112048",{
+        "ActiveMitigationSelector.pqivalue = 1",
+        "player.mitigation = 2",
+        "!player.buff(112048)",
+        "target.threat > 100",
+        "ShieldBarrier.novaHealing(0)",
         "player.rage > 60",
         "target.range <= 5",
     }},
     -- shield_barrier,if=incoming_damage_1500ms>health.max*0.3|rage>rage.max-20
     {"112048",{
+        "ActiveMitigationSelector.pqivalue = 1",
+        "player.mitigation = 3",
+        "!player.buff(112048)",
+        "target.threat > 100",
         "ShieldBarrier.novaHealing(0)",
         "player.rage > 60",
-    }},
+        "target.range <= 5",
+    }},    
     -- shield_wall,if=incoming_damage_2500ms>health.max*0.6
     {"871",{
+        "target.threat > 100",
         "ShieldWall.novaHealing(0)",
+        "target.range <= 5",
     }},
     -- Leap
     {"6544",{
@@ -139,11 +182,18 @@ ProbablyEngine.rotation.register_custom(73, "CodeMyLife Protection", {
     --[[ run_action_list,name=dps_cds,if=buff.vengeance.value>health.max*0.20
     -- run_action_list,name=normal_rotation]]
     -- Cleave 
-    {"845",{ -- Rage OverFlow
-        "player.rage > 80",
+    {"845",{ -- Rage OverFlow Non-Glyphed
+        "player.rage > 90",
+        "@CML.IsGlyphed(58098,false)", -- Glyph of Unending Rage
         "player.aoe = 2",
         "target.range <= 5",
     }},    
+    {"845",{ -- Rage OverFlow Glyphed
+        "player.rage > 110",
+        "@CML.IsGlyphed(58098,true)", -- Glyph of Unending Rage
+        "player.aoe = 2",
+        "target.range <= 5",
+    }},      
     -- heroic_strike,if=buff.ultimatum.up|buff.glyph_incite.up
     {"78",{ -- Ultimatum
         "player.buff(122510)", 
@@ -153,11 +203,18 @@ ProbablyEngine.rotation.register_custom(73, "CodeMyLife Protection", {
         "player.buff(122016)",
         "target.range <= 5",
     }},  
-    {"78",{ -- Rage OverFlow
-        "player.rage > 80",
-        "target.range <= 5",
+    {"78",{ -- Rage OverFlow Non-Glyphed
         "player.aoe = 1",
+        "player.rage > 90",
+        "@CML.IsGlyphed(58098,false)", -- Glyph of Unending Rage
+        "target.range <= 5",
     }}, 
+    {"78",{ -- Rage OverFlow Glyphed
+        "player.aoe = 1",
+        "player.rage > 110",
+        "@CML.IsGlyphed(58098,true)", -- Glyph of Unending Rage
+        "target.range <= 5",
+    }},     
     -- dps_cds=avatar,if=enabled
     {"107574",{ -- On CD
         "player.spell(107574).exists",

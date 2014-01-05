@@ -179,6 +179,10 @@ if _Spec == 2 and CML_Demo_config == nil then
 					width	= 70,
 					tooltip	= PlayerHex.."Select what spells you want to be shown in chat.",
 				},
+			},			
+			{ 	name	= "Dark Intent",
+				tooltip	= PlayerHex.."Buff Spell Power Aura on self if needed.",
+				enable	= true,
 			},				
 			{ 	name	= "Healthstone",
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use |cffFFFFFF|cff33FF33Healthstone.",
@@ -191,6 +195,37 @@ if _Spec == 2 and CML_Demo_config == nil then
 				},
 				newSection = true,
 			},	
+			{ 	name	= "Dark Soul",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Dark Soul.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+				newSection = true,
+			},	
+			{ 	name	= "Doom Guard",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Doom Guard.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},		
+			{ 	name	= "Imp Swarm",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Imp Swarm.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},						
 			{ 	name	= "Racials",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
 				enable	= true,
@@ -238,7 +273,12 @@ if _Spec == 2 and CML_Demo_config == nil then
 				enable	= true,
 				hotkeys	= {'lc'},
 				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus |cffff7d0aSet focus to mouseover.",
-			},					
+			},		
+			{	name	= "Pet Move To Mouse",
+				enable	= true,
+				hotkeys	= {'rc'},
+				tooltip	= "|cff7EBF37Assign |cffFFFFFFPet Move To Mouse |cff7EBF37Use this to |cffFFFFFFmove your pet "..PlayerHex.."toward your mouse.",
+			},			
 		},
 	}
 	CODEMYLIFE_DEMONOLOGY = PQI:AddRotation(CML_Demo_config)
@@ -378,8 +418,18 @@ if not WarlockFunctions then
 	    ["Pause"]					= false,
 	} 	
 	_Queues = {	
-		[9]						= false,
+		[9]							= false,
+		[30283]						= false,
+
 	}
+
+function CML.CancelMeta()
+	local MetaName = GetSpellInfo("103958")
+	local MacroText = tostring("/cancelaura "..MetaName)
+	RunMacroText(MacroText)
+end
+
+
 end
 
 end

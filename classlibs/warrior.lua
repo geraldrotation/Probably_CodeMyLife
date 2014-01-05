@@ -587,6 +587,16 @@ if _Spec == 3 and CML_Prot_config == nil then
 					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFLast Stand "..PlayerHex.."on me.",
 				},
 			},
+			{ 	name	= "Active Mitigation Selector",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFActive Mitigation Selector.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Both","|cffF50000Barrier","|cff2990FFBlock"},
+					value = 1,
+					width = 70,
+					tooltip = PlayerHex.."Choose Active Mitigation method.",	
+				},
+			},			
 			{ 	name	= "Shield Barrier",
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFShield Barrier "..PlayerHex.."on me.",
 				enable	= true,
@@ -792,8 +802,10 @@ if not WarriorFunctions then
 	_WeakBlows					= 115798
 	_Whirlwind					= 1680
 	_WildStrike					= 100130
+
 	macros = {  
 	    ["ActiveCooldowns"]   		= false,
+	    ["ActiveMitigation"]		= 3,
 	    ["AoE"]    					= 1, 
 	    ["Pause"]					= false,
 	    ["Stance"]					= 1,
@@ -807,10 +819,25 @@ if not WarriorFunctions then
 		[_PiercingHowl]			= false,
 	}
 
+	SLASH_MITIGATION1 = "/mitigation"
+	function SlashCmdList.MITIGATION(msg, editbox)
+		if PQIprefix and not _G[PQIprefix.."ActiveMitigationSelector_enable"] or _G[PQIprefix.."ActiveMitigationSelector_value"] ~= 1 then xrn:message("\124cFFED0000Active Mitigation inactive.") return false end		
+		if macros["ActiveMitigation"] == 1 then
+			xrn:message("\124cFFC800FFBarrier Active.")
+			macros["ActiveMitigation"] = 2
+		elseif macros["ActiveMitigation"] == 2 then
+			xrn:message("\124cFF0095FFBarrier and Block Active.")
+			macros["ActiveMitigation"] = 3
+		else
+			xrn:message("\124cFF00FBFFBlock Active.")
+			macros["ActiveMitigation"] = 1
+		end
+	end	
+
 	SLASH_STANCEDANCE1 = "/stancedance"
 	SLASH_STANCEDANCE2 = "/stance"
 	function SlashCmdList.STANCEDANCE(msg, editbox)
-		if _G[PQIprefix.."ActiveStance_value"] ~= 4 and _G[PQIprefix.."ActiveStance_value"] ~= 5 then xrn:message("\124cFFED0000Stances not Actives.") return false end
+		if PQIprefix and _G[PQIprefix.."ActiveStance_value"] ~= 4 and _G[PQIprefix.."ActiveStance_value"] ~= 5 then xrn:message("\124cFFED0000Stances not Actives.") return false end
 		if macros["Stance"] == 1 then
 			xrn:message("\124cFF004EDEDefensive Stance.")
 			macros["Stance"] = 2

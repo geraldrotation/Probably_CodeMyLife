@@ -111,6 +111,18 @@ if _Spec == 1 and CML_Disc_config == nil then
 					tooltip	= "|cffFF0000Health |cffFFFFFFto use |cffFFCC33Binding Heal|cffFFFFFF.",	
 				},
 			},
+			{ 	name	= "Cascade",
+				enable	= true,
+				tooltip	= "|cffFFFFFFCheck to activate |cffFFCC33Cascade|cffFFFFFF.",
+				widget	= { type = "numBox",
+					min		= 1,
+					max		= 100,
+					value	= 70,
+					step	= 5,
+					width	= 70,
+					tooltip	= "|cffFF0000Health |cffFFFFFFto use |cffFFCC33Cascade|cffFFFFFF.",	
+				},
+			},			
 			{ 	name	= "Flash Heal",
 				enable	= true,
 				tooltip	= "|cffFFFFFFCheck to activate |cffFFCC33Flash Heal|cffFFFFFF.",
@@ -167,6 +179,18 @@ if _Spec == 1 and CML_Disc_config == nil then
 					tooltip	= "|cffFF0000Health |cffFFFFFFto use |cffFFCC33Power Word Shield|cffFFFFFF.",
 				},
 			},		
+			{ 	name	= "Prayer Of Healing",
+				enable	= true,
+				tooltip	= "|cffFFFFFFCheck to activate |cffFFCC33Prayer Of Healing|cffFFFFFF.",
+				widget	= { type = "numBox",
+					min		= 1,
+					max		= 100,
+					value	= 70,
+					step	= 5,
+					width	= 70,
+					tooltip	= "|cffFF0000Health |cffFFFFFFto use |cffFFCC33Prayer Of Healing|cffFFFFFF.",	
+				},
+			},						
 			{ 	name	= "Prayer Of Mending",
 				enable	= true,
 				tooltip	= "|cffFFFFFFCheck to activate |cffFFCC33Prayer of Mending|cffFFFFFF.",
@@ -957,6 +981,7 @@ if not PriestFunctions then
 
 	macros = { 
 	    ["ActiveCooldowns"]   		= false, 
+	    ["ActiveDPS"]   			= false, 	    
 	    ["AoE"]    					= 1,  
 	    ["Pause"]					= false,
 	} 	
@@ -971,6 +996,50 @@ if not PriestFunctions then
 			return true
 		end
 	end
+
+	function CML.BubbleMachine()
+		-- Hand of Purity return true, SpellTarget, SpellName, EndTime, SpellType
+		local BubbleDebuffs = {		
+			{ID = 145263, 	Remain = 30, 	Health = 80 }, -- Proving Grounds Healer Debuff.
+			{ID = 144331, 	Remain = 10, 	Health = 100 }, -- Iron Prison - Dark Shamans 	
+			{ID = 144089, 	Remain = 5, 	Health = 40 }, -- Toxic Mist - Dark Shamans 
+			{ID = 143638, 	Remain = 30, 	Health = 30 }, -- Bonecracker 	
+		}
+		for t=1,#nNova do
+			if nNova[t].range == 1 then
+				for i=1,#BubbleDebuffs do
+					if not UnitDebuffID(nNova[t].unit, 6788) and UnitDebuffID(nNova[t].unit,BubbleDebuffs[i].ID) then
+						local SpellName, _, _, _, SpellType, _, EndTime, SpellTarget = UnitDebuffID(nNova[t].unit,BubbleDebuffs[i].ID)
+						if EndTime - GetTime() <= BubbleDebuffs[i].Remain and CML.GetHP(nNova[t].unit) <= BubbleDebuffs[i].Health then
+							ProbablyEngine.dsl.parsedTarget = nNova[t].unit
+							return true
+						end
+					end
+				end
+			end
+		end
+		return false
+	end
+
+	function CML.Purify()
+		if macros["ActiveDispel"] then
+			if UnitExists("boss1") then
+				if CML.GetUnitID("boss1") == 71734 then
+					if not UnitBuffID("player",144359) then 
+						return false
+					end
+				end
+			end
+			for i=1, #nNova do
+				if nNova[i].dispel == true then 
+					ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+					return true
+				end
+			end
+		end
+		return false
+	end
+
 
 	function CML.Will(value)
 		local _ActiveWill = _G[PQIprefix.."ActiveInnerWill_enable"]

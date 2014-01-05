@@ -89,6 +89,17 @@ function CML.ForceMouseCast()
 	return true
 end
 
+-- /dump CML.GetDistance("player","target")
+function CML.GetDistance(T1,T2)
+	Zone1, T1X, T1Y = CML.UnitInfo(T1) 
+	Zone2, T2X, T2Y = CML.UnitInfo(T2) 
+	if T1X == nil or T2X == nil or Zone1 ~= Zone2 then return 0 end
+	XDist = math.abs(T1X - T2X)
+	YDist = math.abs(T1Y - T2Y)
+	Distance = 1975.27205951036*(XDist + YDist)
+	return Distance
+end	
+
 function CML.GetHP(unit)
 	local hp = 100 * UnitHealth(unit) / UnitHealthMax(unit)
 	return hp 
@@ -137,6 +148,7 @@ function CML.HealEngine()
 end
 
 function CML.HealthStone()
+	if not PQIprefix then return false end
     if _G[PQIprefix.."Healthstone_enable"] and GetItemCount(5512, false, true) > 0 and select(2,GetItemCooldown(5512)) == 0 and _HP < _G[PQIprefix.."Healthstone_value"] then
         return true
     end
@@ -171,7 +183,6 @@ function CML.IsInFront(unit, seconds)
 	if UnitExists(unit) then unit = UnitName(unit) else return false end
 	if seconds == nil then seconds = 3 end
 	if ProbablyEngine.module.player.notinfront[unit] and ProbablyEngine.module.player.notinfront[unit] > GetTime() - seconds then
-		xrn:message("\124cFF6B00ED"..unit.." is Not in Front.")
 		return false
 	end
 	ProbablyEngine.dsl.parsedTarget = RawUnit
@@ -185,7 +196,6 @@ function CML.IsInSight(unit, seconds)
 	if UnitExists(unit) then unit = UnitName(unit) else return false end
 	if seconds == nil then seconds = 3 end
 	if ProbablyEngine.module.player.los[unit] and ProbablyEngine.module.player.los[unit] > GetTime() - seconds then
-		xrn:message("\124cFF6B00ED"..unit.." is Out of Sight/Invalid.")
 		return false
 	end
 	return true
@@ -213,6 +223,53 @@ function CML.SetFocus()
 		if PQI:IsHotkeys(_G[PQIprefix.."SetFocus_key"]) then
 			RunMacroText("/focus [target=mouseover]")
 		end
+	end
+end
+
+function CML.PetManager(value)
+	if _G[PQIprefix.."ActivePetWhistle_enable"] then
+		if not UnitExists("pet") then
+			local ActivePetWhistle = _G[PQIprefix.."ActivePetWhistle_value"]
+  		  	if not UnitIsDead("pet") then
+  				if ( LastWhistle == nil or LastWhistle and LastWhistle <= GetTime() - 15 ) then 
+  					if ActivePetWhistle == value then
+  						return true
+  					end
+  				end
+  			elseif value == 0 then
+  				return true
+  			end
+  		end
+  	end
+end
+function CML.PetMove()
+	if UnitExists("pet") then
+		if UnitExists("mouseover") == 1 then
+			PetAttack("mouseover") 
+			return false
+		end
+		if not GetCurrentKeyBoardFocus() then
+			PetMoveTo()
+			CameraOrSelectOrMoveStart() 
+			CameraOrSelectOrMoveStop() 
+		end
+		return false
+	end
+end
+
+function CML.SnapShot()
+	PlayerSpellHaste = UnitSpellHaste("player")
+	PlayerMeleeHaste = GetMeleeHaste()
+	PlayerAttackPower = UnitAttackPower("player")
+	PlayerSpellPower = GetSpellBonusDamage(2)
+	PlayerMastery = GetMastery()
+end
+
+function CML.UnitInfo(unit)
+	local MapName = GetMapInfo(unit)
+	local unitX, unitY = GetPlayerMapPosition(unit) 
+	if MapName and unitX and unitY then 
+		return MapName, unitX, unitY
 	end
 end
 
@@ -340,6 +397,8 @@ function CML.Status()
 		_Runic = UnitPower("player")
 		_RunicMax = UnitPowerMax("player")
 		_Vengeance = select(15,UnitAura("player", GetSpellInfo(93098)))	
+	elseif _MyClass == 10 then	
+		_Chi = UnitPower("player",12) 
 	elseif _MyClass == 11 then
 		if _Spec == 3 then
 			_Rage = UnitPower("player")
@@ -375,6 +434,7 @@ function CML.Status()
 		UiBar_SetRage()
 		UiBar_SetStance()
 		if _Spec == 3 then
+			UiBar_SetMitigation()
 			UiBar_SetVengeance(93098)
 		else
 			UiBar_SetDebuff(86346)
@@ -403,13 +463,17 @@ function CML.Status()
 		UiBar_SetFocus()
 		UiBar_SetPet()
 	elseif _MyClass == 4 then -- Rogue
-
+		UiBar_AoE()
+		UiBar_SetEnergy()
+		UiBar_ActiveHealing()
+		UiBar_Combo()
+		UiBar_SetDebuff(1943)
 	elseif _MyClass == 5 then -- Priest
 		if _Spec == 1 then
 			UiBar_ActiveDispel()
 			UiBar_ActiveDPS()
+			UiBar_Nova1()
 			UiBar_ActiveHealing()
-			UiBar_SetBuff(81700)
 			UiBar_SetMana()
 		end		
 	elseif _MyClass == 6 then -- DeathKnight
@@ -445,6 +509,11 @@ function CML.Status()
 			UiBar_SetPet()
 		end
 	elseif _MyClass == 10 then -- Monk
+		UiBar_AoE()
+		UiBar_SetEnergy()
+		UiBar_ActiveHealing()
+		UiBar_SetPower()
+		UiBar_SetDebuff(1943)
 	elseif _MyClass == 11 then -- Druid
 		if _Spec == 1 then
 			UiBar_ActiveHealing()
@@ -457,7 +526,12 @@ function CML.Status()
 			UiBar_AoE()
 			UiBar_SetVengeance(84840)
 			UiBar_SetRage()
-		end		
+		end	
+		if _Spec == 4 then
+			UiBar_ActiveHealing()
+			UiBar_AoE()
+			UiBar_SetMana()
+		end			
 	end
 	return false
 end
@@ -516,6 +590,11 @@ local UnitDebuff = function(target, spell, owner)
   return debuff, count, expires, caster
 end
 
+
+
+
+
+
 -- activestance == returns macros["Stance"] can be compared	   	"player.activestance = 1"
 -- aoe 			== returns macros["AoE"] can be compared	   	"player.aoe = 1"
 -- macros		== made to read my macros table 				"macros(ActiveCooldowns)"
@@ -547,6 +626,20 @@ ProbablyEngine.condition.register("aoe", function()
 	return macros["AoE"]
 end)
 
+ProbablyEngine.condition.register("mitigation", function()
+	if not macros then return false end
+	return macros["ActiveMitigation"]
+end)
+
+ProbablyEngine.condition.register("debuff.damage", function(target, spell)
+	local debuff,_,_,_,_,_,expires,caster,_,_,_,_,_,_,damage = UnitDebuff(target, spell)
+	
+	if debuff ~= nil and (caster == 'player' or caster == 'pet') then
+		return damage
+	end
+	return 0
+end)
+
 ProbablyEngine.condition.register("hasaura", function(unit, spell)
 	local spell = GetRaidBuffTrayAuraInfo(spell)
 	return (spell ~= nil)
@@ -562,9 +655,33 @@ ProbablyEngine.condition.register("hashero", function(unit, spell)
 	end
 end)
 
+ProbablyEngine.condition.register("hasSpell", function(target, spell)
+	if IsSpellKnown(spell) then
+		return true
+	end
+	return false
+end)
+
+ProbablyEngine.condition.register("HasSpell", function(target, spell)
+  return ProbablyEngine.condition["hasSpell"](target, spell)
+end)
+
+ProbablyEngine.condition.register("isinfront", function(target, time)
+	local time = 1
+	if ProbablyEngine.module.player.notinfront[UnitName(tostring(target))] == nil then return true end
+  	return (ProbablyEngine.module.player.notinfront[UnitName(tostring(target))] < GetTime() - time)
+end)
 
 ProbablyEngine.condition.register("iamtarget", function()
 	return (UnitIsUnit("player","targettarget") ~= nil)
+end)
+
+ProbablyEngine.condition.register("canattack", function(target)
+  	if UnitExists(target) and UnitHealth(target) > 0 then
+  		target = tostring(target)
+    	return (UnitCanAttack("player", target) == 1)
+  	end
+  	return false
 end)
 
 ProbablyEngine.condition.register("macros", function(name)
@@ -585,6 +702,48 @@ ProbablyEngine.condition.register("novaBuff", function(target, value)
 	end
 	if UnitExists(rawunit) == 1 then
   		if UnitBuffID(rawunit, Spell) then
+        	return true
+        end
+  	else
+  		return false
+  	end
+end)
+
+ProbablyEngine.condition.register("novaDebuff", function(target, value)
+	local Spell = value
+	if target == "0" then 
+		rawunit = "player" 
+	elseif target == "69" then 
+		rawunit = "pet" 
+	else
+		rawunit = tostring(nNova[tonumber(target)].unit) 
+	end
+	if UnitExists(rawunit) == 1 then
+  		if UnitDebuffID(rawunit, Spell) then
+        	return true
+        end
+  	else
+  		return false
+  	end
+end)
+
+ProbablyEngine.condition.register("novaTank", function(name,value)
+	if PQIprefix == nil then return false end
+	local PQICheck = _G[PQIprefix..name.."_enable"]
+	if value == "0" then 
+		rawunit = "player" 
+	elseif value == "69" then 
+		rawunit = "pet" 
+	elseif value and #nNova >= tonumber(value) and nNova[tonumber(value)].unit ~= nil then
+		rawunit = tostring(nNova[tonumber(value)].unit) 
+	end
+	if value ~= "0" and value ~= "69" then
+		if nNova[tonumber(value)].range == 0 then return false end
+	end
+  	local PQIValue = _G[PQIprefix..name.."_value"]
+  	if PQICheck and UnitExists(rawunit) == 1 and CML.GetHP(rawunit) ~= nil and tonumber(PQIValue) ~= nil then
+  		if (CML.GetHP(rawunit) <= tonumber(PQIValue)) and nNova[tonumber(value)].role == "TANK" then
+        	ProbablyEngine.dsl.parsedTarget = rawunit
         	return true
         end
   	else
@@ -613,6 +772,68 @@ ProbablyEngine.condition.register("novaHealing", function(name,value)
         end
   	else
   		return false
+  	end
+end)
+
+ProbablyEngine.condition.register("novaAoEHealing10", function(name,value)
+	if PQIprefix == nil then return false end
+	local PQICheck = _G[PQIprefix..name.."_enable"]
+	if value == "0" then 
+		rawunit = "player" 
+	elseif value == "69" then 
+		rawunit = "pet" 
+	elseif value and #nNova >= tonumber(value) and nNova[tonumber(value)].unit ~= nil then
+		rawunit = tostring(nNova[tonumber(value)].unit) 
+	end
+	if value ~= "0" and value ~= "69" then
+		if nNova[tonumber(value)].range == 0 then return false end
+	end
+  	local PQIValue = _G[PQIprefix..name.."_value"]
+  	if PQICheck and UnitExists(rawunit) == 1 and CML.GetHP(rawunit) ~= nil and tonumber(PQIValue) ~= nil then
+  		if (CML.GetHP(rawunit) <= tonumber(PQIValue)) then
+  			local inRange = 0
+  			for i = 1,#nNova do
+  				if CML.GetHP(nNova[i].unit) <= tonumber(PQIValue) and CML.GetDistance(rawunit, nNova[i].unit) < 10 then
+  					inRange = inRange + 1
+  				end
+  			end
+        	ProbablyEngine.dsl.parsedTarget = rawunit
+        	inRange = tonumber(inRange)
+        	return (inRange >= _G[PQIprefix.."AoEHealTargets_value"])
+        end
+  	else
+  		return 0
+  	end
+end)
+
+ProbablyEngine.condition.register("novaAoEHealing30", function(name,value)
+	if PQIprefix == nil then return false end
+	local PQICheck = _G[PQIprefix..name.."_enable"]
+	if value == "0" then 
+		rawunit = "player" 
+	elseif value == "69" then 
+		rawunit = "pet" 
+	elseif value and #nNova >= tonumber(value) and nNova[tonumber(value)].unit ~= nil then
+		rawunit = tostring(nNova[tonumber(value)].unit) 
+	end
+	if value ~= "0" and value ~= "69" then
+		if nNova[tonumber(value)].range == 0 then return false end
+	end
+  	local PQIValue = _G[PQIprefix..name.."_value"]
+  	if PQICheck and UnitExists(rawunit) == 1 and CML.GetHP(rawunit) ~= nil and tonumber(PQIValue) ~= nil then
+  		if (CML.GetHP(rawunit) <= tonumber(PQIValue)) then
+  			local inRange = 0
+  			for i = 1,#nNova do
+  				if CML.GetHP(nNova[i].unit) <= tonumber(PQIValue) and CML.GetDistance(rawunit, nNova[i].unit) < 30 then
+  					inRange = inRange + 1
+  				end
+  			end
+        	ProbablyEngine.dsl.parsedTarget = rawunit
+        	inRange = tonumber(inRange)
+        	return (inRange >= _G[PQIprefix.."AoEHealTargets_value"])
+        end
+  	else
+  		return 0
   	end
 end)
 
@@ -660,7 +881,7 @@ ProbablyEngine.condition.register("pqivalue", function(name,value)
 	if not PQIprefix then return false end
 	local PQICheck = _G[PQIprefix..name.."_enable"]
   	local PQIValue = _G[PQIprefix..name.."_value"] 
-  	if PQICheck then
+  	if PQICheck and PQIValue then
   		return PQIValue
   	end
 end)
@@ -687,6 +908,13 @@ ProbablyEngine.condition.register("sotr", function()
       or (SotRPowValue == 4 and _HolyPower >= 5)
       or (SotRPowValue == 5 and _HolyPower >= 5 and (CML.GetSpellCD(35395) < 1 or CML.GetSpellCD(20271) < 1 or UnitDebuffID("player", 85416))) then return true end
     return false
+end)
+
+
+ProbablyEngine.condition.register("spellpowerboost", function(target)
+	if PlayerSpellPower then
+  		return (PlayerSpellPower <= (GetSpellBonusDamage(2)*90)/100)
+  	end
 end)
 
 ProbablyEngine.condition.register("spell.quickcast", function(target, spell)

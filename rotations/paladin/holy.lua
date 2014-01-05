@@ -133,12 +133,6 @@ ProbablyEngine.rotation.register_custom(65, "CodeMyLife Holy", {
 
 --[[CML_GiftOfTheNaaru()
     CML_HolyPrism()]]
-    -- Light of Dawn
-    {"85222",{
-        "macros(ActiveHealing)", -- Healing ON
-        "HolyRadiance.novaHealing(3)", -- Health under PQI Value
-        "LightofDawn.novaHealing(1)", -- Health under PQI Value
-    }},
     -- Eternal Flame or raid
     {"114163",{
         "macros(ActiveHealing)", -- Healing ON
@@ -157,12 +151,7 @@ ProbablyEngine.rotation.register_custom(65, "CodeMyLife Holy", {
         "macros(ActiveHealing)", -- Healing ON
         "HolyShock.novaHealing(1)", -- Health under PQI Value
     }},
-    -- Holy Radiance
-    {"82327",{
-        "macros(ActiveHealing)", -- Healing ON
-        "HolyRadiance.novaHealing(5)", -- Health under PQI value
-        "HolyRadiance.novaHealing(1)", -- Health under PQI Value
-    }},     
+
 
     --CML_StayOfExecution()    
 
@@ -220,7 +209,23 @@ ProbablyEngine.rotation.register_custom(65, "CodeMyLife Holy", {
         "1.novaBuff(53563)", -- Target have the beacon.
         "macros(ActiveHealing)", -- Healing ON
         "DivineLight.novaHealing(1)", -- Health under PQI Value
-    },},  
+    },},    
+    -- Divine Light tricked
+    {"82326",{
+        "macros(ActiveHealing)", -- Healing ON
+        "1.novaBuff(53563)", -- Target have the beacon.
+        "HolyLight.novaHealing(1)", -- Health under PQI Value
+    },},     
+    -- Holy Radiance
+    {"82327",{
+        "macros(ActiveHealing)", -- Healing ON
+        "HolyRadiance.novaAoEHealing10(1)", -- Health under PQI value 
+    }},   
+    -- Light of Dawn
+    {"85222",{
+        "macros(ActiveHealing)", -- Healing ON
+        "LightOfDawn.novaAoEHealing30(1)", -- Health under PQI Value
+    }},
     -- Holy Light
     {"635",{
         "macros(ActiveHealing)", -- Healing ON
@@ -232,13 +237,7 @@ ProbablyEngine.rotation.register_custom(65, "CodeMyLife Holy", {
         "macros(ActiveHealing)", -- Healing ON
         "!2.novaBuff(53563)", -- Target does not have the beacon.
         "HolyLight.novaHealing(2)", -- Health under PQI Value
-    },},     
-    -- Divine Light tricked
-    {"82326",{
-        "macros(ActiveHealing)", -- Healing ON
-        "1.novaBuff(53563)", -- Target have the beacon.
-        "HolyLight.novaHealing(1)", -- Health under PQI Value
-    },},     
+    },},   
     -- Hammer of the Righteous
     {"53595",{
         "macros(ActiveDPS)", -- DPS Active
@@ -247,6 +246,7 @@ ProbablyEngine.rotation.register_custom(65, "CodeMyLife Holy", {
     },"target"},
     -- Crusader Strike
     {"35395",{
+        "target.canattack",
         "macros(ActiveDPS)", -- DPS Active
         "@CML.Melee(true)", -- Melee Range
     },"target"},

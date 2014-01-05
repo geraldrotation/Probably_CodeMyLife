@@ -1146,36 +1146,7 @@ if not HunterFunctions then
 		  	end  	
 		end
 	end
-	function CML.PetManager(value)
-		if _G[PQIprefix.."ActivePetWhistle_enable"] then
-			if not UnitExists("pet") then
-				local ActivePetWhistle = _G[PQIprefix.."ActivePetWhistle_value"]
-	  		  	if not UnitIsDead("pet") then
-	  				if ( LastWhistle == nil or LastWhistle and LastWhistle <= GetTime() - 15 ) then 
-	  					if ActivePetWhistle == value then
-	  						return true
-	  					end
-	  				end
-	  			elseif value == 0 then
-	  				return true
-	  			end
-	  		end
-	  	end
-	end
-	function CML.PetMove()
-		if UnitExists("pet") then
-			if UnitExists("mouseover") == 1 then
-				PetAttack("mouseover") 
-				return false
-			end
-			if not GetCurrentKeyBoardFocus() then
-				PetMoveTo()
-				CameraOrSelectOrMoveStart() 
-				CameraOrSelectOrMoveStop() 
-			end
-			return false
-		end
-	end
+
 	function CML.PetPassiveBehaviour()
 		if macros["Pause"] == true then 
 			RunMacroText("/petstopattack")

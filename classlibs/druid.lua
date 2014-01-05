@@ -1,6 +1,6 @@
 function CML.DruidStartup()
 
-if _Spec == 1 then PQIprefix = "PQI_CodeMyLifeMoonkin_" UnitDispel = {'Poison'} end
+if _Spec == 1 then PQIprefix = "PQI_FriedChickenMoonkin_" UnitDispel = {'Poison'} end
 if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeFeral_" UnitDispel = {'Poison'} end
 if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeGuardian_" UnitDispel = {'Poison'} end
 if _Spec == 4 then PQIprefix = "PQI_RepairedRestoration_" UnitDispel = {'Poison','Magic'} end
@@ -14,7 +14,7 @@ _HealingRangeSpell = 5185 -- Healing Touch
 --[[]] 	   --[[]]	--[[]]	   --[[]]	--[[]]	   --[[]]	--[[   		   ]]	
 --[[]]	   --[[]]	--[[           ]]	--[[           ]]	--[[]]	 --[[  ]]	
 --[[]]	   --[[]]	--[[           ]]	--[[           ]]	--[[]]	   --[[]]	
-
+ 
 --[[------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
 --------- Moonkin Druid -----PQI_CodeMyLifeMoonkin_Name_value-----------------------------------------------------------------------]]
@@ -498,6 +498,56 @@ if _Spec == 4 and CML_Resto_config == nil then
 				},
 				newSection = true,
 			},
+			{ 	name	= "Cenarion Ward",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFCenarion Ward |cffff7d0aon me.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 40,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFCenarion Ward |cffff7d0aon me.",
+				},
+			},
+			{ 	name	= "Cenarion Ward For Tank",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFCenarion Ward |cffff7d0aFor Tank.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 40,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFCenarion Ward |cffff7d0aFor Tank.",
+				},
+			},			
+			{ 	name	= "Ironbark",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFIronbark |cffff7d0aon me.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 40,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFIronbark |cffff7d0aFor Tank.",
+				},
+			},
+			{ 	name	= "Ironbark For Tank",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFIronbark |cffff7d0aFor Tank.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 40,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFIronbark |cffff7d0aon me.",
+				},
+			},
+			{ 	name	= "Might of Ursoc",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFMight of Ursoc |cffff7d0aon me.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 40,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFMight of Ursoc |cffff7d0aon me.",
+				},
+			},			
 			{ 	name	= "Healthstone",
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use |cffFFFFFF|cff33FF33Healthstone.",
 				enable	= true,
@@ -529,6 +579,86 @@ if _Spec == 4 and CML_Resto_config == nil then
 				},
 				newSection = true,
 			},	
+			{ 	name	= "Rejuvenation For Tank",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRejuvenation |cffff7d0a ForTank.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 65,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRejuvenation |cffff7d0aFor Tank.",
+				},
+			},
+			{ 	name	= "Regrowth",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRegrowth |cffff7d0aon me.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 65,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRegrowth |cffff7d0aon me.",
+				},
+			},	
+			{ 	name	= "Healing Touch",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFHealing Touch |cffff7d0aon me.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 65,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFHealing Touch |cffff7d0aon me.",
+				},
+			},	
+			{ 	name	= "Lifebloom",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFLifebloom |cffff7d0aon me.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 65,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFLifebloom |cffff7d0aon me.",
+				},
+			},	
+			{ 	name	= "Lifebloom For Tank",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFLifebloom |cffff7d0aFor Tank.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 65,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFLifebloom |cffff7d0aFor Tank.",
+				},
+			},			
+			{ 	name	= "Swiftmend",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFLifebloom |cffff7d0aon me.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 65,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFLifebloom |cffff7d0aon me.",
+				},
+			},	
+			{ 	name	= "Wild Growth",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFWild Growth.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 65,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFWild Growth.",
+				},
+			},	
+
+
+
+
+
+
+
+
+
+
 			--[[ Cooldowns ]]
 			{ 	name	= "Incarnation",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Incarnation.",
@@ -629,16 +759,80 @@ if not DruidFunction then
 		[11]					= false,
 	}
 
-	function CML.Rebirth()
-		for i = 1, #nNova do
-			if nNova[i].role == "TANK"
-			  and UnitIsDeadOrGhost(nNova[i].unit) == 1
-			  and IsSpellInRange(GetSpellInfo(20484), nNova[i].unit) == 1 then
-				ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+	function CML.Rejuvenation()
+		if _G[PQIprefix.."Rejuvenation_enable"] and macros["ActiveHealing"] then
+			local NumberRollingRejuv = 0
+			for i = 1, #nNova do
+				if nNova[i].hp <= _G[PQIprefix.."Rejuvenation_value"] then
+					if not UnitBuffID(nNova[i].unit,774) then
+						ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+						return true
+					else
+						NumberRollingRejuv = NumberRollingRejuv + 1
+					end
+				end
+			end
+		end
+		return false
+	end 
+
+	function CML.WildGrowth(members)
+		if _G[PQIprefix.."WildGrowth_enable"] and macros["ActiveHealing"] then
+			local WildValue = _G[PQIprefix.."WildGrowth_value"]
+			local AoEValue = members
+			for i = 1, #nNova do
+				if nNova[i].hp <= WildValue then
+					local inRange = 0 -- I dont have to include myself as i will test me/me anyway..
+					for j = 1,#nNova do
+						print(nNova[i].unit.." "..nNova[j].unit.." "..CML.GetDistance(nNova[i].unit,nNova[j].unit))
+						if nNova[j].hp <= WildValue and CML.GetDistance(nNova[i].unit,nNova[j].unit) <= 30 then
+							inRange = inRange + 1
+							if inRange >= AoEValue then
+								ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+								return true
+							end
+						end
+					end
+				end
+			end
+		end
+		return false
+	end 	
+
+	function CML.IronBark()	
+		if _G[PQIprefix.."Ironbark_enable"] and nNova[1].hp < _G[PQIprefix.."Ironbark_value"] then
+			if UnitGUID(nNova[1].unit) ~= UnitGUID("player") and nNova[1].range == 1 and UnitThreatSituation(nNova[1].unit) == 3
+			  and (nNova[1].role == "TANK" 
+			  or nNova[1].role == "NONE") then
+			  	ProbablyEngine.dsl.parsedTarget = nNova[1].unit
 				return true
 			end
 		end
 	end
+
+	function CML.Rebirth()
+		for i = 1, #nNova do
+			if nNova[i].role == "TANK" and 
+				UnitIsDeadOrGhost(nNova[i].unit) == 1
+			  and IsSpellInRange(GetSpellInfo(20484), nNova[i].unit) == 1 then
+				ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+				CastSpellByName(GetSpellInfo(132158))
+				CastSpellByName(GetSpellInfo(20484),nNova[i].unit)
+				return true
+			end
+		end
+	end
+
+	function CML.Rez()
+		for i = 1, #nNova do
+			if UnitIsDeadOrGhost(nNova[i].unit) == 1
+			  and IsSpellInRange(GetSpellInfo(50769), nNova[i].unit) == 1 then
+				ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+				CastSpellByName(GetSpellInfo(50769),nNova[i].unit)
+				return true
+			end
+		end
+	end	
 
 	function CML.StopDotsCheck(unit)
 		local NoDotsBuffs = {

@@ -80,7 +80,7 @@ ProbablyEngine.rotation.register_custom(251, "CodeMyLife Frost", {
     {"51271",{ -- On CD
         "PillarofFrost.pqivalue = 2",
     }},   
-    {"20572",{ -- On ActiveCooldowns
+    {"51271",{ -- On ActiveCooldowns
         "PillarofFrost.pqivalue = 1",
         "macros(ActiveCooldowns)",
     }},
@@ -93,25 +93,25 @@ ProbablyEngine.rotation.register_custom(251, "CodeMyLife Frost", {
     {"20572",{ -- On CD
         "Racials.pqicheck",
         "Racials.pqivalue = 2",
-        "spell.exists"
+        "player.spell(20572).exists",
     }},
     {"20572",{ -- On ActiveCooldowns
         "Racials.pqicheck",
         "Racials.pqivalue = 1",
         "macros(ActiveCooldowns)",
-        "spell.exists"
+        "player.spell(20572).exists",
     }},
     -- Berserking
     {"26297",{ -- On CD
         "Racials.pqicheck",
         "Racials.pqivalue = 2",
-        "spell.exists"
+        "player.spell(26297).exists",
     }},
     {"26297",{ -- On ActiveCooldowns
         "Racials.pqicheck",
         "Racials.pqivalue = 1",
         "macros(ActiveCooldowns)",
-        "spell.exists"
+        "player.spell(26297).exists",
     }},
     -- arcane_torrent
     -- use_item,slot=hands 

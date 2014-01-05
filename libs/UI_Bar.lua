@@ -228,41 +228,6 @@ CML_VengeanceFrame.A3Bar:Hide()
 CML_VengeanceFrame.A4Bar:Hide()
 CML_VengeanceFrame.A5Bar:Hide()
 CML_VengeanceFrame:SetScript("OnUpdate", CML_Status)
-A1Bar = CML_VengeanceFrame:CreateTexture(nil, "OVERLAY")
-CML_VengeanceFrame.A1Bar = A1Bar
-CML_VengeanceFrame.A1Bar:SetPoint("LEFT",0,59)
-CML_VengeanceFrame.A1Bar:SetWidth(53)
-CML_VengeanceFrame.A1Bar:SetHeight(9)
-CML_VengeanceFrame.A1Bar:SetTexture(191/255,0/255,0/255,0.85)
-A2Bar = CML_VengeanceFrame:CreateTexture(nil, "OVERLAY")
-CML_VengeanceFrame.A2Bar = A2Bar
-CML_VengeanceFrame.A2Bar:SetPoint("LEFT",59,59)
-CML_VengeanceFrame.A2Bar:SetWidth(53)
-CML_VengeanceFrame.A2Bar:SetHeight(9)
-CML_VengeanceFrame.A2Bar:SetTexture(191/255,0/255,0/255,0.85)
-A3Bar = CML_VengeanceFrame:CreateTexture(nil, "OVERLAY")
-CML_VengeanceFrame.A3Bar = A3Bar
-CML_VengeanceFrame.A3Bar:SetPoint("LEFT",118,59)
-CML_VengeanceFrame.A3Bar:SetWidth(53)
-CML_VengeanceFrame.A3Bar:SetHeight(9)
-CML_VengeanceFrame.A3Bar:SetTexture(191/255,0/255,0/255,0.85)
-A4Bar = CML_VengeanceFrame:CreateTexture(nil, "OVERLAY")
-CML_VengeanceFrame.A4Bar = A4Bar
-CML_VengeanceFrame.A4Bar:SetPoint("LEFT",177,59)
-CML_VengeanceFrame.A4Bar:SetWidth(53)
-CML_VengeanceFrame.A4Bar:SetHeight(9)
-CML_VengeanceFrame.A4Bar:SetTexture(191/255,0/255,0/255,0.85)
-A5Bar = CML_VengeanceFrame:CreateTexture(nil, "OVERLAY")
-CML_VengeanceFrame.A5Bar = A5Bar
-CML_VengeanceFrame.A5Bar:SetPoint("LEFT",236,59)
-CML_VengeanceFrame.A5Bar:SetWidth(53)
-CML_VengeanceFrame.A5Bar:SetHeight(9)
-CML_VengeanceFrame.A5Bar:SetTexture(191/255,0/255,0/255,0.85)
-CML_VengeanceFrame.A1Bar:Hide()
-CML_VengeanceFrame.A2Bar:Hide()
-CML_VengeanceFrame.A3Bar:Hide()
-CML_VengeanceFrame.A4Bar:Hide()
-CML_VengeanceFrame.A5Bar:Hide()
 function UiBar_ActiveCooldowns()
 	if macros["ActiveCooldowns"] then
 		CML_VengeanceFrame.rangebar:SetTexture(1,1,1,0.85)
@@ -347,6 +312,29 @@ function UiBar_Borders()
 	end
 end
 
+function UiBar_Combo()
+	local _RealCombo = GetComboPoints("player", "target")
+	local _AnticipationStacks = select(4,UnitBuff("player", GetSpellInfo(115189)))
+	if _RealCombo >= 1 then CML_VengeanceFrame.HP1Bar:Show() else CML_VengeanceFrame.HP1Bar:Hide() end
+	if _RealCombo >= 2 then CML_VengeanceFrame.HP2Bar:Show() else CML_VengeanceFrame.HP2Bar:Hide() end
+	if _RealCombo >= 3 then CML_VengeanceFrame.HP3Bar:Show() else CML_VengeanceFrame.HP3Bar:Hide() end
+	if _RealCombo >= 4 then CML_VengeanceFrame.HP4Bar:Show() else CML_VengeanceFrame.HP4Bar:Hide() end
+	if _RealCombo >= 5 then CML_VengeanceFrame.HP5Bar:Show() else CML_VengeanceFrame.HP5Bar:Hide() end
+	if UnitBuffID("player",115189) and _RealCombo >= 5 then
+		if _AnticipationStacks >= 1 then CML_VengeanceFrame.A1Bar:Show() else CML_VengeanceFrame.A1Bar:Hide() end
+		if _AnticipationStacks >= 2 then CML_VengeanceFrame.A2Bar:Show() else CML_VengeanceFrame.A2Bar:Hide() end
+		if _AnticipationStacks >= 3 then CML_VengeanceFrame.A3Bar:Show() else CML_VengeanceFrame.A3Bar:Hide() end
+		if _AnticipationStacks >= 4 then CML_VengeanceFrame.A4Bar:Show() else CML_VengeanceFrame.A4Bar:Hide() end
+		if _AnticipationStacks >= 5 then CML_VengeanceFrame.A5Bar:Show() else CML_VengeanceFrame.A5Bar:Hide() end
+	else
+		CML_VengeanceFrame.A1Bar:Hide()
+		CML_VengeanceFrame.A2Bar:Hide()
+		CML_VengeanceFrame.A3Bar:Hide()
+		CML_VengeanceFrame.A4Bar:Hide()
+		CML_VengeanceFrame.A5Bar:Hide()
+	end
+end
+
 function UiBar_SetBuff(BuffID)
 	CML_VengeanceFrame:GetStatusBarTexture():SetTexture(196/255,31/255,59/255,"OVERLAY")
 	local UiBarMaxValue = 100
@@ -424,6 +412,15 @@ function UiBar_SetFocus()
 	CML_RessourcesFrame:SetMinMaxValues(0, _FocusMax)
 end
 
+function UiBar_SetEnergy()
+	_Energy = UnitPower("player",3)
+	_EnergyMax = UnitPowerMax("player",3)
+	CML_RessourcesFrame:GetStatusBarTexture():SetTexture(255/255, 245/255, 105/255,0.90,"OVERLAY")
+	CML_RessourcesFrame:SetValue(_Energy)
+	CML_RessourcesFrame.Text:SetText(_Energy.."/".._EnergyMax, 1, 1, 1, 0.7)
+	CML_RessourcesFrame:SetMinMaxValues(0, _EnergyMax)
+end
+
 function UiBar_SetFury()
 	_Fury,_FuryMax = UnitPower("player",15),UnitPowerMax("player",15)
 	CML_VengeanceFrame:GetStatusBarTexture():SetTexture(161/255, 0/255, 200/255,0.90,"OVERLAY")
@@ -466,12 +463,33 @@ function UiBar_SetPower()
 	if _MyClass == 1 then _Power = _TasteForBlood end
 	if _MyClass == 2 then _Power = _HolyPower end
 	if _MyClass == 5 then _Power = _Evangelism end
+	if _MyClass == 10 then _Power = _Chi end
 	if _Power then
 		if _Power >= 1 then CML_VengeanceFrame.HP1Bar:Show() else CML_VengeanceFrame.HP1Bar:Hide() end
 		if _Power >= 2 then CML_VengeanceFrame.HP2Bar:Show() else CML_VengeanceFrame.HP2Bar:Hide() end
 		if _Power >= 3 then CML_VengeanceFrame.HP3Bar:Show() else CML_VengeanceFrame.HP3Bar:Hide() end
 		if _Power >= 4 then CML_VengeanceFrame.HP4Bar:Show() else CML_VengeanceFrame.HP4Bar:Hide() end
 		if _Power >= 5 then CML_VengeanceFrame.HP5Bar:Show() else CML_VengeanceFrame.HP5Bar:Hide() end
+	end
+end
+
+function UiBar_SetMitigation()
+	if not macros then return false end
+	if macros["ActiveMitigation"] == 1 then 
+		CML_VengeanceFrame.HP1Bar:Show() 
+		CML_VengeanceFrame.HP2Bar:Show()
+		CML_VengeanceFrame.HP4Bar:Hide()
+		CML_VengeanceFrame.HP5Bar:Hide()
+	elseif macros["ActiveMitigation"] == 2 then 
+		CML_VengeanceFrame.HP1Bar:Hide()
+		CML_VengeanceFrame.HP2Bar:Hide()
+		CML_VengeanceFrame.HP4Bar:Show()
+		CML_VengeanceFrame.HP5Bar:Show()
+	elseif macros["ActiveMitigation"] == 3 then 	
+		CML_VengeanceFrame.HP1Bar:Show() 
+		CML_VengeanceFrame.HP2Bar:Show()
+		CML_VengeanceFrame.HP4Bar:Show()
+		CML_VengeanceFrame.HP5Bar:Show()
 	end
 end
 
@@ -606,6 +624,23 @@ function UiBar_SetBeacon()
 	end
 end
 
+function UiBar_Nova1()
+	CML_VengeanceFrame:GetStatusBarTexture():SetTexture(255/255,255/255,255/255,0.90,"OVERLAY")
+	if nNova[1].unit == nil or not UnitExists(nNova[1].unit) then
+		CML_VengeanceFrame:SetValue(0)
+		CML_VengeanceFrame.Text:SetText("No Target", 1, 1, 1, 0.7)
+	else
+		CML_VengeanceFrame:SetValue(nNova[1].hp)
+		NovaName = UnitName(nNova[1].unit)
+		if string.len(tostring(NovaName)) > 9 then
+			ShortNovaName = string.sub(tostring(NovaName), 1, 9)
+		else
+			ShortNovaName = tostring(NovaName)
+		end
+		CML_VengeanceFrame.Text:SetText("|cffFFFFFF"..ShortNovaName, 1, 1, 1, 0.7)
+	end
+end
+			
 
 function UiBar_SotR()
 	local SotRFound = false

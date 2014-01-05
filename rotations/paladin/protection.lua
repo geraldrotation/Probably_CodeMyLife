@@ -214,8 +214,9 @@ ProbablyEngine.rotation.register_custom(66, "CodeMyLife Protection", {
     }},    
     {"116467",{"@CML.IsGlyphed(54928,true)","queuecast(116467)"},"ground"}, -- Consecration Glyphed Queue 
 
-    -- Holy Wrath 
+    -- Holy Wrath EDIT:Logic taken from Consecration <== by pve
     {"119072",{
+        "@CML.HolyWrath()",
         "target.range <= 5",
     },"target"}, 
     -- Sacred Shield

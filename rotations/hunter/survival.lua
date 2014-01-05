@@ -17,9 +17,9 @@ ProbablyEngine.rotation.register_custom(255, "CodeMyLife Survival", {
     }},   
     -- Exhilaration
      {"109304",{
-        "spell.exists",
+        "player.spell(109304).exists",
         "Exhilaration.novaHealing(0)",
-    }},                
+    }},             
     -- Healthstone   
     {"#5512",{
         "@CML.HealthStone()",
@@ -92,7 +92,7 @@ ProbablyEngine.rotation.register_custom(255, "CodeMyLife Survival", {
     {{
             {"147362","player.range < 40"}, -- Counter Shot
             { "96231",{"player.spell(96231).cooldown","player.range < 20"}},  -- Scatter Shot 
-        }, "modifier.interrupts"
+        }, "modifier.interrupt"
     }, 
 --------------------------------------------------DPS Rotation-------------------------------------------- 
     -- virmens_bite_potion,if=buff.bloodlust.react|target.time_to_die<=60
@@ -155,25 +155,25 @@ ProbablyEngine.rotation.register_custom(255, "CodeMyLife Survival", {
     {"20572",{
         "Racials.pqicheck",
         "Racials.pqivalue = 2",
-        "spell.exists"
+        "player.spell(20572).exists"
     }},
     {"20572",{
         "Racials.pqicheck",
         "Racials.pqivalue = 1",
         "macros(ActiveCooldowns)",
-        "spell.exists"
+        "player.spell(20572).exists"
     }},
     -- Berserking
     {"26297",{
         "Racials.pqicheck",
         "Racials.pqivalue = 2",
-        "spell.exists"
+        "player.spell(26297).exists"
     }},
     {"26297",{
         "Racials.pqicheck",
         "Racials.pqivalue = 1",
         "macros(ActiveCooldowns)",
-        "spell.exists"
+        "player.spell(26297).exists",
     }},
     -- Fervor ,if=enabled&!ticking&focus<=50
     {"82726",{
@@ -244,7 +244,7 @@ ProbablyEngine.rotation.register_custom(255, "CodeMyLife Survival", {
     {"3045",{
         "RapidFire.pqicheck",
         "RapidFire.pqivalue = 2",
-        "pet.exists",
+        "pet.alive",
         "target.exists",
     }},
     -- Rapid Fire ,if=!buff.rapid_fire.up  -- On ActiveCooldowns
@@ -252,46 +252,46 @@ ProbablyEngine.rotation.register_custom(255, "CodeMyLife Survival", {
         "RapidFire.pqicheck",
         "macros(ActiveCooldowns)",
         "RapidFire.pqivalue = 1",
-        "pet.exists",
+        "pet.alive",
         "target.exists",
     }},
     -- Gloves  -- On CD
     {"#gloves",{
         "ProfessionsCDs.pqivalue = 2",
-        "pet.exists",
+        "pet.alive",
         "target.exists",
     }}, 
     -- Gloves  -- On ActiveCooldowns
     {"#gloves",{
         "macros(ActiveCooldowns)",
         "ProfessionsCDs.pqivalue = 1",
-        "pet.exists",
+        "pet.alive",
         "target.exists",
     }}, 
      -- Trinket1  -- On CD
     {"#trinket1",{
         "Trinkets.pqivalue = 2",
-        "pet.exists",
+        "pet.alive",
         "target.exists",
     }},
     -- Trinket1 -- On ActiveCooldowns
     {"#trinket1",{
         "Trinkets.pqivalue = 1",
         "macros(ActiveCooldowns)",
-        "pet.exists",
+        "pet.alive",
         "target.exists",
     }},
      -- Trinket2    -- On CD
     {"#trinket2",{
         "Trinkets.pqivalue = 2",
-        "pet.exists",
+        "pet.alive",
         "target.exists",
     }},
      -- Trinket2  -- On ActiveCooldowns  
     {"#trinket2",{
         "Trinkets.pqivalue = 1",
         "macros(ActiveCooldowns)",
-        "pet.exists",
+        "pet.alive",
         "target.exists",
     }},
     -- Dire Beast ,if=enabled
@@ -303,14 +303,14 @@ ProbablyEngine.rotation.register_custom(255, "CodeMyLife Survival", {
         "Stampede.pqicheck",
         "macros(ActiveCooldowns)",
         "Stampede.pqivalue = 1",
-        "pet.exists",
+        "pet.alive",
         "target.exists",
     }},  
     -- Stampede ,if=buff.rapid_fire.up|buff.bloodlust.react|target.time_to_die<=25
     {"121818",{
         "Stampede.pqicheck",
         "Stampede.pqivalue = 2",
-        "pet.exists",
+        "pet.alive",
         "target.exists",
     }}, 
     -- Cobra Shot,if=dot.serpent_sting.remains<6
