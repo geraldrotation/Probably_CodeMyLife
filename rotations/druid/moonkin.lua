@@ -3,6 +3,10 @@ ProbablyEngine.rotation.register_custom(102, "FriedChicken Moonkin", {
 	{"TaMere","@CML.PQIConfing()"},{"TaMere","@CML.Status()"},{"pause","@CML.CombatCheck()"}, -- Combat Check/Pause
 	-- Mark of the Wild
 	{"1126","!player.hasaura(1)"},
+	 -- Rebirth
+    { "20484", {
+       "@CML.Rebirth()"
+    }},
 	-- Pause Rotation - Bear Form
 	{"pause","player.seal = 1"},
 	-- Pause Rotation - Cat Form
@@ -80,6 +84,18 @@ ProbablyEngine.rotation.register_custom(102, "FriedChicken Moonkin", {
         "macros(ActiveCooldowns)",
         "target.exists",
     }},
+    -- incarnation,if=talent.incarnation.enabled&(buff.lunar_eclipse.up|buff.solar_eclipse.up) 
+	{"102560",{ -- On CD
+        --"Incarnation.pqivalue = 2",
+        "player.buff(112071)",
+		"player.spell(106731).exists",
+	}},  
+	{"102560",{ -- On ActiveCooldowns 
+        --"Incarnation.pqivalue = 1",
+        "macros(ActiveCooldowns)",
+        "player.buff(112071)",
+		"player.spell(106731).exists",
+	}},
 	-- celestial_alignment,if=(!buff.lunar_eclipse.up&!buff.solar_eclipse.up)&(buff.chosen_of_elune.up|!talent.incarnation.enabled|cooldown.incarnation.remains>10)
 	{"112071",{ -- On CD
         "CelestialAlignment.pqivalue = 2",
@@ -116,7 +132,7 @@ ProbablyEngine.rotation.register_custom(102, "FriedChicken Moonkin", {
 	{"106737",{
 		"player.spell(106737).exists",
 		"player.buff(16886)",
-		"player.spell(106737).charges >= 2",
+		"player.spell(106737).charges >= 1",
 	}},
 	-- starfall,if=!buff.starfall.up
 	{"48505",{
@@ -129,26 +145,12 @@ ProbablyEngine.rotation.register_custom(102, "FriedChicken Moonkin", {
 	{"88751",{
 		"DetonateSchrooms.pqikeybind",
 	}},
-	-- incarnation,if=talent.incarnation.enabled&(buff.lunar_eclipse.up|buff.solar_eclipse.up) 
-	{"106731",{ -- On CD
-        "Incarnation.pqivalue = 2",
-        "player.buff(112071)",
-		"player.spell.exists",
-	}},  
-
-	{"106731",{ -- On ActiveCooldowns 
-        "Incarnation.pqivalue = 1",
-        "macros(ActiveCooldowns)",
-        "player.buff(112071)",
-		"player.spell.exists",
-	}},
 
 	-- natures_vigil,if=talent.natures_vigil.enabled
 
-
 	-- starsurge,if=buff.shooting_stars.react&(active_enemies<5|!buff.solar_eclipse.up)
 	{"78674",{
-		"player.buff(48517)",
+		"player.buff(93400)",
 	}},
 	-- moonfire,cycle_targets=1,if=buff.lunar_eclipse.up&(remains<(buff.natures_grace.remains-2+2*set_bonus.tier14_4pc_caster))
 	{"8921",{ 

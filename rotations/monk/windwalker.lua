@@ -37,12 +37,12 @@ ProbablyEngine.rotation.register_custom(269, "CodeMyLife Windwalker", {
 	-- Gloves
  	{ "#gloves", { -- On ActiveCooldowns
         "@CML.ActiveCooldowns()",
-        "ProfessionsCD.pqivalue = 1",
+        "ProfessionsCDs.pqivalue = 1",
  		"player.buff(121471)",
         "target.exists",
 	}},
  	{ "#gloves", { -- On CD
-        "ProfessionsCD.pqivalue = 2", 
+        "ProfessionsCDs.pqivalue = 2", 
  		"player.buff(121471)",
         "target.exists",
 		}},

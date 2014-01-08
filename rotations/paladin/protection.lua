@@ -55,7 +55,12 @@ ProbablyEngine.rotation.register_custom(66, "CodeMyLife Protection", {
     {"#5512",{
         "@CML.HealthStone()",
         "Healthstone.novaHealing(0)",
-    }},    
+    }},  
+    -- ChopChop   
+    {"#90175",{
+        "@CML.ChopChop()",
+    }},      
+     
     -- Eternal Flame                                                                
     {"114163",{ -- On Me
         "talent(8)",
@@ -231,6 +236,8 @@ ProbablyEngine.rotation.register_custom(66, "CodeMyLife Protection", {
     {"TaMere","@CML.PQIConfing()"},
     -- Player Status
     {"TaMere","@CML.Status()"},
+    -- ChopChop   
+    {"#90175","@CML.ChopChop()","target"},   
     -- Blessing of Kings                
     {"20217",{ 
         "!player.hasaura(1)",

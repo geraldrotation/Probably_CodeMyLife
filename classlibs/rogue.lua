@@ -521,7 +521,17 @@ if _Spec == 3 and CML_Sub_config == nil then
 					width = 60,
 					tooltip = "|cffFFEA00Choose |cffFFFFFFNon Lethal Poison|cffFFEA00.",	
 				},
-			},			
+			},		
+			{ 	name	= "Tricks of the Trade",
+				enable	= true,
+				tooltip = "|cffFFEA00Enables |cffFFFFFFTricks of the Trade|cffFFEA00.",	
+				widget = { type = 'select',
+					values = {"TANK","FOCUS"},
+					value = 2,
+					width = 60,
+					tooltip = "|cffFFEA00Choose |cffFFFFFFTricks of the Trade TARGET|cffFFEA00.",	
+				},
+			},					
 			{ 	name	= "DPS Potion on Heroism",
 				tooltip	= PlayerHex.."toggle Automatic DPS Potions when Heroism starts.",
 				enable	= true,
@@ -681,35 +691,6 @@ if not RogueFunctions then
 	--------------------------------------------------
 	--------------------------------------------------
 
-	function canSND(var1,var2)
-		local SnD, SnDTimeLeft = Buff_Check( 5171, "player" )
-		local CPs = GetComboPoints( "player", "target" )
-
-		if SnD and CPs > 0 then
-			if SnDTimeLeft < 2 then
-				return true
-			end
-		elseif not SnD and CPs > 0 then
-			return true 
-		end
-	end
-
-
-
-	function canRPT(var1,var2)
-		local Rup, RupTimeLeft 	= Debuff_Check( 1943, "target", "PLAYER" )
-		local CPs 				= GetComboPoints( "player", "target" )
-
-		if Rup then
-			if CPs > 0 and RupTimeLeft < 2 then
-				return true
-			end
-		else
-			return true 
-		end
-	end
-
-
 	function canENV(var1,var2)
 		local CPs 					= GetComboPoints( "player", "target" )
 		local Env, EnvTimeLeft 		= Buff_Check( 32645, "player" )
@@ -735,132 +716,6 @@ if not RogueFunctions then
 		end 
 	end
 
-
-	function canMUTI(var1,var2)
-		local CPs 					= GetComboPoints( "player", "target" )
-		local van 					= Buff_Check( 115193, "player" );
-		local vstart, vduration 	= GetSpellCooldown(1856);
-		local Anti, _, AntiCharges 	= Buff_Check( 115189, "player" )
-		local Env, EnvTimeLeft 		= Buff_Check( 32645, "player" )
-		local Rup, RupTimeLeft 		= Debuff_Check( 1943, "target", "PLAYER" )
-		local Blindside 			= Buff_Check( 121153, "player" )
-
-		if van and (vstart + vduration - GetTime()) > 119.9 then 
-			return 
-		end
-		if CPs < 5 or (Env and EnvTimeLeft > 2 and (not Anti or AntiCharges < 3)) then 
-			return true 
-		end
-	end
-
-	function canMUTIENERGY(var1,var2)
-		local CurHealth		 		= 100 * UnitHealth("target") / UnitHealthMax("target")
-		local Rup, RupTimeLeft 		= Debuff_Check( 1943, "target", "PLAYER" )
-		local CurrentEnergy			= UnitPower("player")
-		local CPs 					= GetComboPoints( "player", "target" )
-
-		if CurHealth > 35 then
-			if CurrentEnergy > 71 then
-				if Rup then
-					if RupTimeLeft < 2 then
-						return true
-					end
-				else
-					return true
-				end
-			end
-		end
-	end
-
-	function canDISP(var1,var2)
-		local CPs 					= GetComboPoints( "player", "target" )
-		local CurHealth		 		= 100 * UnitHealth("target") / UnitHealthMax("target")
-		local CurrentEnergy			= UnitPower("player")
-		local EnergyRegen 			= select(2, GetPowerRegen("player"))
-		local Blindside 			= Buff_Check( 121153, "player" )
-		local ShadowBladesUP 		= Buff_Check( 121471, "player" )
-		local van 					= Buff_Check( 115193, "player" );
-		local Anti, _, AntiCharges 	= Buff_Check( 115189, "player" )
-		local Env, EnvTimeLeft 		= Buff_Check( 32645, "player" )
-
-		if Blindside and not van and (CPs < 5 or (Env and EnvTimeLeft > 2 and (not Anti or (ShadowBladesUP and AntiCharges < 3 
-		  and (CurrentEnergy + (EnergyRegen * 1.5)) < 100) or (not ShadowBladesUP and AntiCharges < 4)))) then
-			CastSpellByName( GetSpellInfo(111240), nil )
-			return true
-		elseif CurHealth < 35 and not van and (CPs < 5 or (Env and EnvTimeLeft > 2 and (not Anti or (ShadowBladesUP and AntiCharges < 3) 
-			or (not ShadowBladesUP and AntiCharges < 4 )))) then
-			CastSpellByName( GetSpellInfo(111240), nil )
-			return true
-		end
-	end
-
-	function canDISPENERGY(var1,var2)
-		local CurHealth		 		= 100 * UnitHealth("target") / UnitHealthMax("target")
-		local Blindside 			= Buff_Check( 121153, "player" )
-		local Rup, RupTimeLeft 		= Debuff_Check( 1943, "target", "PLAYER" )
-		local CurrentEnergy			= UnitPower("player")
-		local CPs 					= GetComboPoints( "player", "target" )
-		local Env, EnvTimeLeft 		= Buff_Check( 32645, "player" )
-		local van 					= Buff_Check( 115193, "player" );
-		local Anti, _, AntiCharges 	= Buff_Check( 115189, "player" )
-		local CurrentEnergy			= UnitPower("player")
-		local ShadowBladesUP 		= Buff_Check( 121471, "player" )
-		local EnergyRegen 			= select(2, GetPowerRegen("player"))
-
-		if (CurHealth < 35 or Blindside) and not van then
-			if CurrentEnergy > 90 then
-				if Rup then
-					if RupTimeLeft < 2 then
-						CastSpellByName( GetSpellInfo(111240), nil )
-						return true
-					end
-				else
-					CastSpellByName( GetSpellInfo(111240), nil )
-					return true
-				end
-			end
-		
-			-- 5cps with dispatch proc
-			if Blindside and CPs > 4 and Rup and RupTimeLeft > 3 and Env and (not Anti or ((ShadowBladesUP and AntiCharges < 3) or (not ShadowBladesUP and AntiCharges < 4))) and (CurrentEnergy + (EnergyRegen * 1.5)) < 100 then
-				CastSpellByName( GetSpellInfo(111240), nil )
-				return true
-			end
-		end
-	end
-
-	function canRED(var1,var2)
-		if not Redirect then 
-	   		Redirect = CreateFrame("Frame")
-		end
-		local Reframe = Redirect
-		Reframe:RegisterEvent("UNIT_COMBO_POINTS")
-		Reframe:SetScript("OnEvent", function(self, event, ...)
-
-			if event == "UNIT_COMBO_POINTS" then 
-	       		Combo = GetComboPoints("player")    
-			end
-		end)
-		if Combo == nil then
-			Combo = 0
-		end
-		if UnitAffectingCombat("player") == nil then
-			Combo = 0
-		end
-		local ComboPoints = GetComboPoints("player", "target")
-		if UnitExists("Target") and ComboPoints ~= Combo and Combo~=0 then
-	    	return true
-		end
-	end
-
-	function canHS(var1,var2)
-		local HealthstoneCD = select(2,GetItemCooldown(5512))
-		local Playerhealth = 100 * UnitHealth("player") / UnitHealthMax("player")
-		if  Playerhealth <= 30
-		  and HealthstoneCD < 1 then
-			UseItemByName(5512, "player")
-		end	
-	end
-
 	function validTarget(unit)
 	  	local inRange = IsSpellInRange(GetSpellInfo(1934), unit) -- Rupture
 	  	if not UnitIsVisible(unit) or not UnitExists(unit) or UnitCanAttack("player", unit) ~= 1 
@@ -883,15 +738,27 @@ if not RogueFunctions then
 	  	return true
 	end
 
-	function canPot(var1,var2)
-		if not UnitBuff("player", 2825) or not UnitBuff("player", 32182) or not UnitBuff("player", 80353) 
-		  or not UnitBuff("player", 90355) then
-			return false
-		end
-		if GetItemCount(76089) < 1 then return false end
-		if GetItemCooldown(76089) ~= 0 then return false end
-		return true 
-	end	
+	function CML.AutoTarget()
+if UnitExists("Target") == nil 
+or UnitExists("Target") and UnitIsDead("Target")
+and UnitAffectingCombat("Player")
+then TargetNearestEnemy() 
+end
+end
+
+function CML.TOTT()
+if _G[PQIprefix.."TricksoftheTrade_value"] == 1 then
+for i = 1, #nNova do
+if nNova[i].role == "TANK" then
+ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+return true
+end
+end
+elseif _G[PQIprefix.."TricksoftheTrade_value"] == 2 then
+ProbablyEngine.dsl.parsedTarget = "focus"
+return true
+end
+end
 
 	Mystic = {} 
 
@@ -919,12 +786,7 @@ if not RogueFunctions then
 		end
 	end
 		
-	function Mystic.AutoTarget()
-		if UnitExists("Target") == nil 
-		  or (UnitExists("Target") and UnitIsDead("Target") and UnitAffectingCombat("Player")) then 
-		  	TargetNearestEnemy() 
-		end
-	end
+
 
 	ProbablyEngine.library.register("Mystic", Mystic)
 

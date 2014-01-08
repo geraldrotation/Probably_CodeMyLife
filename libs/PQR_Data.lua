@@ -1,5 +1,6 @@
 function DataLoader()
 	ProbablyEngine.listener.register("UNIT_SPELLCAST_SUCCEEDED", function(...)
+		--print(...)
 		local SourceUnit 	= select(1,...)
 		local SpellID 		= select(5,...)
 		if SourceUnit == "player" then
@@ -20,6 +21,10 @@ function DataLoader()
 			end
 			-- Hunter
 			if _MyClass == 3 then
+				-- Serpent Sting
+				if SpellID == _SerpentSting then
+					LastSerpent = GetTime()
+				end
 				-- Feign Death Enforcer
 			 	if SpellID == _FeignDeath then			
 					FeignDeathCast = GetTime()

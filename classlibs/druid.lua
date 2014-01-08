@@ -488,13 +488,13 @@ if _Spec == 4 and CML_Resto_config == nil then
 				},
 			},			
 			{ 	name	= "Barkskin",
-				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFBarkskin |cffff7d0aon me.",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFBarkskin.",
 				enable	= true,
 				widget	= { type = "numBox",
-					value	= 40,
+					value	= 55,
 					width 	= 70,
 					step	= 5,
-					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFBarkskin |cffff7d0aon me.",
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFBarkskin.",
 				},
 				newSection = true,
 			},
@@ -502,7 +502,7 @@ if _Spec == 4 and CML_Resto_config == nil then
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFCenarion Ward |cffff7d0aon me.",
 				enable	= true,
 				widget	= { type = "numBox",
-					value	= 40,
+					value	= 50,
 					width 	= 70,
 					step	= 5,
 					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFCenarion Ward |cffff7d0aon me.",
@@ -512,7 +512,7 @@ if _Spec == 4 and CML_Resto_config == nil then
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFCenarion Ward |cffff7d0aFor Tank.",
 				enable	= true,
 				widget	= { type = "numBox",
-					value	= 40,
+					value	= 60,
 					width 	= 70,
 					step	= 5,
 					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFCenarion Ward |cffff7d0aFor Tank.",
@@ -525,27 +525,27 @@ if _Spec == 4 and CML_Resto_config == nil then
 					value	= 40,
 					width 	= 70,
 					step	= 5,
-					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFIronbark |cffff7d0aFor Tank.",
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFIronbark |cffff7d0aon Me.",
 				},
 			},
 			{ 	name	= "Ironbark For Tank",
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFIronbark |cffff7d0aFor Tank.",
 				enable	= true,
 				widget	= { type = "numBox",
-					value	= 40,
+					value	= 50,
 					width 	= 70,
 					step	= 5,
-					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFIronbark |cffff7d0aon me.",
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFIronbark |cffff7d0aFor Tank.",
 				},
 			},
 			{ 	name	= "Might of Ursoc",
-				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFMight of Ursoc |cffff7d0aon me.",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFMight of Ursoc.",
 				enable	= true,
 				widget	= { type = "numBox",
-					value	= 40,
+					value	= 20,
 					width 	= 70,
 					step	= 5,
-					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFMight of Ursoc |cffff7d0aon me.",
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFMight of Ursoc.",
 				},
 			},			
 			{ 	name	= "Healthstone",
@@ -559,23 +559,23 @@ if _Spec == 4 and CML_Resto_config == nil then
 				},
 			},	
 			{ 	name	= "Renewal",
-				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRenewal |cffff7d0aon me.",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRenewal.",
 				enable	= true,
 				widget	= { type = "numBox",
 					value	= 25,
 					width 	= 70,
 					step	= 5,
-					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRenewal |cffff7d0aon me.",
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRenewal.",
 				},
 			},
 			{ 	name	= "Rejuvenation",
-				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRejuvenation |cffff7d0aon me.",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRejuvenation.",
 				enable	= true,
 				widget	= { type = "numBox",
-					value	= 65,
+					value	= 85,
 					width 	= 70,
 					step	= 5,
-					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRejuvenation |cffff7d0aon me.",
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRejuvenation.",
 				},
 				newSection = true,
 			},	
@@ -583,40 +583,30 @@ if _Spec == 4 and CML_Resto_config == nil then
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRejuvenation |cffff7d0a ForTank.",
 				enable	= true,
 				widget	= { type = "numBox",
-					value	= 65,
+					value	= 99,
 					width 	= 70,
 					step	= 5,
 					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRejuvenation |cffff7d0aFor Tank.",
 				},
 			},
 			{ 	name	= "Regrowth",
-				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRegrowth |cffff7d0aon me.",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRegrowth.",
 				enable	= true,
 				widget	= { type = "numBox",
-					value	= 65,
+					value	= 55,
 					width 	= 70,
 					step	= 5,
-					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRegrowth |cffff7d0aon me.",
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRegrowth.",
 				},
 			},	
 			{ 	name	= "Healing Touch",
-				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFHealing Touch |cffff7d0aon me.",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFHealing Touch.",
 				enable	= true,
 				widget	= { type = "numBox",
 					value	= 65,
 					width 	= 70,
 					step	= 5,
-					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFHealing Touch |cffff7d0aon me.",
-				},
-			},	
-			{ 	name	= "Lifebloom",
-				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFLifebloom |cffff7d0aon me.",
-				enable	= true,
-				widget	= { type = "numBox",
-					value	= 65,
-					width 	= 70,
-					step	= 5,
-					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFLifebloom |cffff7d0aon me.",
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFHealing Touch.",
 				},
 			},	
 			{ 	name	= "Lifebloom For Tank",
@@ -630,23 +620,33 @@ if _Spec == 4 and CML_Resto_config == nil then
 				},
 			},			
 			{ 	name	= "Swiftmend",
-				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFLifebloom |cffff7d0aon me.",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFSwiftmend.",
 				enable	= true,
 				widget	= { type = "numBox",
-					value	= 65,
+					value	= 75,
 					width 	= 70,
 					step	= 5,
-					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFLifebloom |cffff7d0aon me.",
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFSwiftmend.",
 				},
 			},	
-			{ 	name	= "Wild Growth",
-				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFWild Growth.",
+            { 	name	= "Genesis",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFGenesis.",
 				enable	= true,
 				widget	= { type = "numBox",
 					value	= 65,
 					width 	= 70,
 					step	= 5,
-					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFWild Growth.",
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFGenesis.",
+				},
+			},	
+            { 	name	= "Wildgrowth",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFWildgrowth.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 70,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFWildgrowth.",
 				},
 			},	
 
@@ -709,7 +709,7 @@ if _Spec == 4 and CML_Resto_config == nil then
 		hotkeys = {
 			{	name	= "Pause",
 				enable	= true,
-				hotkeys	= {'la'},
+				hotkeys	= {'ls'},
 				tooltip	= PlayerHex.."Assign |cffFFFFFFPause |cffff7d0aWill |cffFFFFFFStop Rotation, ClearTarget |cffff7d0aand |cffFFFFFFPet Stop Attack.",
 			},
 			{	name	= "Set Focus",
@@ -719,18 +719,23 @@ if _Spec == 4 and CML_Resto_config == nil then
 			},
 			{	name	= "Tranquility",
 				enable	= true,
-				hotkeys	= {'ra'},
+				hotkeys	= {'rc'},
 				tooltip	= PlayerHex.."Assign |cffFFFFFFTranquility. |cffff7d0aHold to Cast.",
+			},
+			{	name	= "Incarnation",
+				enable	= true,
+				hotkeys	= {'rs'},
+				tooltip	= PlayerHex.."Assign |cffFFFFFFIncarnation. |cffff7d0aHold to Cast.",
 			},
 			{	name	= "Place Schrooms",
 				enable	= true,
-				hotkeys	= {'rs'},
+				hotkeys	= {'la'},
 				tooltip	= PlayerHex.."Assign |cffFFFFFFPlace Schrooms. |cffff7d0aHold to Cast.",
 			},
-			{	name	= "Detonate Schrooms",
+			{	name	= "Bloom Schrooms",
 				enable	= true,
-				hotkeys	= {'rc'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFDetonate Schrooms. |cffff7d0aHold to Cast.",
+				hotkeys	= {'ra'},
+				tooltip	= PlayerHex.."Assign |cffFFFFFFBloom Schrooms. |cffff7d0aHold to Cast.",
 			},						
 		},
 	}
@@ -758,6 +763,35 @@ if not DruidFunction then
 	_Queues = {	
 		[11]					= false,
 	}
+
+
+	function  CML.LifeBlooms()
+		local Blooms = false
+		for i=1, #nNova do	
+			if UnitBuffID(nNova[i].unit, 33763)
+			  and (select(7, UnitBuffID(nNova[i].unit, 33763, "PLAYER")) - GetTime() > 1 
+			  or select(4, UnitBuffID(nNova[i].unit, 33763, "PLAYER")) < 3)
+			  and UnitThreatSituation(nNova[i].unit) == 3 then
+				Blooms = true
+			end
+			if Blooms and UnitBuffID(nNova[i].unit, 33763) and (select(4, UnitBuffID(nNova[i].unit, 33763, "PLAYER")) < 3 or select(7, UnitBuffID(nNova[i].unit, 33763, "PLAYER")) - GetTime() < 2) then
+				ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+				return true
+			end
+		end
+		if not Blooms then
+			if #nNova > 1 then
+				for i=1, #nNova do
+					if UnitThreatSituation(nNova[i].unit) == 3
+					  and nNova[i].role == "TANK" or nNova[i].role == "NONE" then
+					  	ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+						return true
+					end
+				end
+			end
+		end	
+	end	
+
 
 	function CML.Rejuvenation()
 		if _G[PQIprefix.."Rejuvenation_enable"] and macros["ActiveHealing"] then
@@ -849,8 +883,10 @@ if not DruidFunction then
 		return true
 	end
 
-	function CML.StopCasting()
+	function CML.StopCasting(var)
 		if UnitBuffID("player", 31821) then return true end
+		if UnitBuffID("player", 122291) then return true end
+		if UnitBuffID("player", 1022) then return true end
 		local Boss1Cast,Boss1CastEnd,StopCasting,PlayerCastEnd
 		local ShouldStop = {
 			137457,
@@ -871,10 +907,10 @@ if not DruidFunction then
 		if PlayerCastEnd ~= nil then
 			if Boss1CastEnd < PlayerCastEnd then
 		    	RunMacroText("/stopcasting")
-		    	return false
+		    	return (false == var)
 		    end
 		end
-		return true
+		return (true == var)
 	end
 
 	function CML.NotEclipse()

@@ -41,6 +41,12 @@ function CML.CannotHealDebuffs(unit)
 	return true
 end
 
+function CML.ChopChop()
+	if UnitExists("target") and UnitIsDeadOrGhost("target") and  GetItemCount(90175, false, true) > 0 and select(2,GetItemCooldown(90175)) == 0 then
+        return true
+    end
+end
+
 function CML.CombatCheck()
 	if UnitBuffID("player",104934) or UnitBuffID("player",80169) or UnitBuffID("player",87959)
 	  or UnitBuffID("player",11392) or UnitBuffID("player",11392) or UnitChannelInfo("player") 
@@ -54,6 +60,25 @@ function CML.CombatCheck()
 	end
 	if PQIprefix and (_G[PQIprefix.."Pause_enable"] and PQI:IsHotkeys(_G[PQIprefix.."Pause_key"])) then
 		return true
+	end
+	return false
+end
+
+function CML.Dispel()
+	if macros and macros["ActiveDispel"] then
+		if UnitExists("boss1") then
+			if CML.GetUnitID("boss1") == 71734 then
+				if not UnitBuffID("player",144359) then 
+					return false
+				end
+			end
+		end
+		for i=1, #nNova do
+			if nNova[i].dispel == true then 
+				ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+				return true
+			end
+		end
 	end
 	return false
 end
@@ -691,6 +716,9 @@ ProbablyEngine.condition.register("macros", function(name)
 	end
 end)
 
+ProbablyEngine.condition.register("nova.dispel", CML.Dispel())
+
+
 ProbablyEngine.condition.register("novaBuff", function(target, value)
 	local Spell = value
 	if target == "0" then 
@@ -706,6 +734,38 @@ ProbablyEngine.condition.register("novaBuff", function(target, value)
         end
   	else
   		return false
+  	end
+end)
+
+ProbablyEngine.condition.register("novaBuffCount", function(target, value)
+	local Spell = value
+	if target == "0" then 
+		rawunit = "player" 
+	elseif target == "69" then 
+		rawunit = "pet" 
+	else
+		rawunit = tostring(nNova[tonumber(target)].unit) 
+	end
+	if UnitExists(rawunit) == 1 then
+  		if UnitBuffID(rawunit, Spell) then
+        	return select(4,UnitBuffID(rawunit, Spell))
+        end
+  	end
+end)
+
+ProbablyEngine.condition.register("novaTankBuffCount", function(target, value)
+	local Spell = value
+	if target == "0" then 
+		rawunit = "player" 
+	elseif target == "69" then 
+		rawunit = "pet" 
+	else
+		rawunit = tostring(nNova[tonumber(target)].unit) 
+	end
+	if UnitExists(rawunit) == 1 then
+  		if UnitBuffID(rawunit, Spell) and nNova[tonumber(value)].role == "TANK" then
+        	return select(4,UnitBuffID(rawunit, Spell))
+        end
   	end
 end)
 

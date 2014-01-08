@@ -94,7 +94,7 @@ ProbablyEngine.rotation.register_custom(250, "CodeMyLife Blood", {
         "target.debuff(55095).duration < 4", -- Frost Fever
     }},
     -- Plague Strike
-    {"Plague Strike",{ 
+    {"45462",{ 
         "target.debuff(55078).duration < 4", -- Blood Plague
     }},
 

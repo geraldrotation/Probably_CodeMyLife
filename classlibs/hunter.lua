@@ -196,7 +196,7 @@ if _MyClass == 3 and _Spec == 1 and CML_Beast_config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFSet Strategy to use|cff7EBF37 Automatic Traps |cffFFFFFF on |cff7EBF37cursor.",	
 				},
-			},							
+			},									
 			{ 	name	= "Pet Passive Behaviour",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFPet Passive Behaviour|cff7EBF37.",
 				enable	= true,
@@ -219,6 +219,17 @@ if _MyClass == 3 and _Spec == 1 and CML_Beast_config == nil then
 					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
 				},
 			},	
+			{ 	name	= "Raid Burst",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFRaid Burst |cffD9000B(By Psyrex)|cffFFFFFF.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Boss Only","|cffFFE100Always","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = PlayerHex.."Choose desired Raid Burst Option. This will start the fight with a 14 second Burst.|cffFFE100Use Always to test on dummy or if you want to burst like crazy on anything. |cff0DFF00Use Raid boss to check if Boss1 exists before using Burst.|cffD9000B(By Psyrex)|cffFFFFFF.",	
+				},
+				newSection = true,
+			},	
 			{ 	name	= "Bestial Wrath",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Bestial Wrath.",
 				enable	= true,
@@ -228,7 +239,6 @@ if _MyClass == 3 and _Spec == 1 and CML_Beast_config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
 				},
-				newSection = true,
 			},				
 			{ 	name	= "Focus Fire",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Focus Fire.",
@@ -1180,11 +1190,39 @@ if not HunterFunctions then
 			end
 		end
 	end
+
+	function CML.LastSerpent()
+		if LastSerpent and LastSerpent > GetTime() - 3 then
+			return false
+		end
+		return true
+	end
+
 	function CML.SteadyFocus()
 		if SteadyCount ~= nil and SteadyCount < 2 then
 			return true
 		end
 	end
+
+	function CML.SuperDuperMacroBeast()
+		local FightTime = GetTime() - ProbablyEngine.module.player.combatTime
+		if _G[PQIprefix.."RaidBurst_enable"] and ((_G[PQIprefix.."RaidBurst_value"] == 1 and UnitExists("boss1")) or _G[PQIprefix.."RaidBurst_value"] == 2) and FightTime < 14 then
+			--print("it works")
+			RunMacroText("/petattack")
+			RunMacroText("/castsequence reset=14 Rapid Fire,Stampede,Dire Beast,Bestial Wrath,Kill Command,Glaive Toss,Arcane Shot,Arcane Shot,Arcane Shot,Arcane Shot,Arcane Shot,Kill Command,Arcane Shot,Arcane Shot,Arcane Shot,Cobra Shot")
+			RunMacroText("/use Virmen's Bite")
+			RunMacroText("/cast Berserking(Racial)")
+			return false
+		end
+	end
+
+	function CML.SuperDuperMacroTimer()
+		local FightTime = GetTime() - ProbablyEngine.module.player.combatTime
+		if _G[PQIprefix.."RaidBurst_enable"] and ((_G[PQIprefix.."RaidBurst_value"] == 1 and UnitExists("boss1")) or _G[PQIprefix.."RaidBurst_value"] == 2) and FightTime < 14 then
+			return true
+		end
+	end	
+
 	function CML.TrapExplosive()
 		if _G[PQIprefix.."ExplosiveTrap_value"] == 2 then
 			if UnitIsUnit("target","mouseover") == 1 then 

@@ -84,7 +84,7 @@ ProbablyEngine.rotation.register_custom(65, "CodeMyLife Holy", {
     }}, 
 --------------------------------------------------Healing Rotation--------------------------------------
     -- Cleanse
-    {"4987","@CML.Cleanse()"},
+    {"4987","@CML.Dispel()"},
     -- Beacon of Light
     {"53563",{
         "@CML.BeaconOfLight()",

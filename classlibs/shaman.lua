@@ -72,6 +72,16 @@ if _Spec == 1 and CML_Ele_config == nil then
 				},
 				newSection = true,
 			},	
+			{ 	name	= "Healing Stream Totem",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use |cffFFFFFF|cff33FF33Healing Stream Totem.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 40,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use |cffFFFFFF|cff33FF33Healing Stream Totem.",
+				},
+			},	
 			{ 	name	= "Ascendance",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Ascendance.",
 				enable	= true,
@@ -303,7 +313,6 @@ end
 --------------------------------------------------------------------------------------------------------------------------------
 --------- Restoration Shaman -----PQI_CodeMyLifeRestoration_Name_value-----------------------------------------------------------------------]]
 if _Spec == 3 and CML_Resto_config == nil then
-	PQR_RotationChanged("Seds")
 	PQIprefix = "PQI_SedsRestoration_"
 	_AoEModes = 2
 	_RangeSpell = 403
@@ -357,18 +366,7 @@ if _Spec == 3 and CML_Resto_config == nil then
 					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use |cffFFFFFF|cff33FF33Healthstone.",
 				},
 				newSection = true,
-			},	
-			{ 	name	= "Racials",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-				newSection = true,
-			},	
+			},		
 			{ 	name	= "Professions CDs",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
 				enable	= true,
@@ -388,6 +386,56 @@ if _Spec == 3 and CML_Resto_config == nil then
 					width = 70,
 					tooltip = PlayerHex.."Choose |cffFFFFFFTrinkets to use|cffff7d0a.",	
 				},
+			},
+			{ 	name	= "Chain Heal",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFChain Heal hp %",
+				enable	= true,
+				widget = { type = 'numBox',
+					value = 90,
+					width = 70,
+					step	= 5,
+					tooltip = PlayerHex.."Choose |cffFFFFFFTrinkets to use|cffff7d0a.",	
+				},
+			},	
+			{ 	name	= "Healing Surge",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFHealing Surge hp %",
+				enable	= true,
+				widget = { type = 'numBox',
+					value = 50,
+					width = 70,
+					step	= 5,
+					tooltip = PlayerHex.."|cffFFFFFFHealing Surge hp %.",	
+				},
+			},
+			{ 	name	= "Greater Healing Wave",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFGreater Healing Wave hp %",
+				enable	= true,
+				widget = { type = 'numBox',
+					value = 50,
+					width = 60,
+					step	= 5,
+					tooltip = PlayerHex.."|cffFFFFFFGreater Healing Wave %.",	
+				},
+			},
+			{ 	name	= "Healing Wave",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFHealing Wave hp %",
+				enable	= true,
+				widget = { type = 'numBox',
+					value = 90,
+					width = 60,
+					step	= 5,
+					tooltip = PlayerHex.."|cffFFFFFFHealing Wave %.",	
+				},
+			},
+			{ 	name	= "Riptide",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFRiptide %",
+				enable	= true,
+				widget = { type = 'numBox',
+					value = 80,
+					width = 60,
+					step	= 5,
+					tooltip = PlayerHex.."|cffFFFFFFRiptide %.",	
+				},
 			},		
 			{ 	name	= "DPS Potion on Heroism",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic DPS Potions|cffff7d0a when |cffFFFFFFHeroism |cffff7d0astarts.",
@@ -401,6 +449,29 @@ if _Spec == 3 and CML_Resto_config == nil then
 				hotkeys	= {'la'},
 				tooltip	= PlayerHex.."Assign |cffFFFFFFPause |cffff7d0aWill |cffFFFFFFStop Rotation, ClearTarget |cffff7d0aand |cffFFFFFFPet Stop Attack.",
 			},
+			{	name	= "Spiritwalker's Grace",
+				enable	= true,
+				hotkeys	= {'rc'},
+				tooltip	= PlayerHex.."Use |cffFFFFFFMouseover Focus |cffff7d0aSpiritwalker's Grace.",
+			},	
+			{	name	= "Spirit link",
+				enable	= true,
+				hotkeys	= {'rs'},
+				tooltip	= PlayerHex.."Use |cffFFFFFFSpirit link",
+			},
+
+			{	name	= "Totemic Projection",
+				enable	= true,
+				hotkeys	= {'la'},
+				tooltip	= PlayerHex.."Use |cffFFFFFFTotemic Projection",
+			},
+			
+			{	name	= "Healing Tide Totem",
+				enable	= true,
+				hotkeys	= {'la'},
+				tooltip	= PlayerHex.."Use |cffFFFFFFHealing Tide Totem",
+			},
+
 			{	name	= "Set Focus",
 				enable	= true,
 				hotkeys	= {'lc'},
@@ -410,7 +481,6 @@ if _Spec == 3 and CML_Resto_config == nil then
 	}
 	CODEMYLIFE_RESTORATION = PQI:AddRotation(CML_Resto_config)
 end
-
 
 
 
@@ -437,15 +507,51 @@ if not ShamanFunctions then
 		end
 	end
 
+	function  CML.EarthShield()
+		CEarthShield = false
+		for i=1, #nNova do	
+			if UnitBuffID(nNova[i].unit, 974)
+			  and (select(7, UnitBuffID(nNova[i].unit, 974, "PLAYER")) - GetTime() > 1 
+			  or select(4, UnitBuffID(nNova[i].unit, 974, "PLAYER")) > 1)
+			  and (UnitThreatSituation(nNova[i].unit) == 3 or not UnitAffectingCombat(nNova[i].unit)) then
+				CEarthShield = true
+			end
+		end
+		if not CEarthShield then
+			if #nNova > 1 then
+				for i=1, #nNova do
+					if UnitThreatSituation(nNova[i].unit) == 3 and not UnitBuffID(nNova[i].unit, 52127)
+					  and nNova[i].role == "TANK" or nNova[i].role == "NONE" then
+					  	ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+						return true
+					end
+				end
+			end
+		end	
+	end	
+
 	macros = { 
 	    ["ActiveCooldowns"]   		= false, 
-	    ["AoE"]    					= 1,  
-	    ["Pause"]					= false,
+	    ["ActiveHealing"]			= false,
+	    ["AoE"]    					= 1,     
+	    ["Pause"]					= false, 
 	} 
 	_Queues = {	
 		[7]						= false,
-		[61882]					= false,
+		[61882]					= false, -- Earthquake
+		[73920]					= false, -- Healing Rain
+		[51490]					= false, -- Thunderstorm
+		[51485]					= false, -- EarthGrab Totem
+		[2894]					= false, -- Fire Elemental Totem
+		[2062]					= false, -- Earth Elemental Totem
+		[76780]					= false, -- Bind Elemental
+		[51514]					= false, -- Hex
+		[36936]					= false, -- Totemic Recall
+		[98008]					= false, -- Spirit link
+
+
 	}
+
 end
 
 

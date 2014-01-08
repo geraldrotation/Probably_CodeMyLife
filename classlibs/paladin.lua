@@ -1126,6 +1126,7 @@ if not PaladinFunctions then
 	    ["ActiveSeal"]				= false,	
 	    ["AoE"]    					= 1,  
 	    ["Consecration"]   			= true,
+	    ["HolyWrath"]   			= true,
 	    ["Pause"]					= false,    
 	    ["TakeControl"]				= false,
 	} 
@@ -1316,27 +1317,15 @@ if not PaladinFunctions then
 		return false
 	end
 
-	function CML.Cleanse()
-		if macros["ActiveDispel"] then
-			if UnitExists("boss1") then
-				if CML.GetUnitID("boss1") == 71734 then
-					if not UnitBuffID("player",144359) then 
-						return false
-					end
-				end
-			end
-			for i=1, #nNova do
-				if nNova[i].dispel == true then 
-					ProbablyEngine.dsl.parsedTarget = nNova[i].unit
-					return true
-				end
-			end
+	function CML.Consecration()
+		if macros["Consecration"] == true then
+			return true
 		end
 		return false
 	end
 
-	function CML.Consecration()
-		if macros["Consecration"] == true then
+	function CML.HolyWrath()
+		if macros["HolyWrath"] == true then
 			return true
 		end
 		return false

@@ -4,7 +4,9 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
     {"TaMere","@CML.Status()"},
     {"pause","@CML.CombatCheck()"}, -- Combat Check/Pause
     {"pause","player.buff(5384)"}, -- Pause for Feign Death
-       
+    {"SuperPsyStuff", "@CML.SuperDuperMacroBeast()"},
+    {"pause","@CML.SuperDuperMacroTimer()"},
+
     -- Aspect of the Iron Hawk
     {"109260",{ 
         "player.spell(109260).exists",
@@ -34,14 +36,20 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
     }}, 
     -- Hearth of the Phoenix               
     {"55709",{
+        "pet.spell(55709).exists",
         "!pet.alive",
-        "player.spell(55709).exists",
     }},
+    -- Revive Pet            
+    {"982",{
+        "!player.moving",
+        "pet.spell(55709).cooldown > 2",
+        "!pet.alive",
+    }},    
     -- Mend Pet
     {"136",{
         "MendPet.novaHealing(69)",
         "pet.alive",
-        "!pet.buff(136)"
+        "!pet.buff(136)",
     }},
     -- Tranquilizing Shot
     { "19801",{
@@ -50,7 +58,7 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
     -- Master's Call
     {"53271","player.state.root"},
     {"53271","player.state.snare"},
-    -- Misditrection
+    -- Misdirection
     {"34477",{
         "Misdirection.pqicheck",
         "@CML.Misdirection()"
@@ -90,15 +98,30 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
     {"83245","@CML.PetManager(5)"}, -- Call Pet Slot 5
     {"982","@CML.PetManager(0)"}, -- Revive Pet                           
 --------------------------------------------------Interrupts-------------------------------------------- 
-    {"147362",{"target.range < 40","modifier.interrupts"}}, -- Counter Shot
-    --[[{ "96231",{"player.spell(96231).cooldown","target.range < 20","modifier.interrupt"}},  -- Scatter Shot 
-        We Removed Scatter as it drops player target wich is bad in a pve environment.]]
+    -- Interrupts
+        -- Counter Shot
+    {"147362",{
+        "target.range < 40",
+        "modifier.interrupts",
+        "!player.spell(147362).cooldown > 0",
+    }},
 --------------------------------------------------DPS Rotation-------------------------------------------- 
     -- virmens_bite_potion,if=buff.bloodlust.react|target.time_to_die<=60
 -- /dump ProbablyEngine.dsl.get("pqicheck")("AgilityPotiononHeroism")
     {"#76089",{
         "AgilityPotiononHeroism.pqicheck",
         "@CML.DPSPotion(76089)",
+    }},
+    -- Auto Shot 
+    {"PetMover",{
+        "PetMoveToMouse.pqicheck",
+        "PetMoveToMouse.pqikeybind",
+        "@CML.PetMove()",
+    }},
+    -- Serpent Sting ,if=!ticking  
+    {"1978",{
+        "@CML.LastSerpent()",
+        "!target.debuff(118253)",
     }},
     -- Gloves  
     {"#gloves",{ -- On CD
@@ -111,13 +134,43 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
         "ProfessionsCDs.pqivalue = 1",
         "pet.alive",
         "target.exists",
-    }}, 
-    -- Auto Shot 
-    {"PetMover",{
-        "PetMoveToMouse.pqicheck",
-        "PetMoveToMouse.pqikeybind",
-        "@CML.PetMove()",
     }},
+    -- Rapid Fire ,if=!buff.rapid_fire.up  -- On CD
+    {"3045",{
+        "RapidFire.pqicheck",
+        "RapidFire.pqivalue = 2",
+        "pet.alive",
+        "target.exists",
+        --"!player.buff(82692)", -- Not under focus fire
+    }},    
+    -- Rapid Fire ,if=!buff.rapid_fire.up  -- On ActiveCooldowns
+    {"3045",{
+        "RapidFire.pqicheck",
+        "macros(ActiveCooldowns)",
+        "RapidFire.pqivalue = 1",
+        "pet.alive",
+        "target.exists",
+        --"!player.buff(82692)", -- Not under focus fire
+    }},
+    -- Stampede ,if=buff.rapid_fire.up|buff.bloodlust.react|target.time_to_die<=25
+    {"121818",{
+        "Stampede.pqicheck",
+        "macros(ActiveCooldowns)",
+        "Stampede.pqivalue = 1",
+        "pet.alive",
+        "target.exists",
+    }},  
+    -- Stampede ,if=buff.rapid_fire.up|buff.bloodlust.react|target.time_to_die<=25
+    {"121818",{
+        "Stampede.pqicheck",
+        "Stampede.pqivalue = 2",
+        "pet.alive",
+        "target.exists",
+    },"target"},
+    -- Dire Beast ,if=enabled&focus<=90
+    {"120679",{
+        "talent(11)",
+    }}, 
     -- Auto Traps
     {"82939",{ -- Explosive Trap
         "ExplosiveTrap.pqicheck",
@@ -202,7 +255,19 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
         "pet.alive",
         "target.exists",
     }},
-        -- Kill Shot
+    -- Bloodfury
+    {"20572",{ -- On CD
+        "player.spell(20572).exists",
+        "Racials.pqicheck",
+        "Racials.pqivalue = 2",
+    }},
+    {"20572",{ -- On ActiveCooldowns
+        "player.spell(20572).exists",
+        "Racials.pqicheck",
+        "Racials.pqivalue = 1",
+        "macros(ActiveCooldowns)",
+    }},
+    -- Kill Shot
     {"53351",{
         "target.health <= 20"
     }},    
@@ -229,60 +294,12 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
         --"!player.buff(3045)", -- Not under rapid fire
         "player.spell(19574).cooldown > 15",
     },"player"},
-    -- Serpent Sting ,if=!ticking  
-    {"1978",{
-        "!target.debuff(118253)",
-    }},
-    -- Bloodfury
-    {"20572",{ -- On CD
-        "player.spell(20572).exists",
-        "Racials.pqicheck",
-        "Racials.pqivalue = 2",
-    }},
-    {"20572",{ -- On ActiveCooldowns
-        "player.spell(20572).exists",
-        "Racials.pqicheck",
-        "Racials.pqivalue = 1",
-        "macros(ActiveCooldowns)",
-    }},
+    -- TODO -- blood_fury
     -- Fervor ,if=enabled&!ticking&focus<=65
     {"82726",{
         "Fervor.pqicheck",
         "talent(10)",
         "player.focus < 45",
-    }},
-    -- Stampede ,if=buff.rapid_fire.up|buff.bloodlust.react|target.time_to_die<=25
-    {"121818",{
-        "Stampede.pqicheck",
-        "macros(ActiveCooldowns)",
-        "Stampede.pqivalue = 1",
-        "pet.alive",
-        "target.exists",
-    }},  
-    -- Stampede ,if=buff.rapid_fire.up|buff.bloodlust.react|target.time_to_die<=25
-    {"121818",{
-        "Stampede.pqicheck",
-        "Stampede.pqivalue = 2",
-        "pet.alive",
-        "target.exists",
-        "player.spell(3045).cooldown < 5"
-    },"target"},
-        -- Rapid Fire ,if=!buff.rapid_fire.up  -- On CD
-    {"3045",{
-        "RapidFire.pqicheck",
-        "RapidFire.pqivalue = 2",
-        "pet.alive",
-        "target.exists",
-        --"!player.buff(82692)", -- Not under focus fire
-    }},    
-    -- Rapid Fire ,if=!buff.rapid_fire.up  -- On ActiveCooldowns
-    {"3045",{
-        "RapidFire.pqicheck",
-        "macros(ActiveCooldowns)",
-        "RapidFire.pqivalue = 1",
-        "pet.alive",
-        "target.exists",
-        "player.spell(3045).cooldown < 5"
     }},
     -- Bestial Wrath ,if=focus>60&!buff.beast_within.up -- On CD
     {"19574",{
@@ -291,8 +308,8 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
         "pet.alive",
         "target.exists",
         "player.focus > 60",
-        "player.spell(34026).cooldown <= 2",
-        "player.spell(121818).cooldown > 15",
+        "player.spell(34026).cooldown <= 3",
+        "player.spell(121818).cooldown >= 2",
     }},
     -- Bestial Wrath ,if=focus>60&!buff.beast_within.up -- On ActiveCooldowns
     {"19574",{
@@ -303,14 +320,14 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
         "target.exists",
         "player.focus > 60",
         "player.spell(34026).cooldown <= 2",
-        "player.spell(121818).cooldown > 15",
+        "player.spell(121818).cooldown >= 2",
     }},
     -- Multi Shot ,if=active_enemies>5|(active_enemies>1&buff.beast_cleave.down)
     {"2643",{
         "player.aoe != 1",
         "player.buff(34720)",
         "!pet.buff(115939)",
-        "player.focus >= 51"
+        "player.focus >= 51",
     }},   
     {"2643",{
         "player.aoe != 1",
@@ -323,13 +340,11 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
         "pet.alive",
         "@CML.KillCommand()",
     }},
-        -- Glaive Toss ,if=enabled
+    -- Glaive Toss ,if=enabled
     {"117050",{
         "talent(16)",
-    }}, 
-        -- Dire Beast ,if=enabled&focus<=90
-    {"120679",{
-        "talent(11)",
+        --"!player.spell(34026).cooldown < 2", 
+        --"player.focus >= 55",
     }},
     -- Cobra Shot ,if=active_enemies>5
     {"77767",{
@@ -339,7 +354,7 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
     {"77767",{
         "BestialWrath.pqivalue = 2",
         "player.spell(19574).cooldown < 2",
-        "player.focus < 55",
+        "player.focus < 45",
     }}, 
     {"77767",{
         "macros(ActiveCooldowns)",
@@ -370,21 +385,43 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
     -- Powershot ,if=enabled
     {"109259",{
         "talent(17)",
-    }},
+    }},   
     -- Arcane Shot ,if=buff.thrill_of_the_hunt.react|buff.beast_within.up
     {"3044",{
+        "talent(16)",
+        "player.spell(117050).cooldown >= 2",
         "player.buff(34720)",
-        "player.focus >= 41"
+        "player.focus >= 41",
     }},
     {"3044",{
+        "talent(16)",
+        "player.spell(117050).cooldown >= 2",
         "player.buff(34720)",
         "player.buff(34471)",
-        "player.focus >= 0"
+        "player.focus >= 0",
     }}, 
     {"3044",{
+        "talent(16)",
+        "player.spell(117050).cooldown >= 2",
         "player.buff(34471)",
-        "player.focus >= 51"
+        "player.focus >= 51",
     }}, 
+    {"3044",{
+        "!talent(16)",
+        "player.buff(34720)",
+        "player.focus >= 41",
+    }},
+    {"3044",{
+        "!talent(16)",
+        "player.buff(34720)",
+        "player.buff(34471)",
+        "player.focus >= 0",
+    }}, 
+    {"3044",{
+        "!talent(16)",
+        "player.buff(34471)",
+        "player.focus >= 51",
+    }},     
     -- Focus Fire ,five_stacks=1 -- On CD
     {"82692",{
         "FocusFire.pqivalue = 2",
@@ -392,6 +429,7 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
         "target.exists",
         "@CML.FocusFire()", -- 5 stacks of Frenzy
         "!player.buff(34471)", -- Not under bestial wrath
+        --"!player.buff(3045)", -- Not under rapid fire
         "player.spell(19574).cooldown > 15",
     },"player"},
     -- Focus Fire ,five_stacks=1 -- On ActiveCooldowns
@@ -402,11 +440,12 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
         "target.exists",
         "@CML.FocusFire()", -- 5 stacks of Frenzy
         "!player.buff(34471)", -- Not under bestial wrath
+        --"!player.buff(3045)", -- Not under rapid fire
         "player.spell(19574).cooldown > 15",
     },"player"},
     -- Cobra Shot,if=dot.serpent_sting.remains<6
     {"77767",{
-        "target.debuff(118253).duration < 6",
+        "!target.debuff(118253).duration > 6",
     }},
     -- Cobra Shot -- Stack Focus
     {"77767",{
@@ -416,10 +455,16 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
     }}, 
     -- Arcane Shot ,if=focus>=61
     {"3044",{
-        "player.focus >= 61"
+        "player.focus >= 61",
+    }},
+    -- Cobra Shot if BW near to be ready    
+    {"77767",{
+     --   "BestialWrath.pqivalue = 2",
+     --   "player.spell(19574).cooldown < 2",
+        "player.focus < 45",
     }},
     -- Cobra Shot
-    {"77767"}
+    --{"77767"}
 }, 
 --------------------------------------------------Out of Combat-------------------------------------------- 
 { 
@@ -440,6 +485,7 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
         "@CML.Aspects(2)",
         "!player.buff(13159)"
     },"player"},
+
     -- Aspect of the Iron Hawk
     {"109260",{ 
         "ActiveAspects.pqicheck",
@@ -456,6 +502,7 @@ ProbablyEngine.rotation.register_custom(253, "CodeMyLife BeastMaster", {
         "player.spell(13165).exists",
         "player.stance != 1",
     }},
+
     -- Hunters Mark
     {"1130",{
         "target.exists",

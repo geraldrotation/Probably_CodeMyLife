@@ -2,12 +2,18 @@ ProbablyEngine.rotation.register_custom(262, "CodeMyLife Elemental", {
 --------------------------------------------------Defensive-------------------------------------------- 
     {"TaMere","@CML.PQIConfing()"},{"TaMere","@CML.Status()"},{"pause","@CML.CombatCheck()"}, -- Combat Check/Pause     
 
+    {"pause","player.buff(2645)"},
+
+    -- Healing Rain Queuecast
+    {"73920", "HealingRain.pqikeybind", "ground"}, 
+    --Healing Stream Totem
+    { "5394", "HealingStreamTotem.novaHealing(0)"},
 	-- precombat+=/flametongue_weapon,weapon=main
-    { "8024",{
+    {"8024",{
     	"!player.enchant.mainhand",
     }},
 	-- precombat+=/lightning_shield,if=!buff.lightning_shield.up
-	{ "324",{
+	{"324",{
 		"!player.buff(324)", 
 	}},
 	--[[ Snapshot raid buffed stats before combat begins and pre-potting is done.]]
@@ -21,6 +27,8 @@ ProbablyEngine.rotation.register_custom(262, "CodeMyLife Elemental", {
         "@CML.HealthStone()",
         "Healthstone.novaHealing(0)",
     }},   
+
+    {"73920","queuecast(73920)","ground"}, -- Healing Rain Queue
 	-- wind_shear
 	{{
             {"57994"}, -- Wind Shear
@@ -73,9 +81,6 @@ ProbablyEngine.rotation.register_custom(262, "CodeMyLife Elemental", {
     {"#trinket2",{
         "@CML.ActiveCooldowns()",
     }},     
-
- 
-
 	-- elemental_mastery,if=talent.elemental_mastery.enabled&(time>15&((!buff.bloodlust.up&time<120)|(!buff.berserking.up&!buff.bloodlust.up&buff.ascendance.up)|(time>=200&(cooldown.ascendance.remains>30|level<87))))
     {"16166",{ -- On CD
         "talent(10)",
@@ -165,6 +170,12 @@ ProbablyEngine.rotation.register_custom(262, "CodeMyLife Elemental", {
         "target.debuff(8050).duration > 1",
         "player.buff(77762)",
     }},    
+    {"51505",{ -- Lava Burst while moving with Spiritwalker's Grace
+        "@CML.IsInSight('target',1)",
+        "player.moving",
+        "target.debuff(8050).duration > 1",
+        "player.buff(79206)",
+    }},      
 	-- flame_shock,if=ticks_remain<2
 	{"8050",{
         "@CML.IsInSight('target',1)",
@@ -178,6 +189,13 @@ ProbablyEngine.rotation.register_custom(262, "CodeMyLife Elemental", {
         "player.aoe != 3",
 		"talent(18)",
 	}},		
+    {"117014",{ -- Elemental Blast while moving with Spiritwalker's Grace
+        "talent(18)",
+        "@CML.IsInSight('target',1)",
+        "player.moving",
+        "target.debuff(8050).duration > 1",
+        "player.buff(79206)",
+    }},       
 	--[[ Use Earth Shock if Lightning Shield is at max (7) charges]]
 	-- earth_shock,if=buff.lightning_shield.react=buff.lightning_shield.max_stack
 	{"8042",{
@@ -193,9 +211,9 @@ ProbablyEngine.rotation.register_custom(262, "CodeMyLife Elemental", {
 		"player.buff(324).count >= 3",
 		"target.debuff(8050).duration > 5",
 	}},	
-
 	-- earth_elemental_totem,if=!active&cooldown.fire_elemental_totem.remains>=60
     {"2062",{ -- On CD
+        "talent(17)",
         "@CML.IsInSight('target',1)",
         "player.aoe != 3",
         "!totem(2).exists",
@@ -208,19 +226,24 @@ ProbablyEngine.rotation.register_custom(262, "CodeMyLife Elemental", {
         "!player.totem(1).exists",
     }},
 	-- spiritwalkers_grace,moving=1,if=((talent.elemental_blast.enabled&cooldown.elemental_blast.remains=0)|(cooldown.lava_burst.remains=0&!buff.lava_surge.react))|(buff.raid_movement.duration>=action.unleash_elements.gcd+action.earth_shock.gcd)
-	{"73680",{ 
+	{"73680",{ -- Elemental Blast
         "@CML.IsInSight('target',1)",
         "player.aoe != 3",
         "player.moving",
 		"talent(18)",
 	}},	
-	{"73680",{
+	{"73680",{ -- Lava Burst
         "@CML.IsInSight('target',1)",
         "player.aoe != 3",
         "player.moving",
 		"player.spell(51505).cooldown = 0",
 		"!player.buff(77762)",
-	}},		
+	}},	
+    {"73680",{ -- Ascendance
+        "@CML.IsInSight('target',1)",
+        "player.buff(114050).duration > 3",
+        "player.moving",
+    }},     
     -- thunderstorm,if=mana.pct_nonproc<80
     {"51490",{
         "@CML.IsInSight('target',1)",
