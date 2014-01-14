@@ -1,8 +1,8 @@
 function CML.MonkStartup()
 
-if _Spec == 1 then PQIprefix = "PQI_CodeMyLifeBrewmaster_" UnitDispel = {'Disease','Poison'} end
-if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeMistweaver_" UnitDispel = {'Disease','Poison','Magic'} end
-if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeWindwalker_" UnitDispel = {'Disease','Poison'} end
+if _Spec == 1 then PQIprefix = "PQI_CodeMyLifeBrewmaster_" Coolprefix = "PQI_CodeMyLifeCooldownsBrew_" UnitDispel = {'Disease','Poison'} end
+if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeMistweaver_" Coolprefix = "PQI_CodeMyLifeCooldownsMist_" UnitDispel = {'Disease','Poison','Magic'} end
+if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeWindwalker_" Coolprefix = "PQI_CodeMyLifeCooldownsWind_" UnitDispel = {'Disease','Poison'} end
 
 _HealingRangeSpell = 102694 -- First Aid
 
@@ -14,6 +14,87 @@ _HealingRangeSpell = 102694 -- First Aid
 --[[           ]]	--[[]]	  --[[]]	--[[           ]]	--[[ ]]   --[[ ]]
 --[[           ]]	--[[]]	   --[[]]	--[[           ]]	 --[[]]   --[[]]
 	
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _Spec == 1 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_CodeMyLifeCooldownsBrew_"
+	CML_Cooldowns_Config = {
+		name	= "CooldownsBrew",
+		author	= "CodeMyLife",
+		abilities = {
+			--[[ Cooldowns ]]
+			{ 	name	= "Healing Shperes",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFHealing Shperes "..PlayerHex.."on cursor.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Keypress","|cff00A8ABAuto","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Healing Shperes |cffFFFFFF on "..PlayerHex.."cursor.",	
+				},
+			},		
+			{ 	name	= "Racials",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Professions CDs",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},					
+			{ 	name	= "Trinkets",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
+					value = 1,
+					width = 70,
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
+				},
+			},		
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff7EBF37On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
+				},
+			},				
+			{ 	name	= "Interrupt",
+				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Counter Shot |cff7EBF37On target.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Counter Shot |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+				},
+				newSection = true,
+			},
+		},
+	}
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
+end
+		
 --[[------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
 --------- Monk Brewmaster -----PQI_CodeMyLifeBrewmaster_Name_value-----------------------------------------------------------------------]]
@@ -61,45 +142,17 @@ if _Spec == 1 and CML_Brew_config == nil then
 					width	= 70,
 					tooltip	= PlayerHex.."Select what spells you want to be shown in chat.",
 				},
-			},	
-			{ 	name	= "Combat Check", 
-				tooltip	= PlayerHex.."Check to activate Combat Check.",
+			},				
+			{ 	name	= "Healthstone",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use |cffFFFFFF|cff33FF33Healthstone.",
 				enable	= true,
-			},
-			{ 	name	= "Racials",
-				tooltip	= PlayerHex.."Toggle Automatic Racials.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				widget	= { type = "numBox",
+					value	= 25,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use |cffFFFFFF|cff33FF33Healthstone.",
 				},
 				newSection = true,
-			},	
-			{ 	name	= "Professions CDs",
-				tooltip	= PlayerHex.."Toggle Automatic Professions CDs.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},					
-			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."Toggle Automatic Trinkets.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = PlayerHex.."Choose Trinkets to use.",	
-				},
-			},		
-			{ 	name	= "DPS Potion on Heroism",
-				tooltip	= PlayerHex.."Toggle Automatic DPS Potions when Heroism starts.",
-				enable	= true,
 			},			
 		},
 		--[[ Keybinds ]]
@@ -127,6 +180,87 @@ end
 --[[]]	   --[[]]		 --[[ ]]		--[[           ]]		 --[[ ]]
 --[[]]	   --[[]]	--[[           ]]	--[[           ]]		 --[[ ]]
 	
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _Spec == 2 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_CodeMyLifeCooldownsMist_"
+	CML_Cooldowns_Config = {
+		name	= "CooldownsMist",
+		author	= "CodeMyLife",
+		abilities = {
+			--[[ Cooldowns ]]
+			{ 	name	= "Healing Shperes",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFHealing Shperes "..PlayerHex.."on cursor.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Keypress","|cff00A8ABAuto","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Healing Shperes |cffFFFFFF on "..PlayerHex.."cursor.",	
+				},
+			},		
+			{ 	name	= "Racials",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Professions CDs",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},					
+			{ 	name	= "Trinkets",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
+					value = 1,
+					width = 70,
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
+				},
+			},		
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff7EBF37On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
+				},
+			},				
+			{ 	name	= "Interrupt",
+				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Counter Shot |cff7EBF37On target.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Counter Shot |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+				},
+				newSection = true,
+			},
+		},
+	}
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
+end
+		
 --[[------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
 --------- Monk Mistweaver -----PQI_CodeMyLifeMistweaver_Name_value-----------------------------------------------------------------------]]
@@ -174,62 +308,18 @@ if _Spec == 2 and CML_Mist_config == nil then
 					width	= 70,
 					tooltip	= PlayerHex.."Select what spells you want to be shown in chat.",
 				},
-			},	
-			{ 	name	= "Combat Check", 
-				tooltip	= PlayerHex.."Check to activate Combat Check.",
-				enable	= true,
-			},
-			{ 	name	= "Active Inner Will",
-				tooltip	= PlayerHex.."Toggle Automatic Inner Will will use Inner Will when out of combat and moving.",
+			},				
+			{ 	name	= "Healthstone",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use |cffFFFFFF|cff33FF33Healthstone.",
 				enable	= true,
 				widget	= { type = "numBox",
-					value	= 6,
+					value	= 25,
 					width 	= 70,
-					max 	= 30,
-					step	= 1,
-					tooltip	= "|cffFFFFFFTime to wait before changing buff.",
-				},
-			},				
-			{ 	name	= "Fortitude",
-				enable	= false,
-				tooltip	= "|cffFFFFFFCheck "..PlayerHex.."to use Fortitude.",
-				newSection = true,
-			},	
-			{ 	name	= "Racials",
-				tooltip	= PlayerHex.."Toggle Automatic Racials.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use |cffFFFFFF|cff33FF33Healthstone.",
 				},
 				newSection = true,
 			},	
-			{ 	name	= "Professions CDs",
-				tooltip	= PlayerHex.."Toggle Automatic Professions CDs.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},					
-			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."Toggle Automatic Trinkets.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = PlayerHex.."Choose Trinkets to use.",	
-				},
-			},		
-			{ 	name	= "DPS Potion on Heroism",
-				tooltip	= PlayerHex.."Toggle Automatic DPS Potions when Heroism starts.",
-				enable	= true,
-			},			
 		},
 		--[[ Keybinds ]]
 		hotkeys = {
@@ -255,6 +345,77 @@ end
 --[[           ]]		  --[[]]		--[[   		   ]]	--[[]]	   --[[]]
 --[[ ]]   --[[ ]]		  --[[]]		--[[]]	 --[[  ]]	--[[          ]]
  --[[]]   --[[]]	--[[           ]]	--[[]]	   --[[]]	--[[         ]]
+
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _Spec == 3 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_CodeMyLifeCooldownsWind_"
+	CML_Cooldowns_Config = {
+		name	= "CooldownsWind",
+		author	= "CodeMyLife",
+		abilities = {
+			--[[ Cooldowns ]]
+			{ 	name	= "Racials",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Professions CDs",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},					
+			{ 	name	= "Trinkets",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
+					value = 1,
+					width = 70,
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
+				},
+			},		
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff7EBF37On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
+				},
+			},				
+			{ 	name	= "Interrupt",
+				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Counter Shot |cff7EBF37On target.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Counter Shot |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+				},
+				newSection = true,
+			},
+		},
+	}
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
+end
 		
 --[[------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
@@ -303,6 +464,17 @@ if _Spec == 3 and CML_Wind_config == nil then
 					width	= 70,
 					tooltip	= PlayerHex.."Select what spells you want to be shown in chat.",
 				},
+			},			
+			{ 	name	= "Healthstone",
+				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use |cffFFFFFF|cff33FF33Healthstone.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 25,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use |cffFFFFFF|cff33FF33Healthstone.",
+				},
+				newSection = true,
 			},				
 			{ 	name	= "Legacy Of The Emperor",
 				tooltip	= PlayerHex.."Toggle Automatic Legacy of The Emperor.",
@@ -345,43 +517,17 @@ if _Spec == 3 and CML_Wind_config == nil then
 					step	= 5,
 					tooltip	= PlayerHex.."Choose halth level to use Touch Of Karma.",
 				},
-			},	
-			{ 	name	= "Racials",
-				tooltip	= PlayerHex.."Toggle Automatic Racials.",
+			},
+			{ 	name	= "Expel Harm",
+				tooltip	= PlayerHex.."Toggle Automatic Expel Harm.",
 				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				widget	= { type = "numBox",
+					value	= 35,
+					width 	= 70,
+					step	= 5,
+					tooltip	= PlayerHex.."Choose halth level to use Expel Harm.",
 				},
-				newSection = true,
 			},	
-			{ 	name	= "Professions CDs",
-				tooltip	= PlayerHex.."Toggle Automatic Professions CDs.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},					
-			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."Toggle Automatic Trinkets.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = PlayerHex.."Choose Trinkets to use.",	
-				},
-			},		
-			{ 	name	= "DPS Potion on Heroism",
-				tooltip	= PlayerHex.."Toggle Automatic DPS Potions when Heroism starts.",
-				enable	= true,
-			},	
-
 		},
 		--[[ Keybinds ]]
 		hotkeys = {
@@ -404,6 +550,7 @@ if _Spec == 3 and CML_Wind_config == nil then
 	}
 	CODEMYLIFE_WINDWALKER = PQI:AddRotation(CML_Wind_config)
 end	
+
 
 --[[           ]]	--[[]]	   --[[]]	--[[]]	   --[[]]	--[[   		   ]]	--[[   		   ]]	--[[   		   ]]	--[[           ]]	--[[]]	   --[[]]
 --[[           ]]	--[[]]	   --[[]]	--[[  ]]   --[[]]	--[[   		   ]]	--[[   		   ]]	--[[   		   ]]	--[[           ]]	--[[  ]]   --[[]]
@@ -429,6 +576,28 @@ if not MonkFunctions then
 		[115460]				= false, -- Healing Sphere
 
 	}
+
+	SLASH_FISTS1 = "/fists"
+	function SlashCmdList.FISTS(msg, editbox)
+		if not macros["FistOfFury"] then
+			xrn:message(PlayerHex.."Fists Of Fury Active.")
+			macros["FistOfFury"] = true
+		elseif macros["FistOfFury"] then
+			xrn:message("\124cFFEB1B00Fists Of Fury Inactive.")
+			macros["FistOfFury"] = false
+		end
+	end
+
+	function HealingSpheresPower()
+		if PQIprefix and UnitExists("mouseover") and UnitCanCooperate("player","mouseover")
+			--and 
+			--CML.GetHP("mouseover") <= _G[PQIprefix.."HealingSpheres_value"] 
+			then
+			print("mouahaha")
+			return true
+		end
+	end
+
 end
 
 end

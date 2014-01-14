@@ -1,6 +1,7 @@
 ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {  
 --------------------------------------------------Defensive-------------------------------------------- 
     {"TaMere","@CML.PQIConfing()"},{"TaMere","@CML.Status()"},{"pause","@CML.CombatCheck()"}, -- Combat Check/Pause
+    {"Cooldowns", "@CML.Cooldowns()"},
     {"642","queuecast(642)","player"}, -- Divine Shield Queue
     {"105593",{"talent(4)","queuecast(105593)"},"target"}, -- Fist of Justice Queue 
     {"853","queuecast(853)","target"}, -- Hammer of Justice Queue
@@ -172,28 +173,28 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
     -- avenging_wrath,if=buff.inquisition.up
     {"31884",{ -- On ActiveCooldowns
         "player.buff(84963)",
-        "AvengingWrath.pqivalue = 1",
+        "AvengingWrath.coolvalue = 1",
         "@CML.ActiveCooldowns()",
         "@CML.Melee(true)",
         "player.holypower <= 2",
     }},
     {"31884",{ -- On CD
         "player.buff(84963)",
-        "AvengingWrath.pqivalue = 2",
+        "AvengingWrath.coolvalue = 2",
         "@CML.Melee(true)",
         "player.holypower <= 2",
     }},    
     -- guardian_of_ancient_kings,if=buff.inquisition.up
     {"86698",{ -- On ActiveCooldowns
         "player.buff(84963)",
-        "GuardianOfAncientKings.pqivalue = 1",
+        "GuardianOfAncientKings.coolvalue = 1",
         "@CML.ActiveCooldowns()",
         "@CML.Melee(true)",
         "player.holypower <= 2",
     }},
     {"86698",{ -- On CD
         "player.buff(84963)",
-        "GuardianOfAncientKings.pqivalue = 2",
+        "GuardianOfAncientKings.coolvalue = 2",
         "@CML.Melee(true)",
         "player.holypower <= 2",
     }},    
@@ -201,7 +202,8 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
     {"105809",{ -- On ActiveCooldowns
         "talent(13)",
         "player.buff(84963)",
-        "HolyAvenger.pqivalue = 1",
+        "!player.buff(86698)",
+        "HolyAvenger.coolvalue = 1",
         "@CML.ActiveCooldowns()",
         "@CML.Melee(true)",
         "player.holypower <= 2",
@@ -209,93 +211,28 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
     {"105809",{ -- On CD
         "talent(13)",
         "player.buff(84963)",
-        "HolyAvenger.pqivalue = 2",
+        "!player.buff(86698)",
+        "HolyAvenger.coolvalue = 2",
         "@CML.Melee(true)",
         "player.holypower <= 2",
     }},
-    -- use_item,name=gauntlets_of_winged_triumph,if=buff.inquisition.up&(buff.ancient_power.down|buff.ancient_power.stack=12)
-    -- Gloves  
-    {"#gloves",{ -- On CD
-        "player.buff(84963)",
-        "SynapseSprings.pqivalue = 2",
-        "@CML.Melee(true)",
-    }},  
-    {"#gloves",{ -- On ActiveCooldowns
-        "player.buff(84963)",
-        "macros(ActiveCooldowns)",
-        "SynapseSprings.pqivalue = 1",
-        "@CML.Melee(true)",
-    }}, 
-     -- Trinket1
-    {"#trinket1",{ -- On CD
-        "player.buff(84963)",
-        "Trinkets.pqivalue = 2",
-        "@CML.Melee(true)",
-    }},
-    {"#trinket1",{ -- On ActiveCooldowns
-        "player.buff(84963)",
-        "Trinkets.pqivalue = 1",
-        "macros(ActiveCooldowns)",
-        "@CML.Melee(true)",
-    }},
-     -- Trinket2   
-    {"#trinket2",{ -- On CD
-        "player.buff(84963)",
-        "Trinkets.pqivalue = 2",
-        "@CML.Melee(true)",
-    }},
-    {"#trinket2",{ -- On ActiveCooldowns 
-        "player.buff(84963)",
-        "Trinkets.pqivalue = 1",
-        "macros(ActiveCooldowns)",
-        "@CML.Melee(true)",
-    }},
-    -- blood_fury
-    {"20572",{ -- On CD
-        "player.buff(84963)",
-        "Racials.pqivalue = 2",
-        "spell.exists",
-        "@CML.Melee(true)",
-    }},
-    {"20572",{ -- On ActiveCooldowns
-        "player.buff(84963)",
-        "Racials.pqivalue = 1",
-        "macros(ActiveCooldowns)",
-        "spell.exists",
-        "@CML.Melee(true)",
-    }},
-    -- berserking
-    {"26297",{ -- On CD
-        "player.buff(84963)",
-        "Racials.pqivalue = 2",
-        "spell.exists",
-        "@CML.Melee(true)",
-    }},
-    {"26297",{ -- On ActiveCooldowns
-        "player.buff(84963)",
-        "Racials.pqivalue = 1",
-        "macros(ActiveCooldowns)",
-        "spell.exists",
-        "@CML.Melee(true)",
-    }},
-    -- arcane_torrent
     -- execution_sentence,if=talent.execution_sentence.enabled&(buff.inquisition.up&(buff.ancient_power.down|buff.ancient_power.stack=12))
     {"114157",{ -- On CD
         "talent(18)",
         "player.buff(84963)",
-        "ExecutionSentence.pqivalue = 2",
+        "ExecutionSentence.coolvalue = 2",
     }},
     {"114157",{ -- On ActiveCooldowns
         "talent(18)",
         "player.buff(84963)",
-        "ExecutionSentence.pqivalue = 1",
+        "ExecutionSentence.coolvalue = 1",
         "macros(ActiveCooldowns)"
     }},    
     -- lights_hammer,if=talent.lights_hammer.enabled&(buff.inquisition.up&(buff.ancient_power.down|buff.ancient_power.stack=12))
     {"114158",{{
         "talent(17)",
         "player.buff(84963)",
-        "LightsHammer.pqivalue = 2"
+        "LightsHammer.coolvalue = 2"
         },{
         "!player.spell(114158).cooldown > 2",
         "@CML.LightsHammer()"
@@ -394,7 +331,7 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
         "player.spell(122032).cooldown = 0",
         "@CML.IsGlyphed(122028,true)",
         "@CML.Melee(true)",
-        "player.aoe = 1",
+        "player.aoe = 2",
     }},
     -- judgment
     {"20271"},
@@ -413,8 +350,14 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
     }},
     -- exorcism
     {"879",{
+        "player.spell(122032).cooldown = 0",
         "@CML.IsGlyphed(122028,false)",
-    }},    
+    }}, 
+    {"879",{
+        "player.spell(122032).cooldown = 0",
+        "@CML.IsGlyphed(122028,true)",
+        "@CML.Melee(true)",
+    }},       
     -- wait,sec=cooldown.exorcism.remains,if=cooldown.exorcism.remains>0&cooldown.exorcism.remains<=0.2
     {"pause",{"spell.cooldown(879) <= 0.5","@CML.IsGlyphed(122028,false)"}},
     -- templars_verdict,if=buff.tier15_4pc_melee.up&active_enemies<4

@@ -4,6 +4,7 @@ ProbablyEngine.rotation.register_custom(255, "CodeMyLife Survival", {
     {"TaMere","@CML.Status()"},
     {"pause","@CML.CombatCheck()"}, -- Combat Check/Pause
     {"pause","player.buff(5384)"}, -- Pause for Feign Death
+    {"PetManager","@CML.PetManager()"},
        
     -- Aspect of the Iron Hawk
     {"109260",{ 
@@ -328,7 +329,7 @@ ProbablyEngine.rotation.register_custom(255, "CodeMyLife Survival", {
         "player.focus >= 67",
     }},
     -- Multi Shot ,if=focus>=67&active_enemies>1
-    {"3044",{
+    {"2643",{
         "player.aoe != 1",
         "player.focus >= 67",
     }},
@@ -341,6 +342,7 @@ ProbablyEngine.rotation.register_custom(255, "CodeMyLife Survival", {
     {"TaMere","@CML.PQIConfing()"},
     -- Player Status
     {"TaMere","@CML.Status()"}, 
+    {"pause","player.buff(5384)"}, -- Pause for Feign Death 
     -- Aspect Swapping
     {"5118",{
         "!toggle.pack",

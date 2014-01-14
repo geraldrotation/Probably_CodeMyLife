@@ -10,6 +10,7 @@ libs\PQR_PQI.lua
 libs\UI_Bar.lua
 libs\Bubba_Healing_Engine.lua
 libs\library.lua
+libs\PokeEngine.lua
 
 ## Class Libs
 classlibs\deathknight.lua

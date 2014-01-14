@@ -1,4 +1,36 @@
 function DataLoader()
+
+	-- Jade Serpent -- Buff 105702 -- Item 76093
+	CML.DPSPotionsSet = {
+		[1] = {Buff = 105702, Item = 76093}, -- Intel
+		[2] = {Buff = 105697, Item = 76089}, -- Agi
+		[3] = {Buff = 105702, Item = 76093}, -- Str
+	}
+
+	-- DPS Potions
+	CML.DPSPotionsList = {
+		["DEATHKNIGHT"]	= {A=3,	B=3, C=3},
+		["DRUID"]		= {A=1,	B=2, C=2, D=1},
+		["HUNTER"]		= {A=2,	B=2, C=2},
+		["MAGE"]		= {A=1,	B=1, C=1},
+		["MONK"]		= {A=2,	B=1, C=2},
+		["PALADIN"] 	= {A=1,	B=3, C=3},
+		["PRIEST"]		= {A=1,	B=1, C=1},
+		["ROGUE"]		= {A=2,	B=2, C=2},
+		["SHAMAN"]		= {A=1,	B=2, C=1},
+		["WARLOCK"]		= {A=1,	B=1, C=1},
+		["WARRIOR"]		= {A=3,	B=3, C=3},
+	}
+
+	ProbablyEngine.module.player.notbehind = {}
+	ProbablyEngine.module.player.los = {}
+	ProbablyEngine.module.player.notinfront = {}
+	ProbablyEngine.listener.register("UNIT_SPELLCAST_SENT", function(...)
+		if ProbablyEngine.module.player.spellcasttarget then ProbablyEngine.module.player.spellcasttarget2 = ProbablyEngine.module.player.spellcasttarget end
+		ProbablyEngine.module.player.spellcasttarget = select(4,...)
+	end)
+
+
 	ProbablyEngine.listener.register("UNIT_SPELLCAST_SUCCEEDED", function(...)
 		--print(...)
 		local SourceUnit 	= select(1,...)
@@ -42,16 +74,48 @@ function DataLoader()
 					if UnitExists("target") ~= nil then RunMacroText("/startattack") NoVanish = GetTime() + 1 end 
 				end
 			end
+			-- Synapse Springs
+			if SpellID == 126734 then
+				ProbablyEngine.module.player.synapseused = GetTime()
+			end	
+			-- Lifeblood
+			if SpellID == 121279 or SpellID == 74497 then
+				ProbablyEngine.module.player.lifebloodused = GetTime()
+			end				
+			-- DPS potions
+			for i = 1, #CML.DPSPotionsSet do
+				if SpellID == CML.DPSPotionsSet[i].Buff and UnitAffectingCombat("player") then
+					ProbablyEngine.module.player.potionused = true
+				end	
+			end	
+			-- Cooldowns
+			if SpellID == 113858 or SpellID == 113861 or SpellID == 103958 then
+				if (_G[Coolprefix.."ProfessionsCDs_value"] == 1 and macros["ActiveCooldowns"]) or _G[Coolprefix.."ProfessionsCDs_value"] == 2 then
+					RunMacroText("/use 10")
+				end
+				if (_G[Coolprefix.."Trinkets_value"] == 1 and macros["ActiveCooldowns"]) or _G[Coolprefix.."Trinkets_value"] == 2 then
+			        RunMacroText("/use 13") 
+			        RunMacroText("/use 14") 
+			    end				
+			end			
+
 			if CML_Debug and (CML_DebugValue == 1 or CML_DebugValue == 3) and not (CML_LastSpell == select(2,...) and (CML_LastTime and (GetTime() - CML_LastTime  < 1))) then
 				CML_LastSpell 	= select(2,...) 
 				CML_LastTime 	= GetTime()
-				print("|cff0059FFCasted: "..select(5,...).." |cffFFFFFF"..CML_LastSpell.." |cff0059FF"..CML_LastTime)
+				if ProbablyEngine.module.player.spellcasttarget then LastTar = ProbablyEngine.module.player.spellcasttarget else LastTar = "Not Assigned" end
+				print("|cff12C8FF"..select(5,...).." |cffFF001E| |cffFFFFFF"..CML_LastSpell.." |cffFF001E| |cff12C8FF"..CML_LastTime.." |cffFFFFFFOn "..LastTar)
 			end
 		end
 	end)
 
+	ProbablyEngine.listener.register("ACTIVE_TALENT_GROUP_CHANGED", function(...)
+		CML_Cooldowns_Config = nil
+		CML_Main_config = nil
+	end)
+
 	ProbablyEngine.listener.register("UNIT_SPELLCAST_FAILED", function(...)
 		local SourceUnit 	= select(1,...)
+		local SpellID 		= select(5,...)
 		if SourceUnit == "player" then
 			-- All Spec Queues!
 			if _Queues[select(5,...)] ~= true and _Queues[select(5,...)] ~= nil then
@@ -59,6 +123,10 @@ function DataLoader()
 					_Queues[select(5,...)] = true 
 				end
 			end
+			-- Rebirth
+			if SpellID == 20484 then
+				ProbablyEngine.module.player.battlerezfail = true
+			end	
 			if CML_Debug and (CML_DebugValue == 2 or CML_DebugValue == 3) and not (CML_LastFail == select(2,...) and (CML_LastFailTime and (GetTime() - CML_LastFailTime  < 1))) then
 				CML_LastFail 	= select(2,...) 
 				CML_LastFailTime 	= GetTime()
@@ -67,15 +135,31 @@ function DataLoader()
 		end
 	end)
 
-	ProbablyEngine.module.player.notbehind = {}
-	ProbablyEngine.module.player.los = {}
-	ProbablyEngine.module.player.notinfront = {}
-	ProbablyEngine.listener.register("UNIT_SPELLCAST_SENT", function(...)
-		ProbablyEngine.module.player.spellcasttarget = select(4,...)
-	end)
-
 	ProbablyEngine.listener.register("UI_ERROR_MESSAGE", function(...)
 	  	local Events = ...
+	  	if Events == ERR_PET_SPELL_DEAD  then
+			ProbablyEngine.module.player.petdead = true
+			ProbablyEngine.module.player.petwhistle = false
+		end
+		if Events == PETTAME_NOTDEAD.. "." then
+			ProbablyEngine.module.player.petwhistle = true
+			ProbablyEngine.module.player.petdead = false
+		end
+		if Events == SPELL_FAILED_ALREADY_HAVE_PET then
+			ProbablyEngine.module.player.petdead = true
+			ProbablyEngine.module.player.petwhistle = false
+		end
+		if Events == PETTAME_CANTCONTROLEXOTIC.. "." then
+			if _G[PQIprefix.."PetManager_value"] < 5 then
+				_G[PQIprefix.."PetManager_value"] = _G[PQIprefix.."PetManager_value"] + 1
+			else
+				_G[PQIprefix.."PetManager_value"] = 1
+			end
+		end
+		if Events == PETTAME_NOPETAVAILABLE.. "." then
+			ProbablyEngine.module.player.petwhistle = true
+			ProbablyEngine.module.player.petdead = false
+		end
 	  	if Events == SPELL_FAILED_NOT_BEHIND then
 			if ProbablyEngine.module.player.spellcasttarget then
 				ProbablyEngine.module.player.notbehind[ProbablyEngine.module.player.spellcasttarget] = GetTime()
@@ -86,7 +170,7 @@ function DataLoader()
 				ProbablyEngine.module.player.los[ProbablyEngine.module.player.spellcasttarget] = GetTime()
 	  		end
 	  	end
-	  	if Events == SPELL_FAILED_UNIT_NOT_INFRONT or ERR_BADATTACKFACING then
+	  	if Events == SPELL_FAILED_UNIT_NOT_INFRONT or Events == ERR_BADATTACKFACING then
 	  		if ProbablyEngine.module.player.spellcasttarget then
 	    		ProbablyEngine.module.player.notinfront[ProbablyEngine.module.player.spellcasttarget] = GetTime()
 			end

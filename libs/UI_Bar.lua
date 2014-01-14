@@ -429,6 +429,14 @@ function UiBar_SetFury()
 	CML_VengeanceFrame:SetMinMaxValues(0, _FuryMax)
 end
 
+function UiBar_SetEmbers()
+	_Energy,_EnergyMax = UnitPower("player", SPELL_POWER_BURNING_EMBERS, true),UnitPowerMax("player", SPELL_POWER_BURNING_EMBERS, true)
+	CML_VengeanceFrame:GetStatusBarTexture():SetTexture(98/255, 255/255, 0/255,0.90,"OVERLAY")
+	CML_VengeanceFrame:SetValue(_Energy)
+	CML_VengeanceFrame.Text:SetText(_Energy.."/".._EnergyMax, 1, 1, 1, 0.7)
+	CML_VengeanceFrame:SetMinMaxValues(0, _EnergyMax)
+end
+
 function UiBar_SetHealth()
 	CML_HealthFrame:SetValue(_HP)
 	CML_HealthFrame.healthbartext:SetText(math.floor(_HP).."%", 1, 1, 1, 1)
@@ -463,6 +471,7 @@ function UiBar_SetPower()
 	if _MyClass == 1 then _Power = _TasteForBlood end
 	if _MyClass == 2 then _Power = _HolyPower end
 	if _MyClass == 5 then _Power = _Evangelism end
+	if _MyClass == 7 then _Power = _Malstroms end
 	if _MyClass == 10 then _Power = _Chi end
 	if _Power then
 		if _Power >= 1 then CML_VengeanceFrame.HP1Bar:Show() else CML_VengeanceFrame.HP1Bar:Hide() end

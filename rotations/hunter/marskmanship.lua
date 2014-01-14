@@ -4,6 +4,7 @@ ProbablyEngine.rotation.register_custom(254, "CodeMyLife Marksman", {
     {"TaMere","@CML.Status()"},
     {"pause","@CML.CombatCheck()"}, -- Combat Check/Pause
     {"pause","player.buff(5384)"}, -- Pause for Feign Death
+    {"PetManager","@CML.PetManager()"},
        
     -- Aspect of the Iron Hawk
     {"109260",{ 
@@ -373,10 +374,13 @@ ProbablyEngine.rotation.register_custom(254, "CodeMyLife Marksman", {
 }, 
 --------------------------------------------------Out of Combat-------------------------------------------- 
 { 
+    {"PetManager","@CML.PetManager()"},
     -- PQI Globals 
     {"TaMere","@CML.PQIConfing()"},
     -- Player Status
     {"TaMere","@CML.Status()"}, 
+    {"PetManager","@CML.PetManager()"},
+    {"pause","player.buff(5384)"}, -- Pause for Feign Death 
     -- Aspect Swapping
     {"5118",{
         "!toggle.pack",

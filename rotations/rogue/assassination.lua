@@ -4,6 +4,7 @@ ProbablyEngine.rotation.register_custom(259, "Mystic Rogue(Assassination)", {
  	{"STARTING","@CML.PQIConfing()"},
  	{"STARTING","@CML.Status()"},
  	{"pause","@CML.CombatCheck()"},
+	{"Cooldowns","@CML.Cooldowns()"},	
  	-- Lethal
 	{"2823",{"LethalPoison.pqivalue = 1","!player.buff(2823)",},"player"},
 	{"8679",{"LethalPoison.pqivalue = 2","!player.buff(8679)",},"player"},	
@@ -37,86 +38,68 @@ ProbablyEngine.rotation.register_custom(259, "Mystic Rogue(Assassination)", {
 
 
 	--- Interrupt Stuff
-	{ "1766", { "modifier.interrupts" , "target.range <= 5" }}, -- KICK
+    {"InettruptMyAss",{ "@CML.Interrupts()" }},
  
-	{ "Deadly Throw", {
- 		"player.spell(26679).exists",
- 		"modifier.interrupts",
- 		"target.range > 5",
- 		"player.combopoints >= 3"
- 	}},
- 
- 	{ "Deadly Throw", {
-	 	"player.spell(26679).exists",
-	 	"modifier.interrupts",
-	 	"target.range < 30",
-	 	"player.combopoints >= 3"
- 	}}, 
-
-	--- Cooldown Stuff
-    {"#76089",{
-        "AgilityPotiononHeroism.pqicheck",
-        "@CML.DPSPotion(76089)",
-    }},	
  	-- Gloves
  	{ "#gloves", { -- On ActiveCooldowns
         "@CML.ActiveCooldowns()",
-        "ProfessionsCD.pqivalue = 1",
+        "ProfessionsCD.coolvalue = 1",
  		"!player.buff(13750)",
  		"player.buff(121471)"
 	}},
+	 	-- Gloves
  	{ "#gloves", { -- On CD
-        "ProfessionsCD.pqivalue = 2", 
+        "ProfessionsCD.coolvalue = 2", 
         "!player.buff(13750)",
  		"player.buff(121471)"
 	}},
 	-- Preparation
  	{ "14185", { -- On ActiveCooldowns
         "@CML.ActiveCooldowns()",
-        "Preparation.pqivalue = 1",
+        "Preparation.coolvalue = 1",
  		"!player.buff(1856)",
  		"player.spell(1856).cooldown >= 60"
  	}},
   	{ "14185", { -- On CD
-        "Preparation.pqivalue = 2",
+        "Preparation.coolvalue = 2",
  		"!player.buff(1856)",
  		"player.spell(1856).cooldown >= 60"
  	}},	
  	-- Shadow Blades
  	{ "121471", { -- On ActiveCooldowns
         "@CML.ActiveCooldowns()",
-        "ShadowBlades.pqivalue = 1",
+        "ShadowBlades.coolvalue = 1",
 		"target.range <= 5",
 		"target.debuff(Rupture).duration > 2"
  	}},
  	{ "121471", { -- On CD
-        "ShadowBlades.pqivalue = 2",
+        "ShadowBlades.coolvalue = 2",
 		"target.range <= 5",
 		"target.debuff(Rupture).duration > 2"
  	}}, 
  	-- Vendetta
  	{ "1856", { -- On ActiveCooldowns
         "@CML.ActiveCooldowns()",
-        "Vendetta.pqivalue = 1",
+        "Vendetta.coolvalue = 1",
 		"target.range <= 5",
 		"target.debuff(Rupture).duration > 2"
  	}},
  	{ "1856", { -- On CD
-        "Vendetta.pqivalue = 2",
+        "Vendetta.coolvalue = 2",
 		"target.range <= 5",
 		"target.debuff(Rupture).duration > 2"
  	}},		
  	-- Vanish
  	{ "1856", { -- On ActiveCooldowns
         "@CML.ActiveCooldowns()",
-        "Vanish.pqivalue = 1",
+        "Vanish.coolvalue = 1",
 		"player.energy < 60",
 		"!player.buff(Shadow Blades)",
 		"player.buff(Envenom).duration < 1",
 		"target.debuff(Rupture).duration > 2",
  	}},
  	{ "1856", { -- On CD
-        "Vanish.pqivalue = 2",
+        "Vanish.coolvalue = 2",
 		"player.energy < 60",
 		"!player.buff(Shadow Blades)",
 		"player.buff(Envenom).duration < 1",
@@ -128,7 +111,6 @@ ProbablyEngine.rotation.register_custom(259, "Mystic Rogue(Assassination)", {
 		"target.range <= 5"
  	}}, 
  	--- AOE Stuff
- 	{"13877","@Mystic.BladeFlurry()"}, -- BladeFlurry	 	
  	{"121411", { -- CRIMSON TEMPEST
  		"player.aoe = 2",
  		"player.combopoints = 5",

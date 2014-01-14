@@ -58,6 +58,7 @@ ProbablyEngine.rotation.register_custom(66, "CodeMyLife Protection", {
     }},  
     -- ChopChop   
     {"#90175",{
+        "target.enemy",
         "@CML.ChopChop()",
     }},      
      
@@ -235,9 +236,12 @@ ProbablyEngine.rotation.register_custom(66, "CodeMyLife Protection", {
     -- PQI Globals 
     {"TaMere","@CML.PQIConfing()"},
     -- Player Status
-    {"TaMere","@CML.Status()"},
+    {"TaMere","@CML.Status()"},    
     -- ChopChop   
-    {"#90175","@CML.ChopChop()","target"},   
+    {"#90175",{
+        "target.enemy",
+        "@CML.ChopChop()",
+    }},    
     -- Blessing of Kings                
     {"20217",{ 
         "!player.hasaura(1)",

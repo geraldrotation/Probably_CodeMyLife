@@ -3,9 +3,92 @@ function CML.DeathknightStartup()
 _RangeSpell = 45462
 _HealingRangeSpell = 102694 -- First Aid
 
-if _Spec == 1 then PQIprefix = "PQI_CodeMyLifeBlood_" end
+if _Spec == 1 then PQIprefix = "PQI_CodeMyLifeBlood_" Coolprefix = "PQI_CodeMyLifeCooldownsBlood_" end
 if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeFrost_" end
 if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeUnholy_" end
+
+
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _Spec == 1 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_CodeMyLifeCooldownsBlood_"
+	CML_Cooldowns_Config = {
+		name	= "CooldownsBlood",
+		author	= "CodeMyLife",
+		abilities = {
+			--[[ Cooldowns ]]	
+			{ 	name	= "Death And Decay",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFDeath And Decay "..PlayerHex.."on cursor.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Keypress","|cff00A8ABAuto","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Death And Decay |cffFFFFFF on "..PlayerHex.."cursor.",	
+				},
+			},	
+			{ 	name	= "Racials",
+				tooltip	= PlayerHex.."Toggle Automatic Racials.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Professions CDs",
+				tooltip	= PlayerHex.."Toggle Automatic Professions CDs.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},					
+			{ 	name	= "Trinkets",
+				tooltip	= PlayerHex.."Toggle Automatic Trinkets.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
+					value = 1,
+					width = 70,
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
+				},
+			},		
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."Toggle Automatic Agility Potions when Heroism starts.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet way to use Potions.",	
+				},
+			},				
+			{ 	name	= "Interrupt",
+				tooltip	= PlayerHex.."Toggle Automatic Interrupt On Target/Mouseover/Focus.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use Interrupt on "..PlayerHex.."Target/Mouseover/Focus.",	
+				},
+				newSection = true,
+			},
+		},
+	}
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
+end
+
 
 --[[           ]]	--[[]]				--[[           ]]	--[[           ]]	--[[        ]]
 --[[           ]]	--[[]]				--[[           ]]	--[[           ]]	--[[         ]]
@@ -122,6 +205,16 @@ if _Spec == 1 and CML_Blood_config == nil then
 					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use this Cooldown.",
 				},
 			},					
+			{ 	name	= "Rune Tap",
+				tooltip	= "|cffFFFFFFCheck "..PlayerHex.."to use this Cooldown.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 25,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use this Cooldown.",
+				},
+			},				
 			{ 	name	= "VampiricBlood",
 				tooltip	= "|cffFFFFFFCheck "..PlayerHex.."to use this Cooldown.",
 				enable	= true,
@@ -131,7 +224,69 @@ if _Spec == 1 and CML_Blood_config == nil then
 					step	= 5,
 					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use this Cooldown.",
 				},
+			},	
+		},
+		--[[ Keybinds ]]
+		hotkeys = {
+			{	name	= "Death And Decay Key",
+				enable	= true,
+				hotkeys	= {'lc'},
+				tooltip	= PlayerHex.."Assign Mouseover Death And Decay.",
+			},	
+			{	name	= "Pause",
+				enable	= true,
+				hotkeys	= {'la'},
+				tooltip	= PlayerHex.."Assign Pause Will Stop Rotation and ClearTarget.",
 			},
+			{	name	= "Set Focus",
+				enable	= true,
+				hotkeys	= {'lc'},
+				tooltip	= PlayerHex.."Assign Mouseover Focus Set focus to mouseover.",
+			},	
+		},
+	}
+	CODEMYLIFE_BLOOD = PQI:AddRotation(CML_Blood_config)
+end	
+
+
+
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _Spec == 2 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_CodeMyLifeCooldownsFrost_"
+	CML_Cooldowns_Config = {
+		name	= "CooldownsFrost",
+		author	= "CodeMyLife",
+		abilities = {
+
+			--[[ Cooldowns ]]
+			{ 	name	= "Death And Decay",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFDeath And Decay "..PlayerHex.."on cursor.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Keypress","|cff00A8ABAuto","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Death And Decay |cffFFFFFF on "..PlayerHex.."cursor.",	
+				},
+			},			
+			{ 	name	= "PillarofFrost",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic PillarofFrost.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+				newSection = true,
+			},	
 			{ 	name	= "Racials",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
 				enable	= true,
@@ -141,7 +296,6 @@ if _Spec == 1 and CML_Blood_config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
 				},
-				newSection = true,
 			},	
 			{ 	name	= "Professions CDs",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
@@ -154,51 +308,40 @@ if _Spec == 1 and CML_Blood_config == nil then
 				},
 			},					
 			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cffff7d0a.",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
-					value = 2,
+					value = 1,
 					width = 70,
-					tooltip = PlayerHex.."Choose |cffFFFFFFTrinkets to use|cffff7d0a.",	
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
 				},
 			},		
-			{ 	name	= "DPS Potion on Heroism",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic DPS Potions|cffff7d0a when |cffFFFFFFHeroism |cffff7d0astarts.",
-				enable	= true,
-			},		
-			{ 	name	= "Death And Decay",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFDeath And Decay "..PlayerHex.."on cursor.",
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
 				enable	= true,
 				widget = { type = 'select',
-					values = {PlayerHex.."Keypress","|cff00A8ABAuto","|cffD90000Disable"},
-					value = 2,
+					values = {"|cff7EBF37On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
+					value = 1,
 					width = 70,
-					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Death And Decay |cffFFFFFF on "..PlayerHex.."cursor.",	
+					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
 				},
-			},		
-		},
-		--[[ Keybinds ]]
-		hotkeys = {
-			{	name	= "Pause",
-				enable	= true,
-				hotkeys	= {'la'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFPause |cffff7d0aWill |cffFFFFFFStop Rotation, ClearTarget |cffff7d0aand |cffFFFFFFPet Stop Attack.",
-			},
-			{	name	= "Set Focus",
-				enable	= true,
-				hotkeys	= {'lc'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus |cffff7d0aSet focus to mouseover.",
-			},
-			{	name	= "Death and Decay Key",
-				enable	= true,
-				hotkeys	= {'lc'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus |cffff7d0aSet focus to mouseover.",
 			},				
+			{ 	name	= "Interrupt",
+				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Counter Shot |cff7EBF37On target.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Counter Shot |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+				},
+				newSection = true,
+			},
 		},
 	}
-	CODEMYLIFE_BLOOD = PQI:AddRotation(CML_Blood_config)
-end	
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
+end
 
 --[[           ]]	--[[           ]]	--[[           ]] 	--[[           ]]	--[[           ]]
 --[[           ]]	--[[           ]]	--[[           ]] 	--[[           ]]	--[[           ]]
@@ -285,9 +428,59 @@ if _Spec == 2 and CML_Frost_config == nil then
 					step	= 5,
 					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use this Cooldown.",
 				},
-			},		
-			{ 	name	= "PillarofFrost",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic PillarofFrost.",
+			},	
+		},
+		--[[ Keybinds ]]
+		hotkeys = {
+			{	name	= "Death And Decay Key",
+				enable	= true,
+				hotkeys	= {'lc'},
+				tooltip	= PlayerHex.."Assign Mouseover Death And Decay.",
+			},	
+			{	name	= "Pause",
+				enable	= true,
+				hotkeys	= {'la'},
+				tooltip	= PlayerHex.."Assign Pause Will Stop Rotation and ClearTarget.",
+			},
+			{	name	= "Set Focus",
+				enable	= true,
+				hotkeys	= {'lc'},
+				tooltip	= PlayerHex.."Assign Mouseover Focus Set focus to mouseover.",
+			},			
+		},
+	}
+	CODEMYLIFE_FROST = PQI:AddRotation(CML_Frost_config)
+end	
+
+
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _Spec == 3 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_CodeMyLifeCooldownsUnholy_"
+	CML_Cooldowns_Config = {
+		name	= "CooldownsUnholy",
+		author	= "CodeMyLife",
+		abilities = {
+
+			--[[ Cooldowns ]]
+			{ 	name	= "Death And Decay",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFDeath And Decay "..PlayerHex.."on cursor.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Keypress","|cff00A8ABAuto","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Death And Decay |cffFFFFFF on "..PlayerHex.."cursor.",	
+				},
+			},	
+			{ 	name	= "UnholyFrenzy",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic UnholyFrenzy.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
@@ -296,7 +489,7 @@ if _Spec == 2 and CML_Frost_config == nil then
 					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
 				},
 				newSection = true,
-			},					
+			},			
 			{ 	name	= "Racials",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
 				enable	= true,
@@ -306,7 +499,6 @@ if _Spec == 2 and CML_Frost_config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
 				},
-				newSection = true,
 			},	
 			{ 	name	= "Professions CDs",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
@@ -319,51 +511,40 @@ if _Spec == 2 and CML_Frost_config == nil then
 				},
 			},					
 			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cffff7d0a.",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
-					value = 2,
+					value = 1,
 					width = 70,
-					tooltip = PlayerHex.."Choose |cffFFFFFFTrinkets to use|cffff7d0a.",	
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
 				},
 			},		
-			{ 	name	= "DPS Potion on Heroism",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic DPS Potions|cffff7d0a when |cffFFFFFFHeroism |cffff7d0astarts.",
-				enable	= true,
-			},
-			{ 	name	= "Death And Decay",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFDeath And Decay "..PlayerHex.."on cursor.",
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
 				enable	= true,
 				widget = { type = 'select',
-					values = {PlayerHex.."Keypress","|cff00A8ABAuto","|cffD90000Disable"},
-					value = 2,
+					values = {"|cff7EBF37On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
+					value = 1,
 					width = 70,
-					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Death And Decay |cffFFFFFF on "..PlayerHex.."cursor.",	
+					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
 				},
-			},	
-		},
-		--[[ Keybinds ]]
-		hotkeys = {
-			{	name	= "Pause",
-				enable	= true,
-				hotkeys	= {'la'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFPause |cffff7d0aWill |cffFFFFFFStop Rotation, ClearTarget |cffff7d0aand |cffFFFFFFPet Stop Attack.",
-			},
-			{	name	= "Set Focus",
-				enable	= true,
-				hotkeys	= {'lc'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus |cffff7d0aSet focus to mouseover.",
-			},
-			{	name	= "Death and Decay Key",
-				enable	= true,
-				hotkeys	= {'lc'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus |cffff7d0aSet focus to mouseover.",
 			},				
+			{ 	name	= "Interrupt",
+				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Counter Shot |cff7EBF37On target.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Counter Shot |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+				},
+				newSection = true,
+			},
 		},
 	}
-	CODEMYLIFE_FROST = PQI:AddRotation(CML_Frost_config)
-end	
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
+end
 
 --[[]]	   --[[]]	--[[]]	   --[[]]	--[[]]	   --[[]]	 --[[         ]] 	--[[]]				--[[]]	  --[[]]
 --[[]]	   --[[]]	--[[  ]]   --[[]]	--[[]]	   --[[]]	--[[           ]] 	--[[]]				--[[]]	  --[[]]
@@ -464,85 +645,29 @@ if _Spec == 3 and CML_Unholy_config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFSet target to use|cff7EBF37 for your Pet. |cffFFFFFFIf invilaid it will attack Target|cff7EBF37.",	
 				},
-			},	
-			{ 	name	= "UnholyFrenzy",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic UnholyFrenzy.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-				newSection = true,
-			},					
-			{ 	name	= "Racials",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-				newSection = true,
-			},	
-			{ 	name	= "Professions CDs",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},					
-			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cffff7d0a.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = PlayerHex.."Choose |cffFFFFFFTrinkets to use|cffff7d0a.",	
-				},
-			},		
-			{ 	name	= "DPS Potion on Heroism",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic DPS Potions|cffff7d0a when |cffFFFFFFHeroism |cffff7d0astarts.",
-				enable	= true,
-			},
-			{ 	name	= "Death And Decay",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFDeath And Decay "..PlayerHex.."on cursor.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {PlayerHex.."Keypress","|cff00A8ABAuto","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Death And Decay |cffFFFFFF on "..PlayerHex.."cursor.",	
-				},
-			},	
+			},			
 		},
 		--[[ Keybinds ]]
 		hotkeys = {
+			{	name	= "Death And Decay Key",
+				enable	= true,
+				hotkeys	= {'lc'},
+				tooltip	= PlayerHex.."Assign Mouseover Death And Decay.",
+			},	
 			{	name	= "Pause",
 				enable	= true,
 				hotkeys	= {'la'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFPause |cffff7d0aWill |cffFFFFFFStop Rotation, ClearTarget |cffff7d0aand |cffFFFFFFPet Stop Attack.",
+				tooltip	= PlayerHex.."Assign Pause Will Stop Rotation and ClearTarget.",
 			},
 			{	name	= "Set Focus",
 				enable	= true,
 				hotkeys	= {'lc'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus |cffff7d0aSet focus to mouseover.",
-			},
-			{	name	= "Death And Decay Key",
-				enable	= true,
-				hotkeys	= {'lc'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus |cffff7d0aSet focus to mouseover.",
-			},		
+				tooltip	= PlayerHex.."Assign Mouseover Focus Set focus to mouseover.",
+			},	
 			{	name	= "Pet Move To Mouse",
 				enable	= true,
 				hotkeys	= {'rc'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFPet Move To Mouse |cff7EBF37Use this to |cffFFFFFFmove your pet "..PlayerHex.."toward your mouse.",
+				tooltip	= PlayerHex.."Assign Pet Move To Mouse Use this to move your pet toward your mouse.",
 			},		
 		},
 	}
@@ -637,6 +762,9 @@ if not DeathknightFunctions then
 		[43265]					= false, -- Death and Decay
 		[49576]					= false, -- Death Grip
 		[46584]					= false, -- Raise Dead 
+		[77575]					= false, -- Outbreak
+		[50842]					= false, -- Pestilence
+
 	}
 end			
 

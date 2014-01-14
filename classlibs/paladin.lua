@@ -1,8 +1,8 @@
 function CML.PaladinStartup()
 
-if _Spec == 1 then PQIprefix = "PQI_CodeMyLifeHoly_" UnitDispel = {'Disease','Poison','Magic'} end
-if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeProtection_" UnitDispel = {'Disease','Poison'} end
-if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeRetribution_" UnitDispel = {'Disease','Poison'} end
+if _Spec == 1 then PQIprefix = "PQI_CodeMyLifeHoly_" Coolprefix = "PQI_CodeMyLifeCooldowns_" UnitDispel = {'Disease','Poison','Magic'} end
+if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeProtection_" Coolprefix = "PQI_CodeMyLifeCooldowns_" UnitDispel = {'Disease','Poison'} end
+if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeRetribution_" Coolprefix = "PQI_CodeMyLifeCooldowns_" UnitDispel = {'Disease','Poison'} end
 
 _RangeSpell = 20271
 _HealingRangeSpell = 19750 -- Flash Heal
@@ -930,91 +930,6 @@ if _Spec == 3 and CML_Ret_config == nil then
 			{ 	name	= "Hand of Freedom",
 				tooltip	= PlayerHex.."Active Hand of Freedom on Self.",
 				enable	= false,
-			},		
-			{ 	name	= "Avenging Wrath",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Avenging Wrath.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-				newSection = true,
-			},	
-			{ 	name	= "Guardian Of Ancient Kings",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Avenging Wrath.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},	
-			{ 	name	= "Holy Avenger",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Avenging Wrath.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},
-			{ 	name	= "Racials",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},	
-			{ 	name	= "Synapse Springs",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Synapse Springs.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},					
-			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cffFFFFFF.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
-					value = 1,
-					width = 70,
-					tooltip = PlayerHex.."Choose |cffFFFFFFTrinkets to use|cffFFFFFF.",	
-				},
-			},		
-			{ 	name	= "DPS Potion on Heroism",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cffFFFFFF when |cffFFFFFFHeroism |cffFFFFFFstarts.",
-				enable	= true,
-			},
-			{ 	name	= "Execution Sentence",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Execution Sentence.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},	
-			{ 	name	= "Lights Hammer",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFLight's Hammer "..PlayerHex.."on cursor.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {PlayerHex.."Keypress","|cff00A8ABAuto","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Light's Hammer |cffFFFFFF on "..PlayerHex.."cursor.",	
-				},
 			},								
 		},
 		--[[ Keybinds ]]			
@@ -1038,6 +953,137 @@ if _Spec == 3 and CML_Ret_config == nil then
 	}
 	CODEMYLIFE_RETRIBUTION = PQI:AddRotation(CML_Ret_config)
 end
+
+
+
+
+
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _MyClass == 2 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_CodeMyLifeCooldowns_"
+
+	CML_Cooldowns_Config = {
+		name	= "Cooldowns",
+		author	= "CodeMyLife",
+		abilities = {
+			{ 	name	= "Lights Hammer",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFLight's Hammer "..PlayerHex.."on cursor.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Keypress","|cff00A8ABAuto","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Light's Hammer |cffFFFFFF on "..PlayerHex.."cursor.",	
+				},
+			},	
+			{ 	name	= "Execution Sentence",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Execution Sentence.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			--[[ Cooldowns ]]
+			{ 	name	= "Avenging Wrath",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Avenging Wrath.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+				newSection = true,
+			},	
+			{ 	name	= "Guardian Of Ancient Kings",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Avenging Wrath.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Holy Avenger",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Avenging Wrath.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},
+
+			{ 	name	= "Racials",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Racials.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Professions CDs",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Professions CDs.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},					
+			{ 	name	= "Trinkets",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
+					value = 1,
+					width = 70,
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
+				},
+			},		
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."On Boss","|cffFFBF00On Heroism","|cffD90000Never"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
+				},
+			},				
+			{ 	name	= "Interrupt",
+				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Counter Shot |cff7EBF37On target.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cffFFFFFF0"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use Interrupt on Target/Mouseover/Focus.",	
+				},
+				newSection = true,
+			},
+		},
+	}
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
+end
+
+
+
 
 --[[           ]]	--[[]]	   --[[]]	--[[]]	   --[[]]	--[[   		   ]]	--[[   		   ]]	--[[   		   ]]	--[[           ]]	--[[]]	   --[[]]
 --[[           ]]	--[[]]	   --[[]]	--[[  ]]   --[[]]	--[[   		   ]]	--[[   		   ]]	--[[   		   ]]	--[[           ]]	--[[  ]]   --[[]]
@@ -1111,6 +1157,7 @@ if not PaladinFunctions then
 	_TurnEvil					= 10326		
 	_WordOfGlory				= 85673
 	-- Paladin T16
+
 	ProtPalT16 = {
 		99126, -- Chest
 		99127, -- Gloves
@@ -1118,6 +1165,14 @@ if not PaladinFunctions then
 		99129, -- Legs
 		99130 -- Shoulders
 	}
+	Tier16 = {
+		99126, -- Chest
+		99127, -- Gloves
+		99128, -- Helm
+		99129, -- Legs
+		99130 -- Shoulders
+	}
+
 	macros = { 
 	    ["ActiveCooldowns"]   		= false,
 	    ["ActiveDispel"]			= true, 
@@ -1167,7 +1222,7 @@ if not PaladinFunctions then
 		if not macros["HoSacQueue"] and GetNumGroupMembers() > 0 then
 			xrn:message("\124cFFFFFFFFHand of Sacrifice Queued.")
 			macros["HoSacQueue"] = true
-		elseif GetNumGroupMembers() > 0 then
+		elseif macros["HoSacQueue"] then
 			xrn:message("\124cFFCC99FFHand of Sacrifice Canceled.")
 			macros["HoSacQueue"] = false
 		end
@@ -1194,10 +1249,10 @@ if not PaladinFunctions then
 	end
 	SLASH_HOPUR1 = "/hopur"
 	function SlashCmdList.HOPUR(msg, editbox)
-		if not macros["HoPurQueue"] then
+		if select(5, GetTalentInfo(13)) and not macros["HoPurQueue"] then
 			xrn:message("\124cFFFFFFFFHand of Purity Queued.")
 			macros["HoPurQueue"] = true
-		else
+		elseif macros["HoPurQueue"] then
 			xrn:message("\124cFFCC99FFHand of Purity Canceled.")
 			macros["HoPurQueue"] = false
 		end
@@ -1400,7 +1455,6 @@ if not PaladinFunctions then
 	end
 
 	function CML.HandOfPurity()
-		-- Hand of Purity return true, SpellTarget, SpellName, EndTime, SpellType
 		local PurityDebuffs =
 		{
 			{ID = 145263, 	Remain = 30, 	Health = 80 }, -- Proving Grounds Healer Debuff.	
@@ -1426,15 +1480,14 @@ if not PaladinFunctions then
 
 	function CML.HandOfProtection()
 		if _G[PQIprefix.."HandofProtection_enable"] then
-			-- Hand of Purity return true, SpellTarget, SpellName, EndTime, SpellType
 			local ProtectionDebuffs =
 			{
-				{ID = 144331, 	Remain = 10, 	Health = 100 }, -- Prisons - Dark Shamans 	
+				{ID = 144331, 	Remain = 5, 	Health = 100 }, -- Prisons - Dark Shamans 	
 			}
 			for t=1,#nNova do
 				if nNova[t].range == 1 and nNova[t].role ~= "TANK" and nNova[t].role ~= "NOOB" then
 					for i=1,#ProtectionDebuffs do
-						if not CML.HandActive(nNova[t].unit) and UnitDebuffID(nNova[t].unit,ProtectionDebuffs[i].ID) then
+						if UnitDebuffID(nNova[t].unit,ProtectionDebuffs[i].ID) then
 							local SpellName, _, _, _, SpellType, _, EndTime, SpellTarget = UnitDebuffID(nNova[t].unit,ProtectionDebuffs[i].ID)
 							if EndTime - GetTime() <= ProtectionDebuffs[i].Remain and CML.GetHP(nNova[t].unit) <= ProtectionDebuffs[i].Health then
 								ProbablyEngine.dsl.parsedTarget = nNova[t].unit

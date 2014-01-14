@@ -1,10 +1,10 @@
 function CML.DruidStartup()
 
-if _Spec == 1 then PQIprefix = "PQI_FriedChickenMoonkin_" UnitDispel = {'Poison'} end
+if _Spec == 1 then PQIprefix = "PQI_FriedChickenMoonkin_" UnitDispel = {'Poison'} Coolprefix = "PQI_FriedChickenCooldownsMoon_" end
 if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeFeral_" UnitDispel = {'Poison'} end
-if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeGuardian_" UnitDispel = {'Poison'} end
+if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeGuardian_" Coolprefix = "PQI_CodeMyLifeCooldownsGuard_" UnitDispel = {'Poison'} end
 if _Spec == 4 then PQIprefix = "PQI_RepairedRestoration_" UnitDispel = {'Poison','Magic'} end
-
+ 
 _HealingRangeSpell = 5185 -- Healing Touch
 
 --[[]]     --[[]] 	--[[           ]]	--[[           ]] 	--[[]]	   --[[]]	
@@ -124,7 +124,69 @@ if _Spec == 1 and CML_Moon_config == nil then
 					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRejuvenation |cffff7d0aon me.",
 				},
 				newSection = true,
-			},	
+			},	},
+		--[[ Keybinds ]]
+		hotkeys = {
+			{	name	= "Pause",
+				enable	= true,
+				hotkeys	= {'la'},
+				tooltip	= PlayerHex.."Assign |cffFFFFFFPause |cffff7d0aWill |cffFFFFFFStop Rotation, ClearTarget |cffff7d0aand |cffFFFFFFPet Stop Attack.",
+			},
+			{	name	= "Set Focus",
+				enable	= true,
+				hotkeys	= {'lc'},
+				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus |cffff7d0aSet focus to mouseover.",
+			},
+			{	name	= "Tranquility",
+				enable	= true,
+				hotkeys	= {'ra'},
+				tooltip	= PlayerHex.."Assign |cffFFFFFFTranquility. |cffff7d0aHold to Cast.",
+			},
+			{	name	= "Hurricane Key",
+				enable	= true,
+				hotkeys	= {'ls'},
+				tooltip	= PlayerHex.."Assign |cffFFFFFFHurricane. |cffff7d0aHold to Cast.",
+			},
+			{	name	= "Place Schrooms",
+				enable	= true,
+				hotkeys	= {'rs'},
+				tooltip	= PlayerHex.."Assign |cffFFFFFFPlace Schrooms. |cffff7d0aHold to Cast.",
+			},
+			{	name	= "Detonate Schrooms",
+				enable	= true,
+				hotkeys	= {'rc'},
+				tooltip	= PlayerHex.."Assign |cffFFFFFFDetonate Schrooms. |cffff7d0aHold to Cast.",
+			},						
+		},
+	}
+	CODEMYLIFE_MOONKIN = PQI:AddRotation(CML_Moon_config)
+end
+
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _MyClass == 11 and _Spec == 1 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_FriedChickenCooldownsMoon_"
+
+	CML_Cooldowns_Config = {
+		name	= "CooldownsMoon",
+		author	= "FriedChicken",
+		abilities = {
+			{ 	name	= "Hurricane",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFHurricane "..PlayerHex.."on cursor.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Keypress","|cff00A8ABAuto","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Hurricane |cffFFFFFF on "..PlayerHex.."cursor.",	
+				},
+			},
 			--[[ Cooldowns ]]
 			{ 	name	= "Celestial Alignment",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Celestial Alignment.",
@@ -135,8 +197,7 @@ if _Spec == 1 and CML_Moon_config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
 				},
-				newSection = true,
-			},
+			},	
 			{ 	name	= "Incarnation",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Incarnation.",
 				enable	= true,
@@ -146,7 +207,7 @@ if _Spec == 1 and CML_Moon_config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
 				},
-			},					
+			},
 			{ 	name	= "Racials",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
 				enable	= true,
@@ -168,55 +229,39 @@ if _Spec == 1 and CML_Moon_config == nil then
 				},
 			},					
 			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cffff7d0a.",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
-					value = 2,
+					value = 1,
 					width = 70,
-					tooltip = PlayerHex.."Choose |cffFFFFFFTrinkets to use|cffff7d0a.",	
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
 				},
 			},		
-			{ 	name	= "DPS Potion on Heroism",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic DPS Potions|cffff7d0a when |cffFFFFFFHeroism |cffff7d0astarts.",
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
 				enable	= true,
-			},			
-		},
-		--[[ Keybinds ]]
-		hotkeys = {
-			{	name	= "Pause",
+				widget = { type = 'select',
+					values = {"|cff7EBF37On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
+				},
+			},				
+			{ 	name	= "Interrupt",
+				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Solar Beam |cff7EBF37On target.",
 				enable	= true,
-				hotkeys	= {'la'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFPause |cffff7d0aWill |cffFFFFFFStop Rotation, ClearTarget |cffff7d0aand |cffFFFFFFPet Stop Attack.",
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Solar Beam |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+				},
+				newSection = true,
 			},
-			{	name	= "Set Focus",
-				enable	= true,
-				hotkeys	= {'lc'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus |cffff7d0aSet focus to mouseover.",
-			},
-			{	name	= "Tranquility",
-				enable	= true,
-				hotkeys	= {'ra'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFTranquility. |cffff7d0aHold to Cast.",
-			},
-			{	name	= "Hurricane",
-				enable	= true,
-				hotkeys	= {'ls'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFHurricane. |cffff7d0aHold to Cast.",
-			},
-			{	name	= "Place Schrooms",
-				enable	= true,
-				hotkeys	= {'rs'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFPlace Schrooms. |cffff7d0aHold to Cast.",
-			},
-			{	name	= "Detonate Schrooms",
-				enable	= true,
-				hotkeys	= {'rc'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFDetonate Schrooms. |cffff7d0aHold to Cast.",
-			},						
 		},
 	}
-	CODEMYLIFE_MOONKIN = PQI:AddRotation(CML_Moon_config)
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
 end
 
 --[[           ]]	--[[           ]]		  --[[]]		--[[           ]]
@@ -226,6 +271,87 @@ end
 --[[]]	   --[[]]	--[[]]				  --[[        ]]	--[[        ]]
 --[[           ]]	--[[           ]]	 --[[]]    --[[]]	--[[]]	  --[[]]		
 --[[           ]] 	--[[           ]]	--[[]]      --[[]]	--[[]]	   --[[]]
+
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _MyClass == 11 and _Spec == 3 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_CodeMyLifeCooldownsGuard_"
+
+	CML_Cooldowns_Config = {
+		name	= "CooldownsGuard",
+		author	= "CodeMyLife",
+		abilities = {
+			{ 	name	= "Incarnation",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Incarnation.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},
+			{ 	name	= "Racials",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Professions CDs",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},					
+			{ 	name	= "Trinkets",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
+					value = 1,
+					width = 70,
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
+				},
+			},		
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff7EBF37On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
+				},
+			},				
+			{ 	name	= "Interrupt",
+				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Solar Beam |cff7EBF37On target.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Solar Beam |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+				},
+				newSection = true,
+			},
+		},
+	}
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
+end
 
 --[[------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
@@ -346,52 +472,7 @@ if _Spec == 3 and CML_Guardian_config == nil then
 					step	= 5,
 					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFRenewal on me.",
 				},
-			},
-			--[[ Cooldowns ]]
-			{ 	name	= "Incarnation",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Incarnation.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},					
-			{ 	name	= "Racials",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
 			},	
-			{ 	name	= "Professions CDs",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},					
-			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cffff7d0a.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = PlayerHex.."Choose |cffFFFFFFTrinkets to use|cffff7d0a.",	
-				},
-			},		
-			{ 	name	= "DPS Potion on Heroism",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic DPS Potions|cffff7d0a when |cffFFFFFFHeroism |cffff7d0astarts.",
-				enable	= true,
-			},			
 		},
 		--[[ Keybinds ]]
 		hotkeys = {
@@ -409,22 +490,7 @@ if _Spec == 3 and CML_Guardian_config == nil then
 				enable	= true,
 				hotkeys	= {'ra'},
 				tooltip	= PlayerHex.."Assign |cffFFFFFFTranquility. |cffff7d0aHold to Cast.",
-			},
-			{	name	= "Hurricane",
-				enable	= true,
-				hotkeys	= {'ls'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFHurricane. |cffff7d0aHold to Cast.",
-			},
-			{	name	= "Place Schrooms",
-				enable	= true,
-				hotkeys	= {'rs'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFPlace Schrooms. |cffff7d0aHold to Cast.",
-			},
-			{	name	= "Detonate Schrooms",
-				enable	= true,
-				hotkeys	= {'rc'},
-				tooltip	= PlayerHex.."Assign |cffFFFFFFDetonate Schrooms. |cffff7d0aHold to Cast.",
-			},						
+			},	
 		},
 	}
 	CODEMYLIFE_GUARDIAN = PQI:AddRotation(CML_Guardian_config)
@@ -867,51 +933,6 @@ if not DruidFunction then
 			end
 		end
 	end	
-
-	function CML.StopDotsCheck(unit)
-		local NoDotsBuffs = {
-			145065,
-			145071,
-			145171,
-			145832,
-		}
-		for i = 1, #NoDotsBuffs do
-			if UnitDebuff(unit,GetSpellInfo(NoDotsBuffs[i])) then
-				return false
-			end
-		end
-		return true
-	end
-
-	function CML.StopCasting(var)
-		if UnitBuffID("player", 31821) then return true end
-		if UnitBuffID("player", 122291) then return true end
-		if UnitBuffID("player", 1022) then return true end
-		local Boss1Cast,Boss1CastEnd,StopCasting,PlayerCastEnd
-		local ShouldStop = {
-			137457,
-			138763,
-			143343,
-		}
-		local Boss1Cast,_,_,_,_,Boss1CastEnd = UnitCastingInfo("boss1")
-		local StopCasting = false
-		for i = 1, #ShouldStop do
-			if Boss1Cast == GetSpellInfo(ShouldStop[i]) then StopCasting = true end
-		end
-		if not StopCasting then return true end
-		if UnitCastingInfo("player") then
-			PlayerCastEnd = select(6,UnitCastingInfo("player"))
-		elseif UnitChannelInfo("player") then
-			PlayerCastEnd = select(6,UnitChannelInfo("player"))
-		end
-		if PlayerCastEnd ~= nil then
-			if Boss1CastEnd < PlayerCastEnd then
-		    	RunMacroText("/stopcasting")
-		    	return (false == var)
-		    end
-		end
-		return (true == var)
-	end
 
 	function CML.NotEclipse()
 	  	if math.abs(UnitPower("player",8)) < 20 then return true end

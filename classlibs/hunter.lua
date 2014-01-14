@@ -1,11 +1,15 @@
 function CML.HunterStartup()
 
+if not UnitAffectingCombat("player") then
+	Sequence = nil
+end
+
 _RangeSpell = 3044
 _HealingRangeSpell = 102694 -- First Aid
 
-if _Spec == 1 then PQIprefix = "PQI_CodeMyLifeBeastmaster_" end
-if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeMarksmanship_" end
-if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeSurvival_" end
+if _Spec == 1 then PQIprefix = "PQI_CodeMyLifeBeastmaster_" Coolprefix = "PQI_CodeMyLifeCooldownsBeast_" end
+if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeMarksmanship_" Coolprefix = "PQI_CodeMyLifeCooldownsMarks_" end
+if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeSurvival_" Coolprefix = "PQI_CodeMyLifeCooldownsSurv_" end
 
 --[[           ]]	--[[           ]]		  --[[]]		--[[           ]]	--[[           ]]
 --[[           ]]	--[[           ]]	     --[[  ]]		--[[           ]]	--[[           ]]
@@ -18,10 +22,10 @@ if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeSurvival_" end
 --[[------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
 --------- BeastMaster Hunter -------- PQI_CodeMyLifeBeastmaster_Name_value  -------------------------------------------------------------]]
-if _MyClass == 3 and _Spec == 1 and CML_Beast_config == nil then
+if _MyClass == 3 and _Spec == 1 and CML_Main_config == nil then
 	PQIprefix = "PQI_CodeMyLifeBeastmaster_"
 	_AoEModes = 2
-	CML_Beast_config = {
+	CML_Main_config = {
 		name	= "Beastmaster",
 		author	= "CodeMyLife",
 		abilities = {
@@ -142,30 +146,6 @@ if _MyClass == 3 and _Spec == 1 and CML_Beast_config == nil then
 				tooltip	= "|cffFFFFFFActive Master's Call |cff7EBF37on me|cff7EBF37.",
 				enable	= true,
 			},
-			{ 	name	= "Active Pet Whistle",
-				tooltip	= "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff5EAB00Pet Slot 1","|cff5EAB00Pet Slot 2","|cff5EAB00Pet Slot 3","|cff5EAB00Pet Slot 4","|cff5EAB00Pet Slot 5"},
-					value = 1,
-					width = 70,
-					tooltip = "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",	
-				},
-			},	
-			{ 	name	= "Mend Pet",
-				tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
-				enable	= true,
-				widget	= { type = "numBox",
-					value	= 40,
-					width 	= 70,
-					step	= 5,
-					tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
-				},
-			},	
-			{ 	name	= "Fervor",
-				tooltip	= "|cffFFFFFFCheck "..PlayerHex.."to activate |cffFFFFFFFervor.",
-				enable	= true,
-			},
 			{ 	name	= "Explosive Trap",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFTraps |cff7EBF37on cursor.",
 				enable	= true,
@@ -201,109 +181,33 @@ if _MyClass == 3 and _Spec == 1 and CML_Beast_config == nil then
 				tooltip	= PlayerHex.."toggle |cffFFFFFFPet Passive Behaviour|cff7EBF37.",
 				enable	= true,
 				widget = { type = 'select',
-					values = {"|cffE07000Target","|cff5EAB00Focus","|cff00A8ABMouse","|cffFFFFFFFollow"},
+					values = {"|cffD90000Target","|cff5EAB00Focus","|cffF97C38FocusTarget","|cff00A8ABMouse","|cffFFFFFFFollow"},
 					value = 2,
 					width = 70,
 					tooltip = "|cffFFFFFFSet target to use|cff7EBF37 for your Pet. |cffFFFFFFIf invilaid it will attack Target|cff7EBF37.",	
 				},
-			},				
-
-			--[[ Cooldowns ]]
-			{ 	name	= "A Murder of Crows",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic A Murder of Crows.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},	
-			{ 	name	= "Raid Burst",
-				tooltip	= PlayerHex.."Toggle |cffFFFFFFRaid Burst |cffD9000B(By Psyrex)|cffFFFFFF.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Boss Only","|cffFFE100Always","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = PlayerHex.."Choose desired Raid Burst Option. This will start the fight with a 14 second Burst.|cffFFE100Use Always to test on dummy or if you want to burst like crazy on anything. |cff0DFF00Use Raid boss to check if Boss1 exists before using Burst.|cffD9000B(By Psyrex)|cffFFFFFF.",	
-				},
 				newSection = true,
 			},	
-			{ 	name	= "Bestial Wrath",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Bestial Wrath.",
+			{ 	name	= "Pet Manager",
+				tooltip	= "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",
 				enable	= true,
 				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},				
-			{ 	name	= "Focus Fire",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Focus Fire.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},	
-			{ 	name	= "Rapid Fire",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Rapid Fire.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},
-			{ 	name	= "Stampede",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Stampede.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},
-			{ 	name	= "Racials",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},	
-			{ 	name	= "Professions CDs",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},					
-			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
+					values = {"|cff5EAB00Pet Slot 1","|cff5EAB00Pet Slot 2","|cff5EAB00Pet Slot 3","|cff5EAB00Pet Slot 4","|cff5EAB00Pet Slot 5"},
 					value = 1,
 					width = 70,
-					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
+					tooltip = "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",	
 				},
 			},		
-			{ 	name	= "Agility Potion on Heroism",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
+			{ 	name	= "Mend Pet",
+				tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
 				enable	= true,
-			},	
+				widget	= { type = "numBox",
+					value	= 40,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
+				},
+			},		
 		},
 		--[[ Keybinds ]]
 		hotkeys = {
@@ -340,8 +244,145 @@ if _MyClass == 3 and _Spec == 1 and CML_Beast_config == nil then
 
 		},
 	}
-	CODEMYLIFE_BEASTMASTER = PQI:AddRotation(CML_Beast_config)
+	CODEMYLIFE_HUNTER = PQI:AddRotation(CML_Main_config)
 end
+
+
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _MyClass == 3 and _Spec == 1 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_CodeMyLifeCooldownsBeast_"
+
+	CML_Cooldowns_Config = {
+		name	= "CooldownsBeast",
+		author	= "CodeMyLife",
+		abilities = {
+
+			--[[ Cooldowns ]]
+			{ 	name	= "Raid Burst",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFRaid Burst |cffD9000B(By Psyrex)|cffFFFFFF.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Boss Only","|cffFFE100Always","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = PlayerHex.."Choose desired Raid Burst Option. This will start the fight with a 14 second Burst.|cffFFE100Use Always to test on dummy or if you want to burst like crazy on anything. |cff0DFF00Use Raid boss to check if Boss1 exists before using Burst.|cffD9000B(By Psyrex)|cffFFFFFF.",	
+				},
+			},	
+			{ 	name	= "Bestial Wrath",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Bestial Wrath.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Stampede",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Stampede.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},
+			{ 	name	= "Rapid Fire",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Rapid Fire.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},
+			{ 	name	= "A Murder of Crows",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic A Murder of Crows.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},				
+			{ 	name	= "Focus Fire",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Focus Fire.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Racials",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Professions CDs",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},					
+			{ 	name	= "Trinkets",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
+					value = 1,
+					width = 70,
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
+				},
+			},		
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff7EBF37On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
+				},
+			},				
+			{ 	name	= "Interrupt",
+				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Counter Shot |cff7EBF37On target.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Counter Shot |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+				},
+				newSection = true,
+			},
+		},
+	}
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
+end
+
+
+
 
 --[[]]     --[[]] 		  --[[]]		--[[           ]]	--[[]]	   --[[]]	--[[           ]]
 --[[ ]]   --[[ ]] 		 --[[  ]] 		--[[           ]]	--[[]]	  --[[]]	--[[           ]]
@@ -354,11 +395,11 @@ end
 --[[------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
 --------- Marksmanship Hunter -----PQI_CodeMyLifeMarksmanship_Name_value-----------------------------------------------------------------------]]
-if _MyClass == 3 and _Spec == 2 and CML_Marks_config == nil then
+if _MyClass == 3 and _Spec == 2 and CML_Main_config == nil then
 	PQIprefix = "PQI_CodeMyLifeMarksmanship_"
 	_AoEModes = 2
 	_RangeSpell = _ArcaneShot
-	CML_Marks_config = {
+	CML_Main_config = {
 		name	= "Marksmanship",
 		author	= "CodeMyLife",
 		abilities = {
@@ -397,7 +438,7 @@ if _MyClass == 3 and _Spec == 2 and CML_Marks_config == nil then
 					width	= 70,
 					tooltip	= "|cff7EBF37Select what spells you want to be shown in chat.",
 				},
-			},			
+			},		
 			{ 	name	= "Exhilaration",
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFExhilaration |cff7EBF37on me.",
 				enable	= true,
@@ -477,31 +518,6 @@ if _MyClass == 3 and _Spec == 2 and CML_Marks_config == nil then
 				tooltip	= "|cffFFFFFFActive Master's Call |cff7EBF37on me|cff7EBF37.",
 				enable	= true,
 			},
-			{ 	name	= "Active Pet Whistle",
-				tooltip	= "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff5EAB00Pet Slot 1","|cff5EAB00Pet Slot 2","|cff5EAB00Pet Slot 3","|cff5EAB00Pet Slot 4","|cff5EAB00Pet Slot 5"},
-					value = 1,
-					width = 70,
-					tooltip = "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",	
-				},
-			},		
-			{ 	name	= "Mend Pet",
-				tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
-				enable	= true,
-				widget	= { type = "numBox",
-					value	= 40,
-					width 	= 70,
-					step	= 5,
-					tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
-				},
-			},		
-			{ 	name	= "Fervor",
-				tooltip	= "|cffFFFFFFCheck "..PlayerHex.."to activate |cffFFFFFFFervor.",
-				enable	= true,
-			},
-
 			{ 	name	= "Explosive Trap",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFTraps |cff7EBF37on cursor.",
 				enable	= true,
@@ -537,76 +553,32 @@ if _MyClass == 3 and _Spec == 2 and CML_Marks_config == nil then
 				tooltip	= PlayerHex.."toggle |cffFFFFFFPet Passive Behaviour|cff7EBF37.",
 				enable	= true,
 				widget = { type = 'select',
-					values = {"|cffE07000Target","|cff5EAB00Focus","|cff00A8ABMouse","|cffFFFFFFFollow"},
+					values = {"|cffD90000Target","|cff5EAB00Focus","|cffF97C38FocusTarget","|cff00A8ABMouse","|cffFFFFFFFollow"},
 					value = 2,
 					width = 70,
 					tooltip = "|cffFFFFFFSet target to use|cff7EBF37 for your Pet. |cffFFFFFFIf invilaid it will attack Target|cff7EBF37.",	
 				},
-			},
-			--[[ Cooldowns ]]
-			{ 	name	= "A Murder of Crows",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic A Murder of Crows.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},				
-			{ 	name	= "Stampede",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Stampede.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},
-			{ 	name	= "Rapid Fire",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Rapid Fire.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},
-			{ 	name	= "Racials",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
+				newSection = true,
 			},	
-			{ 	name	= "Professions CDs",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
+			{ 	name	= "Pet Manager",
+				tooltip	= "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",
 				enable	= true,
 				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
+					values = {"|cff5EAB00Pet Slot 1","|cff5EAB00Pet Slot 2","|cff5EAB00Pet Slot 3","|cff5EAB00Pet Slot 4","|cff5EAB00Pet Slot 5"},
+					value = 1,
 					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},					
-			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
+					tooltip = "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",	
 				},
 			},		
-			{ 	name	= "Agility Potion on Heroism",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
+			{ 	name	= "Mend Pet",
+				tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
 				enable	= true,
+				widget	= { type = "numBox",
+					value	= 40,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
+				},
 			},	
 		},
 		--[[ Keybinds ]]
@@ -644,8 +616,124 @@ if _MyClass == 3 and _Spec == 2 and CML_Marks_config == nil then
 
 		},	
 	}
-	CODEMYLIFE_MARKSMANSHIP = PQI:AddRotation(CML_Marks_config)
+	CODEMYLIFE_HUNTER = PQI:AddRotation(CML_Main_config)
 end
+
+
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _MyClass == 3 and _Spec == 2 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_CodeMyLifeCooldownsMarks_"
+
+	CML_Cooldowns_Config = {
+		name	= "CooldownsMarks",
+		author	= "CodeMyLife",
+		abilities = {
+
+			--[[ Cooldowns ]]
+			{ 	name	= "Stampede",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Stampede.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},
+			{ 	name	= "Rapid Fire",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Rapid Fire.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},
+			{ 	name	= "A Murder of Crows",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic A Murder of Crows.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},				
+			{ 	name	= "Focus Fire",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Focus Fire.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Racials",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Professions CDs",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},					
+			{ 	name	= "Trinkets",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
+					value = 1,
+					width = 70,
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
+				},
+			},		
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff7EBF37On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
+				},
+			},				
+			{ 	name	= "Interrupt",
+				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Counter Shot |cff7EBF37On target.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Counter Shot |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+				},
+				newSection = true,
+			},
+		},
+	}
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
+end
+
+
 
 --[[           ]] 	--[[]]	   --[[]]	--[[           ]]  	--[[]]	   --[[]]
 --[[           ]] 	--[[]]	   --[[]]	--[[           ]] 	--[[]]	   --[[]]
@@ -691,7 +779,18 @@ if _MyClass == 3 and _Spec == 3 and CML_Surv_config == nil then
 					step	= 5,
 					tooltip	= PlayerHex.."Set Player Status Vertical Value.",
 				},
-			},		
+			},			
+			{ 	name	= "Debug",
+				tooltip	= "|cff7EBF37Displays Rotation locally in chat.",
+				enable	= false,
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Success","|cffD90000Failed","|cffFFFFFFBoth"},
+					value	= 1,
+					width	= 70,
+					tooltip	= "|cff7EBF37Select what spells you want to be shown in chat.",
+				},
+				newSection = true,
+			},	
 			{ 	name	= "Exhilaration",
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFExhilaration |cff7EBF37on me.",
 				enable	= true,
@@ -773,16 +872,6 @@ if _MyClass == 3 and _Spec == 3 and CML_Surv_config == nil then
 				enable	= false,
 				newSection = true,
 	
-			},
-			{ 	name	= "Active Pet Whistle",
-				tooltip	= "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff5EAB00Pet Slot 1","|cff5EAB00Pet Slot 2","|cff5EAB00Pet Slot 3","|cff5EAB00Pet Slot 4","|cff5EAB00Pet Slot 5"},
-					value = 1,
-					width = 70,
-					tooltip = "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",	
-				},
 			},		
 			{ 	name	= "Mend Pet",
 				tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
@@ -793,10 +882,6 @@ if _MyClass == 3 and _Spec == 3 and CML_Surv_config == nil then
 					step	= 5,
 					tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
 				},
-			},		
-			{ 	name	= "Fervor",
-				tooltip	= "|cffFFFFFFCheck "..PlayerHex.."to activate |cffFFFFFFFervor.",
-				enable	= true,
 			},	
 			{ 	name	= "Explosive Trap",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFTraps |cff7EBF37on cursor.",
@@ -833,88 +918,33 @@ if _MyClass == 3 and _Spec == 3 and CML_Surv_config == nil then
 				tooltip	= PlayerHex.."toggle |cffFFFFFFPet Passive Behaviour|cff7EBF37.",
 				enable	= true,
 				widget = { type = 'select',
-					values = {"|cffE07000Target","|cff5EAB00Focus","|cff00A8ABMouse","|cffFFFFFFFollow"},
+					values = {"|cffD90000Target","|cff5EAB00Focus","|cffF97C38FocusTarget","|cff00A8ABMouse","|cffFFFFFFFollow"},
 					value = 2,
 					width = 70,
 					tooltip = "|cffFFFFFFSet target to use|cff7EBF37 for your Pet. |cffFFFFFFIf invilaid it will attack Target|cff7EBF37.",	
 				},
-			},
-			--[[ Cooldowns ]]
-			{ 	name	= "A Murder of Crows",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic A Murder of Crows.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},	
-			{ 	name	= "Stampede",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Stampede.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},
-			{ 	name	= "Rapid Fire",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Rapid Fire.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},
-			{ 	name	= "Racials",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},	
-			{ 	name	= "Professions CDs",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},					
-			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
-					value = 1,
-					width = 70,
-					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
-				},
-			},		
-			{ 	name	= "Agility Potion on Heroism",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
-				enable	= true,
-			},			
-			{ 	name	= "Debug",
-				tooltip	= "|cff7EBF37Displays Rotation locally in chat.",
-				enable	= false,
-				widget = { type = 'select',
-					values 	= {PlayerHex.."Success","|cffD90000Failed","|cffFFFFFFBoth"},
-					value	= 1,
-					width	= 70,
-					tooltip	= "|cff7EBF37Select what spells you want to be shown in chat.",
-				},
 				newSection = true,
 			},	
+			{ 	name	= "Pet Manager",
+				tooltip	= "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff5EAB00Pet Slot 1","|cff5EAB00Pet Slot 2","|cff5EAB00Pet Slot 3","|cff5EAB00Pet Slot 4","|cff5EAB00Pet Slot 5"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",	
+				},
+			},		
+			{ 	name	= "Mend Pet",
+				tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
+				enable	= true,
+				widget	= { type = "numBox",
+					value	= 40,
+					width 	= 70,
+					step	= 5,
+					tooltip	= "|cffFFFFFFPet Health value "..PlayerHex.."to use |cffFFFFFFMend Pet|cff7EBF37.",
+				},
+			},		
 		},
 		--[[ Keybinds ]]
 		hotkeys = {
@@ -952,6 +982,157 @@ if _MyClass == 3 and _Spec == 3 and CML_Surv_config == nil then
 	}
 	CODEMYLIFE_SURVIVAL = PQI:AddRotation(CML_Surv_config)
 end
+
+--[[           ]]	--[[         ]]		--[[           ]] 	
+--[[           ]]	--[[          ]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]	--[[]]				
+--[[]]				--[[]]	   --[[]]	--[[           ]] 	
+--[[]]				--[[]]	   --[[]]		   	   --[[]]	
+--[[   		   ]]	--[[          ]]	--[[           ]] 	
+--[[   		   ]]	--[[         ]] 	--[[           ]] 	
+
+if _MyClass == 3 and _Spec == 3 and CML_Cooldowns_Config == nil then
+	Coolprefix = "PQI_CodeMyLifeCooldownsSurv_"
+	CML_Cooldowns_Config = {
+		name	= "CooldownsSurv",
+		author	= "CodeMyLife",
+		abilities = {
+			--[[ Cooldowns ]]
+			{ 	name	= "Stampede",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Stampede.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},
+			{ 	name	= "Rapid Fire",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Rapid Fire.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},
+			{ 	name	= "A Murder of Crows",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic A Murder of Crows.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},				
+			{ 	name	= "Focus Fire",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Focus Fire.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Racials",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},	
+			{ 	name	= "Professions CDs",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},					
+			{ 	name	= "Trinkets",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
+					value = 1,
+					width = 70,
+					tooltip = "|cff7EBF37Choose |cffFFFFFFTrinkets to use|cff7EBF37.",	
+				},
+			},		
+			{ 	name	= "DPS Potion",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff7EBF37On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
+				},
+			},				
+			{ 	name	= "Interrupt",
+				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Counter Shot |cff7EBF37On target.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
+					value = 1,
+					width = 70,
+					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Counter Shot |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+				},
+				newSection = true,
+			},
+		},
+	}
+	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 --[[           ]]	--[[]]	   --[[]]	--[[]]	   --[[]]	--[[   		   ]]	--[[   		   ]]	--[[   		   ]]	--[[           ]]	--[[]]	   --[[]]
 --[[           ]]	--[[]]	   --[[]]	--[[  ]]   --[[]]	--[[   		   ]]	--[[   		   ]]	--[[   		   ]]	--[[           ]]	--[[  ]]   --[[]]
@@ -1046,6 +1227,7 @@ if not HunterFunctions then
 		["Pause"]				= false,
 		["ScatterQueue"]		= false,
 		["StampedeQueue"]		= false,
+		["Synapse"]				= 0,
 		["WidowVenomQueue"] 	= false, 
 	} 
 	_Queues = {	
@@ -1070,6 +1252,7 @@ if not HunterFunctions then
 		[_TrapLauncherSnakes] 	= false,
 		[_WidowVenom] 			= false,
 	}
+
 	function CML.Aspects(value)
 		local _ActiveAspects = _G[PQIprefix.."ActiveAspects_enable"]
 		local _ActiveAspectsValue = _G[PQIprefix.."ActiveAspects_value"]
@@ -1097,6 +1280,7 @@ if not HunterFunctions then
 			end
 		end
 	end	
+
 	function CML.FocusFire()
 		Stacks = select(4,UnitBuffID("player",19615))
 		if Stacks == 5 then
@@ -1157,6 +1341,44 @@ if not HunterFunctions then
 		end
 	end
 
+	function CML.PetManager()
+		if _G[PQIprefix.."MendPet_enable"] and (UnitHealth("pet")/UnitHealthMax("pet")*100) <= _G[PQIprefix.."MendPet_value"] then
+			if not UnitBuffID("pet",136) then
+				CastSpellByName(GetSpellInfo(136))
+			end
+		end
+		if _G[PQIprefix.."PetManager_enable"] == false then return false end
+		if (not UnitExists("pet") or UnitIsDeadOrGhost("pet")) and ProbablyEngine.module.player.petdead then
+			if GetUnitSpeed("player") == 0 then
+				CastSpellByName(GetSpellInfo(982))
+				--PetIsDead = false
+				return false
+			end
+		end
+		if (not UnitExists("pet") or UnitIsDeadOrGhost("pet")) and ProbablyEngine.module.player.petwhistle then
+			if _G[PQIprefix.."PetManager_value"] == 1 then
+				CastSpellByName(GetSpellInfo(883))
+			elseif _G[PQIprefix.."PetManager_value"] == 2 then
+				CastSpellByName(GetSpellInfo(83242))
+			elseif _G[PQIprefix.."PetManager_value"] == 3 then
+				CastSpellByName(GetSpellInfo(83243))
+			elseif _G[PQIprefix.."PetManager_value"] == 4 then
+				CastSpellByName(GetSpellInfo(83244))
+			elseif _G[PQIprefix.."PetManager_value"] == 5 then
+				CastSpellByName(GetSpellInfo(83245))
+			end
+			--PetWhistle = false
+			return false
+		end
+		if not UnitExists("pet") or UnitIsDeadOrGhost("pet") then
+			if GetUnitSpeed("player") == 0 then
+				CastSpellByName(GetSpellInfo(982))
+				--PetIsDead = false
+				return false
+			end
+		end
+	end
+
 	function CML.PetPassiveBehaviour()
 		if macros["Pause"] == true then 
 			RunMacroText("/petstopattack")
@@ -1177,6 +1399,14 @@ if not HunterFunctions then
 					return false
 				end
 			elseif PetPassiveBehaviour == 3 then
+				if UnitExists("focustarget") == 1 then
+					PetAttack("focustarget") 
+					return false
+				else
+					PetAttack("target")
+					return false
+				end
+			elseif PetPassiveBehaviour == 4 then
 				if UnitExists("mouseover") == 1 then
 					PetAttack("mouseover") 
 					return false
@@ -1184,7 +1414,7 @@ if not HunterFunctions then
 					PetAttack("target")
 					return false
 				end
-			elseif PetPassiveBehaviour == 4 then
+			elseif PetPassiveBehaviour == 5 then
 				PetFollow()
 				return false
 			end
@@ -1206,26 +1436,52 @@ if not HunterFunctions then
 
 	function CML.SuperDuperMacroBeast()
 		local FightTime = GetTime() - ProbablyEngine.module.player.combatTime
-		if _G[PQIprefix.."RaidBurst_enable"] and ((_G[PQIprefix.."RaidBurst_value"] == 1 and UnitExists("boss1")) or _G[PQIprefix.."RaidBurst_value"] == 2) and FightTime < 14 then
+		if _G[Coolprefix.."RaidBurst_enable"] and ((_G[Coolprefix.."RaidBurst_value"] == 1 and UnitExists("boss1")) or _G[Coolprefix.."RaidBurst_value"] == 2) and FightTime < 14 then
 			--print("it works")
-			RunMacroText("/petattack")
-			RunMacroText("/castsequence reset=14 Rapid Fire,Stampede,Dire Beast,Bestial Wrath,Kill Command,Glaive Toss,Arcane Shot,Arcane Shot,Arcane Shot,Arcane Shot,Arcane Shot,Kill Command,Arcane Shot,Arcane Shot,Arcane Shot,Cobra Shot")
-			RunMacroText("/use Virmen's Bite")
-			RunMacroText("/cast Berserking(Racial)")
+			if _G[Coolprefix.."DPSPotionOnHeroism_enable"] and _G[Coolprefix.."DPSPotionOnHeroism_value"] == 1 and UnitExists("boss1") then UseItemByName(CML.DPSPotionsSet[CML.DPSPotionSelect()].Item) end
+			local SS,RF,BF,BR,Stamp,DB,BW,KC,GT,AS,CS,Timer = SS,RF,BF,BR,Stamp,DB,BW,KC,GT,AS,CS,10
+			if LastSerpent ~= nil and LastSerpent >= GetTime() - 2 then SS = "" else SS = select(1,GetSpellInfo(1978))..", " Timer = Timer + 1 end
+			if CML.GetSpellCD(3045) == 0 then RF = select(1,GetSpellInfo(3045))..", " else RF = "" end
+			if IsPlayerSpell(20572) == true and CML.GetSpellCD(20572) == 0 then BF = select(1,GetSpellInfo(20572)).."(Racial), " else BF = "" end
+			if IsPlayerSpell(26297) == true and CML.GetSpellCD(26297) == 0 then BR = select(1,GetSpellInfo(26297)).."(Racial), " else BR = "" end			
+			if UnitLevel("player") >= 87 and CML.GetSpellCD(121818) <= 3 then Stamp = select(1,GetSpellInfo(121818))..", " Timer = Timer + 1 else Stamp = "" end
+			if select(5, GetTalentInfo(11)) and CML.GetSpellCD(120679) <= 3 then DB = select(1,GetSpellInfo(120679))..", " Timer = Timer + 1 else DB = "" end
+			if CML.GetSpellCD(19574) == 0 then BW = select(1,GetSpellInfo(19574))..", " else BW = "" end
+			if CML.GetSpellCD(34026) <= 3 then KC = select(1,GetSpellInfo(34026))..", " else KC = "" end					
+			if select(5, GetTalentInfo(16)) and CML.GetSpellCD(117050) <= 3 then
+			GT = select(1,GetSpellInfo(117050))..", "
+			Timer = Timer + 1 else GT = "" end	
+			if macros["AoE"] == 2 then AS = select(1,GetSpellInfo(2643))..", " else AS = select(1,GetSpellInfo(3044))..", " end
+			local CS = select(1,GetSpellInfo(77767))..", "
+			Timer = Timer.." "
+			if not Sequence then
+				Sequence = "/castsequence reset="..Timer..SS..RF..Stamp..DB..BW..KC..GT..AS..AS..AS..AS..AS..KC..AS..AS..AS..CS..CS
+				_MacroSpammerMode = true
+				if CML_Debug then print("/castsequence reset="..Timer..SS..RF..Stamp..DB..BW..KC..GT..AS..AS..AS..AS..AS..KC..AS..AS..AS..CS..CS) end
+			end
+			-- /castsequence reset= 14 Serpent Sting, Rapid Fire, Stampede, Dire Beast, Bestial Wrath, Kill Command, Glaive Toss, Arcane Shot, Arcane Shot, Arcane Shot, Arcane Shot, Arcane Shot, Kill Command, Arcane Shot, Arcane Shot, Arcane Shot, Cobra Shot, Cobra Shot, end
+			if Sequence ~= nil and UnitPower("player") >= 40 and _MacroSpammerMode ~= false then
+				RunMacroText("/cast "..BF)
+				RunMacroText("/cast "..BR)
+				RunMacroText(Sequence)
+			elseif _MacroSpammerMode == true then
+				if CML_Debug then print("Macrospam Ended; Focus fallen under 40.") end
+				_MacroSpammerMode = false
+			end
 			return false
 		end
 	end
 
 	function CML.SuperDuperMacroTimer()
 		local FightTime = GetTime() - ProbablyEngine.module.player.combatTime
-		if _G[PQIprefix.."RaidBurst_enable"] and ((_G[PQIprefix.."RaidBurst_value"] == 1 and UnitExists("boss1")) or _G[PQIprefix.."RaidBurst_value"] == 2) and FightTime < 14 then
+		if _MacroSpammerMode and _G[Coolprefix.."RaidBurst_enable"] and ((_G[Coolprefix.."RaidBurst_value"] == 1 and UnitExists("boss1")) or _G[Coolprefix.."RaidBurst_value"] == 2) and FightTime < 14 then
 			return true
 		end
 	end	
 
 	function CML.TrapExplosive()
 		if _G[PQIprefix.."ExplosiveTrap_value"] == 2 then
-			if UnitIsUnit("target","mouseover") == 1 then 
+			if UnitExists("target") == 1 and UnitIsUnit("target","mouseover") == 1 and CML.GetSpellCD(_TrapLauncherExplosive) <= 3 then 
 				_Queues[_TrapLauncherExplosive] = true 
 				return true
 			end
@@ -1233,7 +1489,7 @@ if not HunterFunctions then
 	end
 	function CML.TrapSnakes()
 		if _G[PQIprefix.."SnakesTrap_value"] == 2 then
-			if UnitIsUnit("target","mouseover") == 1 then 
+			if UnitExists("target") == 1 and UnitIsUnit("target","mouseover") == 1 and CML.GetSpellCD(_TrapLauncherSnakes) <= 3 then 
 				_Queues[_TrapLauncherSnakes] = true 
 				return true
 			end
@@ -1241,7 +1497,7 @@ if not HunterFunctions then
 	end
 	function CML.TrapIce()
 		if _G[PQIprefix.."IceTrap_value"] == 2 then
-			if UnitIsUnit("target","mouseover") == 1 then 
+			if UnitExists("target") == 1 and UnitIsUnit("target","mouseover") == 1 and CML.GetSpellCD(_TrapLauncherIce) <= 3 then 
 				_Queues[_TrapLauncherIce] = true 
 				return true
 			end

@@ -2,16 +2,6 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
 --------------------------------------------------Defensive-------------------------------------------- 
     {"TaMere","@CML.PQIConfing()"},{"TaMere","@CML.Status()"},{"pause","@CML.CombatCheck()"}, -- Combat Check/Pause
 
-    -- Healthstone   
-    {"#5512",{
-        "@CML.HealthStone()",
-        "Healthstone.novaHealing(0)",
-    }},   
-    {"PetMover",{
-        "PetMoveToMouse.pqicheck",
-        "PetMoveToMouse.pqikeybind",
-        "@CML.PetMove()",
-    }},
     {"30283","queuecast(30283)","ground"}, -- ShadowFury
 	--[[Pre-Combat]]
 	-- dark_intent,if=!aura.spell_power_multiplier.up
@@ -20,16 +10,15 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
         "DarkIntent.pqicheck",
     },"player"},
 	-- summon_pet,if=!talent.grimoire_of_sacrifice.enabled|buff.grimoire_of_sacrifice.down
-	{"30146",{ -- Fel Guard
+	{"30146",{ -- Fel Hunter
 		"!talent(15)", -- !talent.grimoire_of_sacrifice.enabled
 		"!pet.exists",
 	}},
-	{"30146",{ -- Fel Guard
+	{"30146",{ -- Fel Hunter
 		"talent(15)",
 		"!player.buff(108503)", -- buff.grimoire_of_sacrifice.down
 		"!pet.exists",
 	}},	
-	-- snapshot_stats
 	-- grimoire_of_sacrifice,if=talent.grimoire_of_sacrifice.enabled
 	{"108503",{
 		"talent(15)",
@@ -41,66 +30,11 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
 		"talent(14)",
 		"!pet.exists",
 	}},	
-	-- jade_serpent_potion
-
 	-- curse_of_the_elements,if=debuff.magic_vulnerability.down
 	{"1490",{
-		"!target.debuff(1490)",
+		"1490.multidot360(1)",
 	}},	
-	-- Gloves
- 	{ "#gloves", { -- On ActiveCooldowns
-        "@CML.ActiveCooldowns()",
-        "ProfessionsCDs.pqivalue = 1",
-        "target.exists",
-	}},
- 	{ "#gloves", { -- On CD
-        "ProfessionsCDs.pqivalue = 2", 
-        "target.exists",
-	}},
-    -- Berserking
-    {"26297",{ -- On CD
-        "player.spell(26297).exists",
-        "Racials.pqivalue = 2",
-        "target.exists",
-    }},
-    {"26297",{ -- On ActiveCooldowns
-        "player.spell(26297).exists",
-        "Racials.pqivalue = 1",
-        "macros(ActiveCooldowns)",
-        "target.exists",
-    }},
-   -- Lifeblood
-    {"121279",{ -- On CD
-        "player.spell(121279).exists",
-        "ProfessionsCDs.pqivalue = 2",
-        "target.exists",
-    }},
-    {"121279",{ -- On ActiveCooldowns 
-        "player.spell(121279).exists",
-        "ProfessionsCDs.pqivalue = 1",
-        "macros(ActiveCooldowns)",
-        "target.exists",
-    }},
-     -- Trinket1 
-    {"#trinket1",{ -- On CD
-        "Trinkets.pqivalue = 2",
-        "target.exists",
-    }},
-    {"#trinket1",{ -- On ActiveCooldowns
-        "Trinkets.pqivalue = 1",
-        "macros(ActiveCooldowns)",
-        "target.exists",
-    }},
-     -- Trinket2   
-    {"#trinket2",{ -- On CD
-        "Trinkets.pqivalue = 2",
-        "target.exists",
-    }}, 
-    {"#trinket2",{ -- On ActiveCooldowns 
-        "Trinkets.pqivalue = 1",
-        "macros(ActiveCooldowns)",
-        "target.exists",
-    }},	
+    -- Hand of Guldan
     {"105174",{ -- 1er
 		"player.aoe = 1",
    		"player.spell(105174).charges >= 2",
@@ -117,23 +51,22 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
     {"113861",{
     	"!talent(16)",
 		"target.debuff(47960)",
-   		"player.spell(47960).charges = 0",
+   		"player.spell(105174).charges = 0",
     }},	
     {"113861",{
     	"talent(16)", -- talent.archimondes_darkness.enabled
     	"player.spell(113861).charges = 2", -- charges=2
 		"target.debuff(47960)",
-   		"player.spell(47960).charges = 0",
+   		"player.spell(105174).charges = 0",
     }},	    
     {"113861",{
 		"target.debuff(47960)",
-   		"player.spell(47960).charges = 0",
+   		"player.spell(105174).charges = 0",
     }},	    
     {"113861",{
     	"talent(16)", -- talent.archimondes_darkness.enabled
 		"target.debuff(47960)",
-   		"player.spell(47960).charges = 0",
-   		"player.spell(47960).charges = 0",
+   		"player.spell(105174).charges = 0",
     	"player.buff(145085).remains >= 3", -- trinket.proc.intellect.react
     }},	      	
 	-- service_pet,if=talent.grimoire_of_service.enabled
@@ -198,27 +131,11 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
         "macros(ActiveCooldowns)",  
      }},	
 	-- doom,cycle_targets=1,if=buff.metamorphosis.up&(ticks_remain<=1|(ticks_remain+1<n_ticks&buff.dark_soul.up)|(ticks_remain<=add_ticks%2&stat.spell_power>spell_power))&target.time_to_die>=30&miss_react
-    {"603",{
-		"player.aoe = 1",
-    	"player.buff(103958)", -- buff.metamorphosis.up
-    	"target.debuff(603).duration <= 25", -- ticks_remain<=1
-    	--"target.ttd >= 30", -- target.time_to_die>=30
-    }},		
-	-- cancel_metamorphosis,if=buff.metamorphosis.up&buff.dark_soul.down&demonic_fury<=650&target.time_to_die>30&(cooldown.metamorphosis.remains<4|demonic_fury<=300)&!(action.hand_of_guldan.in_flight&dot.shadowflame.remains)
-    --[[{"CancelMeta",{
-		"player.aoe = 1",
-    	"player.buff(103958)", -- buff.metamorphosis.up
-    	"!player.buff(113861)", -- buff.dark_soul.down
-    	"player.demonicfury <= 300", -- demonic_fury<=300
-    	--"target.ttd >= 30", -- target.time_to_die>30
-    	"player.cooldown(103958).cooldown < 4", -- cooldown.metamorphosis.remains<4
-    	"@CML.CancelMeta()",
-    }},	]]   
+    {"603",{"player.aoe = 1","player.buff(103958)","603.multidot(25)"}},		
 	-- touch_of_chaos,if=buff.metamorphosis.up
     {"103964",{
-    	"player.aoe = 1",
-    	"target.debuff(146739).duration <= 3",
     	"player.buff(103958)", -- buff.metamorphosis.up
+        "146739.multirefresh(5)",
     }},	     
 	-- soul_fire,if=buff.metamorphosis.up&buff.molten_core.react&(buff.dark_soul.remains<action.shadow_bolt.cast_time|buff.dark_soul.remains>cast_time)
     {"104027",{
@@ -235,15 +152,14 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
 	-- corruption,cycle_targets=1,if=!ticking&target.time_to_die>=6&miss_react
     {"172",{
 		"player.aoe = 1",
-    	"target.debuff(146739).duration <= 5", -- !ticking
-    	"!player.buff(103958)", -- buff.metamorphosis.down
-    	"player.spell(113861).cooldown <= 5", -- buff.dark.cooldown<=5
+        "!player.buff(103958)", -- buff.metamorphosis.down
+        "target.debuff(146739).duration <= 2", -- !ticking
     }},	
 	-- corruption,cycle_targets=1,if=!ticking&target.time_to_die>=6&miss_react
     {"172",{
-		"player.aoe = 1",
-    	"target.debuff(146739).duration <= 4", -- !ticking
+		"player.aoe = 2",
     	"!player.buff(103958)", -- buff.metamorphosis.down
+        "146739.multidot(2)", -- !ticking
     }},	
 	-- metamorphosis,if=(buff.dark_soul.up&buff.dark_soul.remains<demonic_fury%32)|demonic_fury>=950|demonic_fury%32>target.time_to_die|(action.hand_of_guldan.in_flight&dot.shadowflame.remains)
     {"103958",{
@@ -266,22 +182,12 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
 		"player.aoe = 1",
     	"!player.buff(103958)", -- buff.metamorphosis.down
     	"player.demonicfury >= 950", -- demonic_fury>=950
-    }},	    
---[[    {"103958",{
-		"player.aoe = 1",
-		"target.debuff(47960)",
-   		"player.spell(105174).charges = 0",
-    	"!player.buff(103958)", -- buff.metamorphosis.down
-    	"player.buff(113861)", -- buff.dark_soul.up
-    	"player.demonicfury >= 500", -- demonic_fury>=950
-    	"target.ttd <= 15",
-    }},	  ]]  
-		
+    }},		
 	-- hand_of_guldan,if=!in_flight&dot.shadowflame.remains<travel_time+action.shadow_bolt.cast_time&(charges=2|dot.shadowflame.remains>travel_time|(charges=1&recharge_time<4))
    {"105174",{
 		"player.aoe = 1",
    		"player.spell(105174).charges >= 2",
-    	"!target.debuff(47960)", -- !ticking
+    	"!target.debuff(47960)",
     	"!player.lastcast",
     }},	
    {"105174",{
@@ -317,7 +223,6 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
 	{"124916",{
     	"player.aoe = 2", -- AoE
     	"player.buff(103958)", -- buff.metamorphosis.up
-    	"target.range <= 5",
     }},	
 	-- immolation_aura,if=buff.metamorphosis.up
 	{"104025",{
@@ -325,6 +230,7 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
 		"!player.buff(104025)", 
     	"player.buff(103958)", -- buff.metamorphosis.up
     	"target.range <= 5",
+        "player.demonicfury >= 500"
     }},	
 	-- void_ray,if=buff.metamorphosis.up&dot.corruption.remains<10
 	{"115422",{ 
@@ -342,11 +248,10 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
     }},	 
 	-- doom,cycle_targets=1,if=buff.metamorphosis.up&(!ticking|remains<tick_time|(ticks_remain+1<n_ticks&buff.dark_soul.up))&target.time_to_die>=30&miss_react
     {"603",{
-    	"player.aoe = 2", -- AoE
-    	"player.buff(103958)", -- buff.metamorphosis.up
-    	"target.debuff(603).duration <= 2", -- ticks_remain<=1
-    	--"target.ttd >= 30", -- target.time_to_die>=30
-    }},	
+        "player.aoe = 2",
+        "player.buff(103958)", -- buff.metamorphosis.up
+        "603.multidot360(25)", -- ticks_remain<=1
+    }}, 
 	-- void_ray,if=buff.metamorphosis.up
 	{"115422",{ 
     	"player.aoe = 2", -- AoE
@@ -378,19 +283,15 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
     	"player.buff(113861)", -- buff.dark_soul.up
     	"player.demonicfury >= 300", -- demonic_fury>=950
     }},	
---[[    {"103958",{
-    	"player.aoe = 2", -- AoE
-    	"!player.buff(103958)", -- buff.metamorphosis.down
-    	"player.demonicfury >= 500", -- demonic_fury>=950
-    	"target.ttd <= 15",
-    }},		]]
 	-- hellfire,chain=1,interrupt=1
     {"1949",{
     	"player.aoe = 2", -- AoE
     	"!player.buff(1949)",
     	"target.range <= 5",
-    }},		
-
+        "player.health >= 20",
+    }},	
+    -- shadow_bolt
+    {"686","player.aoe = 2"},	
 }, 
 --------------------------------------------------Out of Combat-------------------------------------------- 
 { 
@@ -414,8 +315,6 @@ ProbablyEngine.rotation.register_custom(266, "CodeMyLife Demonology", {
 		"!player.buff(108503)", -- buff.grimoire_of_sacrifice.down
 		"!pet.exists",
 	}},	
-	-- snapshot_stats
-	{"SnapShot","@CML.SnapShot()"},
 	-- grimoire_of_sacrifice,if=talent.grimoire_of_sacrifice.enabled
 	{"108503",{
 		"talent(15)",

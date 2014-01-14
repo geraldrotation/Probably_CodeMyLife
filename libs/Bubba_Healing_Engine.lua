@@ -251,7 +251,7 @@ if not metaTable1 then
 		-- Updating the values of the Unit
 		function o:UpdateUnit()
 			o.name = UnitName(o.unit)
-			o.role = UnitGroupRolesAssigned(o.unit)
+			if UnitName(o.unit) == "Oto the Protector" then o.role = "TANK" else o.role = UnitGroupRolesAssigned(o.unit) end
 			o.guid = o:nGUID()
 			o.guidsh = select(2, o:nGUID())
 			local InRangeNow = 1
@@ -342,9 +342,9 @@ if not metaTable1 then
 				elseif x.range then return true
 				elseif y.range then return false end
 			end)
-			if UnitExists("target") and memberSetup.cache[select(2, Nova_GUID("target"))] then
-				table.sort(nNova, function(x)return UnitIsUnit(x.unit, "target") end)
-			end
+--			if UnitExists("target") and memberSetup.cache[select(2, Nova_GUID("target"))] then
+--				table.sort(nNova, function(x)return UnitIsUnit(x.unit, "target") end)
+--			end
 		end
 		-- We are creating the initial Main Table
 		nNova()
