@@ -89,8 +89,8 @@ function DataLoader()
 				end	
 			end	
 			-- Cooldowns
-			if SpellID == 113858 or SpellID == 113861 or SpellID == 103958 then
-				if (_G[Coolprefix.."ProfessionsCDs_value"] == 1 and macros["ActiveCooldowns"]) or _G[Coolprefix.."ProfessionsCDs_value"] == 2 then
+			if SpellID == 113858 or SpellID == 113861 or SpellID == 103958 or SpellID == 80240 or SpellID == 108683 or SpellID == 103958 then
+				if (_G[Coolprefix.."ProfessionsCDs_value"] == 1 and macros["ActiveCooldowns"]) or _G[Coolprefix.."ProfessionsCDs_value"] == 2 and (not ProbablyEngine.module.player.synapseused or ProbablyEngine.module.player.synapseused <= (GetTime() - 60)) then
 					RunMacroText("/use 10")
 				end
 				if (_G[Coolprefix.."Trinkets_value"] == 1 and macros["ActiveCooldowns"]) or _G[Coolprefix.."Trinkets_value"] == 2 then
@@ -99,11 +99,16 @@ function DataLoader()
 			    end				
 			end			
 
+			-- Magma projection
+			if SpellID == 8190 and UnitExists("target") and IsSpellInRange(73899) ~= 1 then
+				ProbablyEngine.module.player.shouldproject = GetTime()
+			end
+
 			if CML_Debug and (CML_DebugValue == 1 or CML_DebugValue == 3) and not (CML_LastSpell == select(2,...) and (CML_LastTime and (GetTime() - CML_LastTime  < 1))) then
 				CML_LastSpell 	= select(2,...) 
 				CML_LastTime 	= GetTime()
 				if ProbablyEngine.module.player.spellcasttarget then LastTar = ProbablyEngine.module.player.spellcasttarget else LastTar = "Not Assigned" end
-				print("|cff12C8FF"..select(5,...).." |cffFF001E| |cffFFFFFF"..CML_LastSpell.." |cffFF001E| |cff12C8FF"..CML_LastTime.." |cffFFFFFFOn "..LastTar)
+				print("|cff12C8FF"..select(5,...).." |cffFF001E| |cffFFFFFF"..CML_LastSpell.." |cffFF001E| |cff12C8FF"..CML_LastTime.." |cffFF001E| |cffFFFFFF"..LastTar)
 			end
 		end
 	end)
@@ -125,7 +130,7 @@ function DataLoader()
 			end
 			-- Rebirth
 			if SpellID == 20484 then
-				ProbablyEngine.module.player.battlerezfail = true
+				ProbablyEngine.module.player.battlerezfail = ProbablyEngine.module.player.battlerezfail + 1
 			end	
 			if CML_Debug and (CML_DebugValue == 2 or CML_DebugValue == 3) and not (CML_LastFail == select(2,...) and (CML_LastFailTime and (GetTime() - CML_LastFailTime  < 1))) then
 				CML_LastFail 	= select(2,...) 
@@ -137,6 +142,7 @@ function DataLoader()
 
 	ProbablyEngine.listener.register("UI_ERROR_MESSAGE", function(...)
 	  	local Events = ...
+	  	-- print(...)
 	  	if Events == ERR_PET_SPELL_DEAD  then
 			ProbablyEngine.module.player.petdead = true
 			ProbablyEngine.module.player.petwhistle = false

@@ -7,9 +7,9 @@ end
 _RangeSpell = 3044
 _HealingRangeSpell = 102694 -- First Aid
 
-if _Spec == 1 then PQIprefix = "PQI_CodeMyLifeBeastmaster_" Coolprefix = "PQI_CodeMyLifeCooldownsBeast_" end
-if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeMarksmanship_" Coolprefix = "PQI_CodeMyLifeCooldownsMarks_" end
-if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeSurvival_" Coolprefix = "PQI_CodeMyLifeCooldownsSurv_" end
+if _Spec == 1 then PQIprefix = "PQI_CodeMyLifeBeastmaster_" Coolprefix = "PQI_CodeMyLifeCooldownsBeast_" PQR_Text("CodeMyLife(BeastMaster)",nil,"abd473") end
+if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeMarksmanship_" Coolprefix = "PQI_CodeMyLifeCooldownsMarks_" PQR_Text("CodeMyLife(Marksmanship)",nil,"abd473") end
+if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeSurvival_" Coolprefix = "PQI_CodeMyLifeCooldownsSurv_" PQR_Text("CodeMyLife(Survival)",nil,"abd473") end
 
 --[[           ]]	--[[           ]]		  --[[]]		--[[           ]]	--[[           ]]
 --[[           ]]	--[[           ]]	     --[[  ]]		--[[           ]]	--[[           ]]
@@ -32,7 +32,13 @@ if _MyClass == 3 and _Spec == 1 and CML_Main_config == nil then
 			{ 	name	= "Player Status", 
 				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",
@@ -63,6 +69,16 @@ if _MyClass == 3 and _Spec == 1 and CML_Main_config == nil then
 					value	= 1,
 					width	= 70,
 					tooltip	= PlayerHex.."Select what spells you want to be shown in chat.",
+				},
+			},		
+			{ 	name	= "AoE Helper",
+				tooltip	= PlayerHex.."Enables AoE Helper.",
+				enable	= false,
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Forced","|cffD90000Stop"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select how you want the profile to react when you use mouseover ground effects spells.",
 				},
 			},	
 			{ 	name	= "Exhilaration",
@@ -174,9 +190,9 @@ if _MyClass == 3 and _Spec == 1 and CML_Main_config == nil then
 					values = {"|cff5EAB00Keypress","|cff00A8ABAuto","|cffD90000Disable"},
 					value = 2,
 					width = 70,
-					tooltip = "|cffFFFFFFSet Strategy to use|cff7EBF37 Automatic Traps |cffFFFFFF on |cff7EBF37cursor.",	
+					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Traps |cffFFFFFF on cursor.",	
 				},
-			},									
+			},			
 			{ 	name	= "Pet Passive Behaviour",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFPet Passive Behaviour|cff7EBF37.",
 				enable	= true,
@@ -187,9 +203,9 @@ if _MyClass == 3 and _Spec == 1 and CML_Main_config == nil then
 					tooltip = "|cffFFFFFFSet target to use|cff7EBF37 for your Pet. |cffFFFFFFIf invilaid it will attack Target|cff7EBF37.",	
 				},
 				newSection = true,
-			},	
+			},								
 			{ 	name	= "Pet Manager",
-				tooltip	= "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle|cff7EBF37.",
+				tooltip	= "|cffFFFFFFCall Pet Slot "..PlayerHex.."to use when we |cffFFFFFFWhistle.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {"|cff5EAB00Pet Slot 1","|cff5EAB00Pet Slot 2","|cff5EAB00Pet Slot 3","|cff5EAB00Pet Slot 4","|cff5EAB00Pet Slot 5"},
@@ -214,32 +230,32 @@ if _MyClass == 3 and _Spec == 1 and CML_Main_config == nil then
 			{	name	= "Traps",
 				enable	= true,
 				hotkeys	= {'ls'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFTrap Launcher |cff7EBF37Hold to throw your |cffFFFFFFExplosive and Ice |cff7EBF37traps on your mouse.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFTrap Launcher "..PlayerHex.."Hold to throw your "..PlayerHex.."traps on your mouse.",
 			},
 			{	name	= "Freezing Trap",
 				enable	= true,
 				hotkeys	= {'rs'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFFreezing Trap |cffFFFFFFHold "..PlayerHex.."to throw |cffFFFFFFFreezing Trap |cff7EBF37on your mouse.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFFreezing Trap |cffFFFFFFHold "..PlayerHex.."to throw |cffFFFFFFFreezing Trap "..PlayerHex.."on your mouse.",
 			},
 			{	name	= "Stack Focus",
 				enable	= true,
 				hotkeys	= {'la'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFStack Focus |cff7EBF37Use this to keep high focus before burn phases.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFStack Focus "..PlayerHex.."Use this to keep high focus before burn phases.",
 			},
 			{	name	= "Pause",
 				enable	= true,
 				hotkeys	= {'ra'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFPause |cff7EBF37Will |cffFFFFFFStop Rotation, ClearTarget |cff7EBF37and |cffFFFFFFPet Stop Attack.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFPause "..PlayerHex.."Will |cffFFFFFFStop Rotation, ClearTarget "..PlayerHex.."and |cffFFFFFFPet Stop Attack.",
 			},
 			{	name	= "Pet Move To Mouse",
 				enable	= true,
 				hotkeys	= {'rc'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFPet Move To Mouse |cff7EBF37Use this to |cffFFFFFFmove your pet "..PlayerHex.."toward your mouse.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFPet Move To Mouse "..PlayerHex.."Use this to |cffFFFFFFmove your pet "..PlayerHex.."toward your mouse.",
 			},
 			{	name	= "Set Focus",
 				enable	= true,
 				hotkeys	= {'lc'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFMouseover Focus |cff7EBF37Set focus to mouseover.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus "..PlayerHex.."Set focus to mouseover.",
 			},			
 
 		},
@@ -398,15 +414,20 @@ end
 if _MyClass == 3 and _Spec == 2 and CML_Main_config == nil then
 	PQIprefix = "PQI_CodeMyLifeMarksmanship_"
 	_AoEModes = 2
-	_RangeSpell = _ArcaneShot
 	CML_Main_config = {
 		name	= "Marksmanship",
 		author	= "CodeMyLife",
 		abilities = {
 			{ 	name	= "Player Status", 
-				tooltip	= "|cff7EBF37Enables |cffFFFFFFPlayer Bar.",
+				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",
@@ -438,7 +459,17 @@ if _MyClass == 3 and _Spec == 2 and CML_Main_config == nil then
 					width	= 70,
 					tooltip	= "|cff7EBF37Select what spells you want to be shown in chat.",
 				},
-			},		
+			},			
+			{ 	name	= "AoE Helper",
+				tooltip	= PlayerHex.."Enables AoE Helper.",
+				enable	= false,
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Forced","|cffD90000Stop"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select how you want the profile to react when you use mouseover ground effects spells.",
+				},
+			},	
 			{ 	name	= "Exhilaration",
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFExhilaration |cff7EBF37on me.",
 				enable	= true,
@@ -548,7 +579,7 @@ if _MyClass == 3 and _Spec == 2 and CML_Main_config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFSet Strategy to use|cff7EBF37 Automatic Traps |cffFFFFFF on |cff7EBF37cursor.",	
 				},
-			},		
+			},			
 			{ 	name	= "Pet Passive Behaviour",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFPet Passive Behaviour|cff7EBF37.",
 				enable	= true,
@@ -583,37 +614,36 @@ if _MyClass == 3 and _Spec == 2 and CML_Main_config == nil then
 		},
 		--[[ Keybinds ]]
 		hotkeys = {
-			{	name	= "Traps",
+		{	name	= "Traps",
 				enable	= true,
 				hotkeys	= {'ls'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFTrap Launcher |cff7EBF37Hold to throw your |cffFFFFFFExplosive and Ice |cff7EBF37traps on your mouse.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFTrap Launcher "..PlayerHex.."Hold to throw your "..PlayerHex.."traps on your mouse.",
 			},
 			{	name	= "Freezing Trap",
 				enable	= true,
 				hotkeys	= {'rs'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFFreezing Trap |cffFFFFFFHold "..PlayerHex.."to throw |cffFFFFFFFreezing Trap |cff7EBF37on your mouse.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFFreezing Trap |cffFFFFFFHold "..PlayerHex.."to throw |cffFFFFFFFreezing Trap "..PlayerHex.."on your mouse.",
 			},
 			{	name	= "Stack Focus",
 				enable	= true,
 				hotkeys	= {'la'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFStack Focus |cff7EBF37Use this to keep high focus before burn phases.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFStack Focus "..PlayerHex.."Use this to keep high focus before burn phases.",
 			},
 			{	name	= "Pause",
 				enable	= true,
 				hotkeys	= {'ra'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFPause |cff7EBF37Will |cffFFFFFFStop Rotation, ClearTarget |cff7EBF37and |cffFFFFFFPet Stop Attack.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFPause "..PlayerHex.."Will |cffFFFFFFStop Rotation, ClearTarget "..PlayerHex.."and |cffFFFFFFPet Stop Attack.",
 			},
 			{	name	= "Pet Move To Mouse",
 				enable	= true,
 				hotkeys	= {'rc'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFPet Move To Mouse |cff7EBF37Use this to |cffFFFFFFmove your pet "..PlayerHex.."toward your mouse.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFPet Move To Mouse "..PlayerHex.."Use this to |cffFFFFFFmove your pet "..PlayerHex.."toward your mouse.",
 			},
 			{	name	= "Set Focus",
 				enable	= true,
 				hotkeys	= {'lc'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFMouseover Focus |cff7EBF37Set focus to mouseover.",
-			},		
-
+				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus "..PlayerHex.."Set focus to mouseover.",
+			},	
 		},	
 	}
 	CODEMYLIFE_HUNTER = PQI:AddRotation(CML_Main_config)
@@ -666,17 +696,7 @@ if _MyClass == 3 and _Spec == 2 and CML_Cooldowns_Config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
 				},
-			},				
-			{ 	name	= "Focus Fire",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Focus Fire.",
-				enable	= true,
-				widget = { type = 'select',
-					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
-					value = 2,
-					width = 70,
-					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
-				},
-			},	
+			},		
 			{ 	name	= "Racials",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
 				enable	= true,
@@ -749,15 +769,20 @@ end
 if _MyClass == 3 and _Spec == 3 and CML_Surv_config == nil then
 	PQIprefix = "PQI_CodeMyLifeSurvival_"
 	_AoEModes = 3
-	_RangeSpell = _ArcaneShot
 	CML_Surv_config = {
 		name	= "Survival",
 		author	= "CodeMyLife",
 		abilities = {
 			{ 	name	= "Player Status", 
-				tooltip	= "|cff7EBF37Enables |cffFFFFFFPlayer Bar.",
+				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",
@@ -790,6 +815,16 @@ if _MyClass == 3 and _Spec == 3 and CML_Surv_config == nil then
 					tooltip	= "|cff7EBF37Select what spells you want to be shown in chat.",
 				},
 				newSection = true,
+			},		
+			{ 	name	= "AoE Helper",
+				tooltip	= PlayerHex.."Enables AoE Helper.",
+				enable	= false,
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Forced","|cffD90000Stop"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select how you want the profile to react when you use mouseover ground effects spells.",
+				},
 			},	
 			{ 	name	= "Exhilaration",
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFExhilaration |cff7EBF37on me.",
@@ -948,36 +983,36 @@ if _MyClass == 3 and _Spec == 3 and CML_Surv_config == nil then
 		},
 		--[[ Keybinds ]]
 		hotkeys = {
-			{	name	= "Traps",
+		{	name	= "Traps",
 				enable	= true,
 				hotkeys	= {'ls'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFTrap Launcher |cff7EBF37Hold to throw your |cffFFFFFFExplosive and Ice |cff7EBF37traps on your mouse.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFTrap Launcher "..PlayerHex.."Hold to throw your "..PlayerHex.."traps on your mouse.",
 			},
 			{	name	= "Freezing Trap",
 				enable	= true,
 				hotkeys	= {'rs'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFFreezing Trap |cffFFFFFFHold "..PlayerHex.."to throw |cffFFFFFFFreezing Trap |cff7EBF37on your mouse.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFFreezing Trap |cffFFFFFFHold "..PlayerHex.."to throw |cffFFFFFFFreezing Trap "..PlayerHex.."on your mouse.",
 			},
 			{	name	= "Stack Focus",
 				enable	= true,
 				hotkeys	= {'la'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFStack Focus |cff7EBF37Use this to keep high focus before burn phases.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFStack Focus "..PlayerHex.."Use this to keep high focus before burn phases.",
 			},
 			{	name	= "Pause",
 				enable	= true,
 				hotkeys	= {'ra'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFPause |cff7EBF37Will |cffFFFFFFStop Rotation, ClearTarget |cff7EBF37and |cffFFFFFFPet Stop Attack.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFPause "..PlayerHex.."Will |cffFFFFFFStop Rotation, ClearTarget "..PlayerHex.."and |cffFFFFFFPet Stop Attack.",
 			},
 			{	name	= "Pet Move To Mouse",
 				enable	= true,
 				hotkeys	= {'rc'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFPet Move To Mouse |cff7EBF37Use this to |cffFFFFFFmove your pet "..PlayerHex.."toward your mouse.",
+				tooltip	= PlayerHex.."Assign |cffFFFFFFPet Move To Mouse "..PlayerHex.."Use this to |cffFFFFFFmove your pet "..PlayerHex.."toward your mouse.",
 			},
 			{	name	= "Set Focus",
 				enable	= true,
 				hotkeys	= {'lc'},
-				tooltip	= "|cff7EBF37Assign |cffFFFFFFMouseover Focus |cff7EBF37Set focus to mouseover.",
-			},
+				tooltip	= PlayerHex.."Assign |cffFFFFFFMouseover Focus "..PlayerHex.."Set focus to mouseover.",
+			},	
 		},
 	}
 	CODEMYLIFE_SURVIVAL = PQI:AddRotation(CML_Surv_config)
@@ -1216,6 +1251,7 @@ if not HunterFunctions then
 		["CallPet4Queue"]		= false,
 		["CallPet5Queue"]		= false,
 	    ["Camouflage"]			= false,
+	    ["Cleave"]				= false,
 		["ConcShotQueue"]		= false,
 		["DisengageQueue"] 		= false, 
 		["DismissPetQueue"]		= false,
@@ -1252,6 +1288,28 @@ if not HunterFunctions then
 		[_TrapLauncherSnakes] 	= false,
 		[_WidowVenom] 			= false,
 	}
+
+	SLASH_CLEAVE1 = "/cleave"
+	function SlashCmdList.CLEAVE(msg, editbox)
+		if not macros["Cleave"] then
+			xrn:message("\124cFFFFFFFFCleave Mode Enabled.")
+			macros["Cleave"] = true
+		else
+			xrn:message("\124cFFCC99FFCleave Mode Disabled.")
+			macros["Cleave"] = false
+		end
+	end
+
+	SLASH_BIND1 = "/bind"
+	function SlashCmdList.BIND(msg, editbox)
+		if not _Queues[_BindingShot] then
+			xrn:message("\124cFFFFFFFFBinding Shot Queued.")
+			_Queues[_BindingShot] = true
+		else
+			xrn:message("\124cFFCC99FFBinding Shot Queued.")
+			_Queues[_BindingShot] = false
+		end
+	end
 
 	function CML.Aspects(value)
 		local _ActiveAspects = _G[PQIprefix.."ActiveAspects_enable"]
@@ -1347,7 +1405,7 @@ if not HunterFunctions then
 				CastSpellByName(GetSpellInfo(136))
 			end
 		end
-		if _G[PQIprefix.."PetManager_enable"] == false then return false end
+		if _G[PQIprefix.."PetManager_enable"] ~= true then return false end
 		if (not UnitExists("pet") or UnitIsDeadOrGhost("pet")) and ProbablyEngine.module.player.petdead then
 			if GetUnitSpeed("player") == 0 then
 				CastSpellByName(GetSpellInfo(982))
@@ -1386,39 +1444,43 @@ if not HunterFunctions then
 			return false
 		end		
 		if _G[PQIprefix.."PetPassiveBehaviour_enable"] and not PQI:IsHotkeys(_G[PQIprefix.."PetPassiveBehaviour_key"]) then
-			local PetPassiveBehaviour = _G[PQIprefix.."PetPassiveBehaviour_value"]
-			if PetPassiveBehaviour == 1 then
-				PetAttack("target")
-				return false
-			elseif PetPassiveBehaviour == 2 then
-				if UnitExists("focus") == 1 then
-					PetAttack("focus") 
-					return false
-				else
+			if SlowDown == nil or SlowDown <= GetTime() - 3 then
+				SlowDown = GetTime()
+				local PetPassiveBehaviour = _G[PQIprefix.."PetPassiveBehaviour_value"]
+				if PetPassiveBehaviour == 1 and UnitExists("target") then
 					PetAttack("target")
 					return false
+				elseif PetPassiveBehaviour == 2 then
+					if UnitExists("focus") == 1 then
+						PetAttack("focus") 
+						return false
+					elseif UnitExists("target") then
+						PetAttack("target")
+						return false
+					end
+				elseif PetPassiveBehaviour == 3 then
+					if UnitExists("focustarget") == 1 then
+						PetAttack("focustarget") 
+						return false
+					elseif UnitExists("target") then
+						PetAttack("target")
+						return false
+					end
+				elseif PetPassiveBehaviour == 4 then
+					if UnitExists("mouseover") == 1 then
+						PetAttack("mouseover") 
+						return false
+					elseif UnitExists("target") then
+						PetAttack("target")
+						return false
+					end
+				elseif PetPassiveBehaviour == 5 then
+					PetFollow()
+					return false
 				end
-			elseif PetPassiveBehaviour == 3 then
-				if UnitExists("focustarget") == 1 then
-					PetAttack("focustarget") 
-					return false
-				else
-					PetAttack("target")
-					return false
-				end
-			elseif PetPassiveBehaviour == 4 then
-				if UnitExists("mouseover") == 1 then
-					PetAttack("mouseover") 
-					return false
-				else
-					PetAttack("target")
-					return false
-				end
-			elseif PetPassiveBehaviour == 5 then
-				PetFollow()
-				return false
 			end
 		end
+		return false
 	end
 
 	function CML.LastSerpent()

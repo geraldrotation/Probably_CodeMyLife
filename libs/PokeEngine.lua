@@ -2717,65 +2717,6 @@ end
 
 
 
-
-function Rubim.BossTauntCheck()
-  -- Make sure we're a tank first and we're in a raid
-  if UnitGroupRolesAssigned("player") ~= "TANK" or not IsInRaid() then
-    return false
-  end
-
-  local otherTank
-  for i = 1, GetNumGroupMembers() do
-    local other = "raid" .. i
-    if not otherTank and not UnitIsUnit("player", other) and UnitGroupRolesAssigned(other) == "TANK" then
-      otherTank = other
-    end
-  end
-  if not otherTank then return false end
-
-  if UnitIsDeadOrGhost(otherTank) then return false end
-
-  for j = 1, 4 do
-    local bossID = "boss" .. j
-    local boss = UnitID(bossID)
-    if     boss == 71543 then -- Immersus
-      if ProbablyEngine.dsl.get('debuff.any')(otherTank, 143437) or ProbablyEngine.dsl.get('debuff.any')(otherTank, 143436) then
-        ProbablyEngine.dsl.parsedTarget = bossID
-        return true
-      end
-    elseif boss == 72276 then -- Norushen
-      if select(4, UnitDebuff(otherTank, GetSpellName(146124))) >= 4  then
-        ProbablyEngine.dsl.parsedTarget = bossID
-        return true
-      end
-    elseif boss == 71734 then -- Sha of Pride
-      if ProbablyEngine.dsl.get('debuff.any')(otherTank, 144358) then
-        ProbablyEngine.dsl.parsedTarget = bossID
-        return true
-      end
-	elseif boss == 71859 then -- Shaman
-	  if select(4, UnitDebuff(otherTank, GetSpellName(144215))) >= 4 then
-        ProbablyEngine.dsl.parsedTarget = bossID
-	    return true
-	  end
-	elseif boss == 71515 then -- Nazgrin
-	  if select(4, UnitDebuff(otherTank, GetSpellName(143494))) >= 4 then
-        ProbablyEngine.dsl.parsedTarget = bossID
-	    return true
-	  end   
-	  
-	 elseif boss == 71454 then -- Malkorok
-	 if select(4, UnitDebuff(otherTank, GetSpellName(142990))) >= 13
-	 and not ProbablyEngine.dsl.get('debuff.any')("player", 144358)
-	 then
-       ProbablyEngine.dsl.parsedTarget = bossID
-	   return true
-	  end   
-	  
-    end
-  end
-
-  return false
 end]]
 
 

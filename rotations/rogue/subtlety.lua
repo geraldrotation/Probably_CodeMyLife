@@ -187,13 +187,13 @@ ProbablyEngine.rotation.register_custom(261, "Mystic Rogue(Subtlety)", {
 	{"108211",{"NonLethalPoison.pqivalue = 3","!player.buff(108211)",},"player"},	
 	{"108215",{"NonLethalPoison.pqivalue = 4","!player.buff(108215)",},"player"},
 	-- Premeditation
- 	{ "14183" , { -- On ActiveCooldowns
+	{"14183",{ -- On ActiveCooldowns
         "@CML.ActiveCooldowns()",
         "Premeditation.coolvalue = 1",
- 	}},
- 	{ "14183" , { -- On CD
+  	},"target"},
+  	{"14183",{ -- On CD
         "Premeditation.coolvalue = 2",
- 	}}, 
+  	},"target"}, 
  	{ "Garrote", {
 	"!talent(10)",
  	"!target.debuff(Rupture)"

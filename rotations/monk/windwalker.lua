@@ -22,7 +22,11 @@ ProbablyEngine.rotation.register_custom(269, "CodeMyLife Windwalker", {
     {"115203",{"FortifyingBrew.novaHealing(0)"}},
     -- Touch Of Karma
     {"122470",{"TouchOfKarma.novaHealing(0)"},"target"},
-	-- auto_attack
+
+	-- Spinning Fire Blossom
+	{"115073",{"target.range > 5","player.chi >= 1"}},
+	-- Crackling Jade Lightning
+	{"117952",{"target.range > 5","!player.moving"}},
 
 	-- chi_brew,if=talent.chi_brew.enabled&chi<=2&(trinket.proc.agility.react|(charges=1&recharge_time<=10)|charges=2|target.time_to_die<charges*10)
 	{"115399",{"player.chi <= 2","talent(9)","player.buff(125195).count <= 6"}},
@@ -43,8 +47,9 @@ ProbablyEngine.rotation.register_custom(269, "CodeMyLife Windwalker", {
 	-- tiger_palm,if=buff.tiger_power.down&debuff.rising_sun_kick.remains>1&energy.time_to_max>1
 	{"100787",{"!player.buff(125359)","target.debuff(107428).duration >= 1","player.energy <= 80"}},	
 	-- invoke_xuen,if=talent.invoke_xuen.enabled
-	{"123904",{"talent(18)","target.range <= 5"}},
-
+    {"123904",{"player.spell(123904).exists","InvokeXuen.coolvalue = 1","macros(ActiveCooldowns)"}},
+    {"123904",{"player.spell(123904).exists","InvokeXuen.coolvalue = 2"}},    
+ 
 	-- run_action_list,name=aoe,if=active_enemies>=3
 	-- run_action_list,name=single_target,if=active_enemies<3
 

@@ -2,40 +2,58 @@
 --------------------------------------------Player Frame---------------------------------------------
 if not CML_VengeanceFrameSetup then
 CML_VengeanceFrameSetup = true
-CML_SotRFrame = CreateFrame("StatusBar", nil, UIParent)
-CML_SotRFrame:SetBackdrop({ bgFile = [[Interface\DialogFrame\UI-DialogBox-Background-Dark]], tile = true, tileSize = 16, })
-CML_SotRFrame:SetStatusBarTexture([[Interface\\AddOns\\DBM-DefaultSkins\\textures\\default.tga]],"OVERLAY")
-CML_SotRFrame:SetOrientation("HORIZONTAL")
-CML_SotRFrame:SetStatusBarColor(1,1,1,1)
-CML_SotRFrame:SetBackdropColor(1,1,1,1)
-CML_SotRFrame:GetStatusBarTexture():SetTexture(217/255, 0/255, 255/255,0.75,"OVERLAY")
-CML_SotRFrame:SetMinMaxValues(0, 10)
-CML_SotRFrame:SetValue(0)
-CML_SotRFrame:SetWidth(30)
-CML_SotRFrame:SetHeight(22)
-CML_SotRFrame.texture = CML_SotRFrame:CreateTexture()
-CML_SotRFrame.texture:SetAllPoints()
-CML_SotRFrame.texture:SetTexture(25/255,25/255,25/255,1)
-CML_SotRFrame:SetPoint("CENTER",150,-140)
-CML_SotRFrame:SetClampedToScreen(true)
-CML_SotRFrame:EnableMouse(true)
-CML_SotRFrame:SetMovable(true)
-CML_SotRFrame:RegisterForDrag("LeftButton")
-CML_SotRFrame:SetScript("OnDragStart", CML_SotRFrame.StartMoving)
-CML_SotRFrame:SetScript("OnDragStop", CML_SotRFrame.StopMovingOrSizing)
-CML_SotRFrame:SetValue(4)
-border = CML_SotRFrame:CreateTexture(nil, "BACKGROUND")
-CML_SotRFrame.Border = border
-CML_SotRFrame.Border:SetPoint("LEFT",-4,0)
-CML_SotRFrame.Border:SetWidth(38)
-CML_SotRFrame.Border:SetHeight(30)
-CML_SotRFrame.Border:SetTexture(232/255, 172/255, 200/255,0.35)
-bartext = CML_SotRFrame:CreateFontString(nil, "OVERLAY")
-CML_SotRFrame.Text = bartext
-CML_SotRFrame.Text:SetFontObject("MovieSubtitleFont")
-CML_SotRFrame.Text:SetTextHeight(15)
-CML_SotRFrame.Text:SetPoint("CENTER",0,-1)
-CML_SotRFrame.Text:SetTextColor(255/255, 255/255, 255/255,1)
+
+CML_MiniFrame = CreateFrame("StatusBar", nil, UIParent)
+CML_MiniFrame:SetWidth(30)
+CML_MiniFrame:SetHeight(22)
+CML_MiniFrame.texture = CML_MiniFrame:CreateTexture()
+CML_MiniFrame.texture:SetAllPoints()
+CML_MiniFrame.texture:SetTexture(25/255,25/255,25/255,1)
+CML_MiniFrame:SetPoint("CENTER",150,-140)
+CML_MiniFrame:SetClampedToScreen(true)
+CML_MiniFrame:EnableMouse(true)
+CML_MiniFrame:SetMovable(true)
+CML_MiniFrame:RegisterForDrag("LeftButton")
+CML_MiniFrame:SetScript("OnDragStart", CML_MiniFrame.StartMoving)
+CML_MiniFrame:SetScript("OnDragStop", CML_MiniFrame.StopMovingOrSizing)
+bartext = CML_MiniFrame:CreateFontString(nil, "OVERLAY")
+CML_MiniFrame.Text = bartext
+CML_MiniFrame.Text:SetFontObject("MovieSubtitleFont")
+CML_MiniFrame.Text:SetTextHeight(15)
+CML_MiniFrame.Text:SetPoint("CENTER",0,-1)
+CML_MiniFrame.Text:SetTextColor(255/255, 255/255, 255/255,1)
+border = CML_MiniFrame:CreateTexture(nil, "BACKGROUND")
+CML_MiniFrame.Border = border
+CML_MiniFrame.Border:SetPoint("LEFT",-4,0)
+CML_MiniFrame.Border:SetWidth(110)
+CML_MiniFrame.Border:SetHeight(30)
+CML_MiniFrame.Border:SetTexture(232/255, 172/255, 200/255,0.35)
+cdbar = CML_MiniFrame:CreateTexture(nil, "LOW")
+CML_MiniFrame.cdbar = cdbar
+CML_MiniFrame.cdbar:SetPoint("LEFT",35,0)
+CML_MiniFrame.cdbar:SetWidth(30)
+CML_MiniFrame.cdbar:SetHeight(22)
+CML_MiniFrame.cdbar:SetTexture(25/255,25/255,25/255,1)
+cdbartext = CML_MiniFrame:CreateFontString(nil, "MEDIUM", cdbar)
+CML_MiniFrame.cdbartext = cdbartext
+CML_MiniFrame.cdbartext:SetFontObject("MovieSubtitleFont")
+CML_MiniFrame.cdbartext:SetTextHeight(15)
+CML_MiniFrame.cdbartext:SetPoint("CENTER",35,1)
+CML_MiniFrame.cdbartext:SetTextColor(255/255, 255/255, 255/255,1)
+healingmodebar = CML_MiniFrame:CreateTexture(nil, "OVERLAY")
+CML_MiniFrame.healingmodebar = healingmodebar
+CML_MiniFrame.healingmodebar:SetPoint("LEFT",70,0)
+CML_MiniFrame.healingmodebar:SetWidth(30)
+CML_MiniFrame.healingmodebar:SetHeight(22)
+CML_MiniFrame.healingmodebar:SetTexture(25/255,25/255,25/255,1)
+healingmodebartext = CML_MiniFrame:CreateFontString(nil, "OVERLAY", healingmodebar)
+CML_MiniFrame.healingmodebartext = healingmodebartext
+CML_MiniFrame.healingmodebartext:SetFontObject("MovieSubtitleFont")
+CML_MiniFrame.healingmodebartext:SetTextHeight(15)
+CML_MiniFrame.healingmodebartext:SetPoint("CENTER",70,1)
+
+
+
 CML_VengeanceFrame = CreateFrame("StatusBar", nil, UIParent)
 CML_VengeanceFrame:SetBackdrop({ bgFile = [[Interface\DialogFrame\UI-DialogBox-Background-Dark]], tile = true, tileSize = 16, })
 CML_VengeanceFrame:SetStatusBarTexture([[Interface\\AddOns\\DBM-DefaultSkins\\textures\\default.tga]],"OVERLAY")
@@ -215,7 +233,7 @@ CML_RessourcesFrame.Text:SetFontObject("MovieSubtitleFont")
 CML_RessourcesFrame.Text:SetTextHeight(17)
 CML_RessourcesFrame.Text:SetPoint("CENTER",0,-1)
 CML_RessourcesFrame.Text:SetTextColor(255/255, 255/255, 255/255,1)
-CML_SotRFrame:Hide()
+CML_MiniFrame:Hide()
 CML_VengeanceFrame:Hide() 
 CML_VengeanceFrame.HP1Bar:Hide()
 CML_VengeanceFrame.HP2Bar:Hide()
@@ -228,15 +246,22 @@ CML_VengeanceFrame.A3Bar:Hide()
 CML_VengeanceFrame.A4Bar:Hide()
 CML_VengeanceFrame.A5Bar:Hide()
 CML_VengeanceFrame:SetScript("OnUpdate", CML_Status)
+
 function UiBar_ActiveCooldowns()
 	if macros["ActiveCooldowns"] then
 		CML_VengeanceFrame.rangebar:SetTexture(1,1,1,0.85)
 		CML_VengeanceFrame.rangebartext:SetTextColor(200/255,200/255,200/255)
 		CML_VengeanceFrame.rangebartext:SetText("ON", 0, 1, 0, 0.7)
+		CML_MiniFrame.cdbar:SetTexture(1,1,1,0.85)
+		CML_MiniFrame.cdbartext:SetTextColor(200/255,200/255,200/255)
+		CML_MiniFrame.cdbartext:SetText("ON", 0, 1, 0, 0.7)
 	else
 		CML_VengeanceFrame.rangebar:SetTexture(196/255,31/255,59/255,0.85)
 		CML_VengeanceFrame.rangebartext:SetTextColor(255/255, 255/255, 255/255)
 		CML_VengeanceFrame.rangebartext:SetText("OFF", 0, 1, 0, 0.7)
+		CML_MiniFrame.cdbar:SetTexture(196/255,31/255,59/255,0.85)
+		CML_MiniFrame.cdbartext:SetTextColor(255/255, 255/255, 255/255)
+		CML_MiniFrame.cdbartext:SetText("OFF", 0, 1, 0, 0.7)
 	end	
 end
 
@@ -269,10 +294,16 @@ function UiBar_ActiveHealing()
 		CML_VengeanceFrame.healingmodebartext:SetText("ON", 1, 1, 1, 0.7)
 		CML_VengeanceFrame.healingmodebar:SetTexture(PlayerR, PlayerG, PlayerB,1)
 		CML_VengeanceFrame.healingmodebartext:SetTextColor(255/255, 255/255, 255/255,1)
+		CML_MiniFrame.healingmodebartext:SetText("ON", 1, 1, 1, 0.7)
+		CML_MiniFrame.healingmodebar:SetTexture(PlayerR, PlayerG, PlayerB,1)
+		CML_MiniFrame.healingmodebartext:SetTextColor(255/255, 255/255, 255/255,1)
 	else
 		CML_VengeanceFrame.healingmodebartext:SetText("OFF", 1, 1, 1, 0.7)
 		CML_VengeanceFrame.healingmodebar:SetTexture(196/255,31/255,59/255,1)
 		CML_VengeanceFrame.healingmodebartext:SetTextColor(255/255, 255/255, 255/255,1)
+		CML_MiniFrame.healingmodebartext:SetText("OFF", 1, 1, 1, 0.7)
+		CML_MiniFrame.healingmodebar:SetTexture(196/255,31/255,59/255,1)
+		CML_MiniFrame.healingmodebartext:SetTextColor(255/255, 255/255, 255/255,1)
 	end
 end
 
@@ -281,33 +312,45 @@ function UiBar_AoE()
 		CML_VengeanceFrame.aoebartext:SetText("AoE", 255/255,255/255,0/255)
 		CML_VengeanceFrame.aoebartext:SetTextColor(255/255, 255/255, 255/255)
 		CML_VengeanceFrame.aoebar:SetTexture(196/255,31/255,59/255,0.85)
+		CML_MiniFrame.texture:SetTexture(196/255,31/255,59/255,0.85)
+		CML_MiniFrame.Text:SetText("2", 255/255,255/255,0/255)
+		CML_MiniFrame.Text:SetTextColor(255/255, 255/255, 255/255,1)
 	elseif macros["AoE"] == 3 then
 		CML_VengeanceFrame.aoebartext:SetText("Mass", 255/255,255/255,255/255)
 		CML_VengeanceFrame.aoebartext:SetTextColor(255/255, 255/255, 255/255)
 		CML_VengeanceFrame.aoebar:SetTexture(36/255, 54/255, 255/255,0.90)
+		CML_MiniFrame.texture:SetTexture(36/255, 54/255, 255/255,0.90)
+		CML_MiniFrame.Text:SetText("3", 255/255,255/255,255/255)
+		CML_MiniFrame.Text:SetTextColor(255/255, 255/255, 255/255,1)
 	else
 		CML_VengeanceFrame.aoebartext:SetText("Single",200/255,200/255,200/255)
 		CML_VengeanceFrame.aoebartext:SetTextColor(200/255,200/255,200/255)
 		CML_VengeanceFrame.aoebar:SetTexture(255/255, 255/255, 255/255,0.85)
+		CML_MiniFrame.texture:SetTexture(255/255, 255/255, 255/255,0.85)
+		CML_MiniFrame.Text:SetText("1",200/255,200/255,200/255)
+		CML_MiniFrame.Text:SetTextColor(255/255, 255/255, 255/255,1)
 	end
 end
 
 function UiBar_Borders()
 	if macros["Pause"] == true or (PauseKeyCheck and PauseKey) then
 		CML_VengeanceFrame.Border:SetTexture(0/255, 0/255, 0/255,0.35)
-		if _Spec == 2 then CML_SotRFrame.Border:SetTexture(0/255, 0/255, 0/255,0.35) end
+		CML_MiniFrame.Border:SetTexture(0/255, 0/255, 0/255,0.35)
+		if _Spec == 2 then CML_MiniFrame.Border:SetTexture(0/255, 0/255, 0/255,0.35) end
 	elseif not UnitAffectingCombat("player") then
 		CML_VengeanceFrame.Border:SetTexture(PlayerR, PlayerG, PlayerB,0.35)
-		if _Spec == 2 then CML_SotRFrame.Border:SetTexture(PlayerR, PlayerG, PlayerB,0.35) end
+		CML_MiniFrame.Border:SetTexture(PlayerR, PlayerG, PlayerB,0.35)
+		if _Spec == 2 then CML_MiniFrame.Border:SetTexture(PlayerR, PlayerG, PlayerB,0.35) end
 	elseif IsSpellInRange(GetSpellInfo(_RangeSpell),"target") ~= 1 then
 		CML_VengeanceFrame.Border:SetTexture(1,0,0,0.35)
-		if _Spec == 2 then CML_SotRFrame.Border:SetTexture(1,0,0,0.35) end
+		CML_MiniFrame.Border:SetTexture(1,0,0,0.35)
 	else
 		if not CML.IsInFront("target",1) then
 			CML_VengeanceFrame.Border:SetTexture(217/255, 0/255, 0/255,0.35)
-			if _Spec == 2 then CML_SotRFrame.Border:SetTexture(217/255, 0/255, 0/255,0.35) end
+			CML_MiniFrame.Border:SetTexture(217/255, 0/255, 0/255,0.35)
 		else
 			CML_VengeanceFrame.Border:SetTexture(1,1,1,0.35)
+			CML_MiniFrame.Border:SetTexture(1,1,1,0.35)
 		end
 	end
 end
@@ -362,6 +405,28 @@ function UiBar_SetDebuff(DebuffID)
 	CML_VengeanceFrame:SetValue(DebuffTime)
 	CML_VengeanceFrame.Text:SetText(DebuffTime.."s", 1, 1, 1, 0.7)
 end
+
+function UiBar_SetDistance(target)
+	local Distance = math.floor(CML.GetDistance("player",target)*10)/10
+	if Distance then
+		CML_VengeanceFrame.rangebar:SetTexture(1,1,1,0.85)
+		CML_VengeanceFrame.rangebartext:SetTextColor(200/255,200/255,200/255)
+		CML_VengeanceFrame.rangebartext:SetText(Distance, 0, 1, 0, 0.7)
+		CML_MiniFrame.cdbar:SetTexture(1,1,1,0.85)
+		CML_MiniFrame.cdbartext:SetTextColor(200/255,200/255,200/255)
+		CML_MiniFrame.cdbartext:SetText(Distance, 0, 1, 0, 0.7)
+	else
+		CML_VengeanceFrame.rangebar:SetTexture(196/255,31/255,59/255,0.85)
+		CML_VengeanceFrame.rangebartext:SetTextColor(255/255, 255/255, 255/255)
+		CML_VengeanceFrame.rangebartext:SetText("?", 0, 1, 0, 0.7)
+		CML_MiniFrame.cdbar:SetTexture(196/255,31/255,59/255,0.85)
+		CML_MiniFrame.cdbartext:SetTextColor(255/255, 255/255, 255/255)
+		CML_MiniFrame.cdbartext:SetText("?", 0, 1, 0, 0.7)
+	end	
+
+end
+
+
 
 function UiBar_SetEclipse()
 	if not CML_EclipseFrame then
@@ -460,7 +525,7 @@ function UiBar_SetPet()
 	else
 		local PetHealth = (UnitHealth("pet")/UnitHealthMax("pet"))*100
 		CML_VengeanceFrame:GetStatusBarTexture():SetTexture(255/255, 255/255, 255/255,0.90,"OVERLAY")
-		CML_VengeanceFrame:SetValue(PetHealth)
+		CML_VengeanceFrame:SetValue(math.floor(PetHealth))
 		CML_VengeanceFrame.Text:SetText(PetHealth.."%", 1, 1, 1, 0.7)
 		CML_VengeanceFrame:SetMinMaxValues(0, 100)
 	end

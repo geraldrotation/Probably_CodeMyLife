@@ -12,9 +12,9 @@ ProbablyEngine.rotation.register_custom(251, "CodeMyLife Frost", {
     -- Frost Presence
     {"48266",{"player.seal != 2","target.range <= 5"}},
     -- Unholy Presence if out of range 
-    {"48265",{"player.seal != 3","player.health >= 60","target.range > 5"}}, 
+    {"48265",{"ActivePresence.pqivalue = 1","player.seal != 3","player.health >= 60","target.range > 5"}}, 
     -- Blood Presence if out of range and under 50% hp
-    {"48263",{"player.seal != 1","player.health < 50","target.range > 5"}},       
+    {"48263",{"ActivePresence.pqivalue = 1","player.seal != 1","player.health < 50","target.range > 5"}},       
     -- Anti Magi Shell
     { "48707",{"AntiMagicShell.novaHealing(0)"}},     
     -- Icebound Fortitude
@@ -35,15 +35,15 @@ ProbablyEngine.rotation.register_custom(251, "CodeMyLife Frost", {
     {"51271",{"PillarofFrost.coolvalue = 2"}}, 
     -- empower_rune_weapon,if=target.time_to_die<=60&(buff.mogu_power_potion.up|buff.golemblood_potion.up)
     {"47568",{"player.buff(105706)"}},
-    -- raise_dead
-    {"46584",{"player.buff(51271)"}}, 
-
+    -- raise_dead 
+    {"46584",{"RaiseDead.coolvalue = 1","macros(ActiveCooldowns)"}},
+    {"46584",{"RaiseDead.coolvalue = 2"}}, 
     -- run_action_list,name=aoe,if=active_enemies>=3
     -- run_action_list,name=single_target,if=active_enemies<3
 
     --[[Single Target]]
     -- single_target=plague_leech,if=talent.plague_leech.enabled&((dot.blood_plague.remains<1|dot.frost_fever.remains<1))
-    {"123693",{"player.aoe = 1","talent(2)","target.debuff(55078).duration < 2"}}, 
+    {"123693",{"player.aoe = 1","talent(2)","target.debuff(55078)","target.debuff(55078).duration < 1","target.debuff(55095)","@CML.CanTap()"}}, 
     -- single_target+=/outbreak,if=!dot.frost_fever.ticking|!dot.blood_plague.ticking
     {"77575",{"player.aoe = 1","!target.debuff(55078)"}},    
     -- single_target+=/unholy_blight,if=talent.unholy_blight.enabled&((!dot.frost_fever.ticking|!dot.blood_plague.ticking))
@@ -52,7 +52,8 @@ ProbablyEngine.rotation.register_custom(251, "CodeMyLife Frost", {
     {"130735",{"player.aoe = 1","target.health <= 35"}}, 
     -- single_target+=/blood_tap,if=talent.blood_tap.enabled&((target.health.pct-3*(target.health.pct%target.time_to_die)<=35&cooldown.soul_reaper.remains=0))
     {"45529",{"player.aoe = 1","talent(13)","target.health <= 35","player.spell(130735)","@CML.CanTap()"}}, 
-    --[[ single_target+=/howling_blast,if=!dot.frost_fever.ticking we wont include is as it's not a dps improvement.]]
+    -- single_target+=/howling_blast,if=!dot.frost_fever.ticking
+    {"49184",{"player.aoe = 1","!target.debuff(55095)"}},    
     -- single_target+=/plague_strike,if=!dot.blood_plague.ticking
     {"45462",{"player.aoe = 1","!target.debuff(55078)"}},     
     -- single_target+=/howling_blast,if=buff.rime.react
@@ -66,17 +67,22 @@ ProbablyEngine.rotation.register_custom(251, "CodeMyLife Frost", {
     -- single_target+=/frost_strike,if=runic_power>76
     {"49143",{"player.aoe = 1","player.runic > 76"}},
     -- single_target+=/obliterate,if=blood=2|frost=2|unholy=2
-    {"49020",{"player.aoe = 1","player.runes(blood) = 2","player.runes(frost) = 2","player.runes(unholy) = 2"}},
+    {"49020",{"player.aoe = 1","player.runes(blood) = 1","player.runes(frost) = 1","player.runes(unholy) = 1"}},
+    {"49020",{"player.aoe = 1","player.runes(blood) = 2"}},
+    {"49020",{"player.aoe = 1","player.runes(frost) = 2"}},
+    {"49020",{"player.aoe = 1","player.runes(unholy) = 2"}},
     -- single_target+=/plague_leech,if=talent.plague_leech.enabled&((dot.blood_plague.remains<3|dot.frost_fever.remains<3))
     {"123693",{"player.aoe = 1","talent(2)","target.debuff(55078).duration < 4"}}, 
     -- single_target+=/outbreak,if=dot.frost_fever.remains<3|dot.blood_plague.remains<3
     {"77575",{"player.aoe = 1","target.debuff(55078).duration < 3"}}, 
     -- single_target+=/unholy_blight,if=talent.unholy_blight.enabled&((dot.frost_fever.remains<3|dot.blood_plague.remains<3))
-    {"115989",{"player.aoe = 1","talent(3)","target.debuff(55078).duration < 3"}}, 
+    {"115989",{"player.aoe = 1","talent(13)","target.debuff(55078).duration < 3"}}, 
     -- single_target+=/frost_strike,if=talent.runic_empowerment.enabled&(frost=0|unholy=0|blood=0)
-    {"49143",{"player.aoe = 1","talent(14)","@CML.CanTap()"}},  
+    {"49143",{"player.aoe = 1","talent(14)","player.runes(unholy) = 0","player.buff(114851).count > 10","@CML.CanTap()"}}, 
+    {"49143",{"player.aoe = 1","talent(14)","player.runes(frost) = 0","player.buff(114851).count > 10","@CML.CanTap()"}}, 
+    {"49143",{"player.aoe = 1","talent(14)","player.runes(blood) = 0","player.buff(114851).count > 10","@CML.CanTap()"}}, 
     -- single_target+=/frost_strike,if=talent.blood_tap.enabled&buff.blood_charge.stack<=10
-    {"49143",{"player.aoe = 1","talent(13)","player.runes(unholy) = 0","player.buff(114851).count > 10","@CML.CanTap()"}}, 
+    {"49143",{"player.aoe = 1","talent(13)","@CML.CanTap()"}},  
     -- single_target+=/horn_of_winter
     {"57330"},      
     -- single_target+=/obliterate
@@ -92,8 +98,8 @@ ProbablyEngine.rotation.register_custom(251, "CodeMyLife Frost", {
     --[[Multi Target]]
     -- aoe=unholy_blight,if=talent.unholy_blight.enabled
     { "115989",{"player.aoe = 2","talent(3)"}},
-        -- outbreak,if=!dot.frost_fever.ticking|!dot.blood_plague.ticking
-        {"77575",{"player.aoe = 2","!target.debuff(55078)"}}, 
+    -- outbreak,if=!dot.frost_fever.ticking|!dot.blood_plague.ticking
+    {"77575",{"player.aoe = 2","!target.debuff(55078)"}}, 
     -- aoe+=/pestilence,if=dot.blood_plague.ticking&talent.plague_leech.enabled,line_cd=28
     { "50842",{"player.aoe = 2","talent(2)","target.debuff(55078)","!modofier.last"}},  
     -- aoe+=/pestilence,if=dot.blood_plague.ticking&talent.unholy_blight.enabled&cooldown.unholy_blight.remains<49,line_cd=28
@@ -137,7 +143,7 @@ ProbablyEngine.rotation.register_custom(251, "CodeMyLife Frost", {
     -- Player Status
     {"TaMere","@CML.Status()"}, 
     -- Unholy Presence if out of range 
-    {"48265",{"player.seal != 3","player.health >= 60","target.range > 5"}}, 
+    {"48265",{"ActivePresence.pqivalue = 1","player.seal != 3","player.health >= 60","target.range > 5"}}, 
     -- Frost Presence
     {"48266",{"player.seal != 2","target.alive","target.enemy","target.range <5"}},
 })

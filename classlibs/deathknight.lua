@@ -8,6 +8,14 @@ if _Spec == 2 then PQIprefix = "PQI_CodeMyLifeFrost_" end
 if _Spec == 3 then PQIprefix = "PQI_CodeMyLifeUnholy_" end
 
 
+--[[           ]]	--[[]]				--[[           ]]	--[[           ]]	--[[        ]]
+--[[           ]]	--[[]]				--[[           ]]	--[[           ]]	--[[         ]]
+--[[]]	   --[[]]	--[[]]				--[[]]	   --[[]]	--[[]]	   --[[]]	--[[]]    --[[]]
+--[[         ]]		--[[]]				--[[]]	   --[[]]	--[[]]	   --[[]]	--[[]]	   --[[]]
+--[[]]	   --[[]]	--[[]]				--[[]]	   --[[]]	--[[]]	   --[[]]	--[[]]	  --[[]]
+--[[           ]]	--[[]]				--[[           ]]	--[[           ]]	--[[         ]]
+--[[           ]] 	--[[           ]]	--[[           ]]	--[[           ]]	--[[        ]]
+
 --[[           ]]	--[[         ]]		--[[           ]] 	
 --[[           ]]	--[[          ]]	--[[           ]] 	
 --[[]]				--[[]]	   --[[]]	--[[]]				
@@ -33,6 +41,27 @@ if _Spec == 1 and CML_Cooldowns_Config == nil then
 					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Death And Decay |cffFFFFFF on "..PlayerHex.."cursor.",	
 				},
 			},	
+			{ 	name	= "Active Presence",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFActive Presence.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cff0DFF00Active will use Unholy presence when not in melee range and use Blood presence when low HP.|cffD90000Disable will never change presence.",	
+				},
+				newSection = true,
+			},		
+			{ 	name	= "Raise Dead",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Raise Dead.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},		
 			{ 	name	= "Racials",
 				tooltip	= PlayerHex.."Toggle Automatic Racials.",
 				enable	= true,
@@ -88,15 +117,6 @@ if _Spec == 1 and CML_Cooldowns_Config == nil then
 	}
 	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
 end
-
-
---[[           ]]	--[[]]				--[[           ]]	--[[           ]]	--[[        ]]
---[[           ]]	--[[]]				--[[           ]]	--[[           ]]	--[[         ]]
---[[]]	   --[[]]	--[[]]				--[[]]	   --[[]]	--[[]]	   --[[]]	--[[]]    --[[]]
---[[         ]]		--[[]]				--[[]]	   --[[]]	--[[]]	   --[[]]	--[[]]	   --[[]]
---[[]]	   --[[]]	--[[]]				--[[]]	   --[[]]	--[[]]	   --[[]]	--[[]]	  --[[]]
---[[           ]]	--[[]]				--[[           ]]	--[[           ]]	--[[         ]]
---[[           ]] 	--[[           ]]	--[[           ]]	--[[           ]]	--[[        ]]
 	
 --[[------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
@@ -111,7 +131,13 @@ if _Spec == 1 and CML_Blood_config == nil then
 			{ 	name	= "Player Status", 
 				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",
@@ -249,6 +275,13 @@ if _Spec == 1 and CML_Blood_config == nil then
 end	
 
 
+--[[           ]]	--[[           ]]	--[[           ]] 	--[[           ]]	--[[           ]]
+--[[           ]]	--[[           ]]	--[[           ]] 	--[[           ]]	--[[           ]]
+--[[]]	  			--[[]]	   --[[]]	--[[]]	   --[[]]	--[[]]				     --[[ ]]			   
+--[[         ]]		--[[         ]]	    --[[]]	   --[[]]	--[[           ]]		 --[[ ]]		
+--[[       	 ]]		--[[        ]]		--[[]]	   --[[]]			   --[[]]	 	 --[[ ]]				   
+--[[]]				--[[]]	  --[[]]	--[[           ]]	--[[           ]]	 	 --[[ ]]				
+--[[]] 				--[[]]	   --[[]]	--[[           ]]	--[[           ]]		 --[[ ]]		
 
 --[[           ]]	--[[         ]]		--[[           ]] 	
 --[[           ]]	--[[          ]]	--[[           ]] 	
@@ -276,8 +309,19 @@ if _Spec == 2 and CML_Cooldowns_Config == nil then
 					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Death And Decay |cffFFFFFF on "..PlayerHex.."cursor.",	
 				},
 			},			
+			{ 	name	= "Active Presence",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFActive Presence.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cff0DFF00Active will use Unholy presence when not in melee range and use Blood presence when low HP.|cffD90000Disable will never change presence.",	
+				},
+				newSection = true,
+			},	
 			{ 	name	= "PillarofFrost",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic PillarofFrost.",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic PillarofFrost.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
@@ -287,8 +331,18 @@ if _Spec == 2 and CML_Cooldowns_Config == nil then
 				},
 				newSection = true,
 			},	
+			{ 	name	= "Raise Dead",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Raise Dead.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},		
 			{ 	name	= "Racials",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Racials.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
@@ -298,7 +352,7 @@ if _Spec == 2 and CML_Cooldowns_Config == nil then
 				},
 			},	
 			{ 	name	= "Professions CDs",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Professions CDs.",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Professions CDs.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
@@ -308,7 +362,7 @@ if _Spec == 2 and CML_Cooldowns_Config == nil then
 				},
 			},					
 			{ 	name	= "Trinkets",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Trinkets|cff7EBF37.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {"|cff0DFF00Both Active","|cffFFE100Both On CD","|cffD90000Disable"},
@@ -318,7 +372,7 @@ if _Spec == 2 and CML_Cooldowns_Config == nil then
 				},
 			},		
 			{ 	name	= "DPS Potion",
-				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Agility Potions|cff7EBF37 when |cffFFFFFFHeroism |cff7EBF37starts.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {"|cff7EBF37On Boss","|cffFFFFFFOn Heroism","|cffFFDD00Never"},
@@ -326,15 +380,15 @@ if _Spec == 2 and CML_Cooldowns_Config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
 				},
-			},				
+			},			
 			{ 	name	= "Interrupt",
-				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Counter Shot |cff7EBF37On target.",
+				tooltip	= PlayerHex.."Toggle Automatic Interrupt On Target/Mouseover/Focus.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
 					value = 1,
 					width = 70,
-					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Counter Shot |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+					tooltip = "|cffFFFFFFSet Treshold to use Interrupt on "..PlayerHex.."Target/Mouseover/Focus.",	
 				},
 				newSection = true,
 			},
@@ -343,13 +397,6 @@ if _Spec == 2 and CML_Cooldowns_Config == nil then
 	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
 end
 
---[[           ]]	--[[           ]]	--[[           ]] 	--[[           ]]	--[[           ]]
---[[           ]]	--[[           ]]	--[[           ]] 	--[[           ]]	--[[           ]]
---[[]]	  			--[[]]	   --[[]]	--[[]]	   --[[]]	--[[]]				     --[[ ]]			   
---[[         ]]		--[[         ]]	    --[[]]	   --[[]]	--[[           ]]		 --[[ ]]		
---[[       	 ]]		--[[        ]]		--[[]]	   --[[]]			   --[[]]	 	 --[[ ]]				   
---[[]]				--[[]]	  --[[]]	--[[           ]]	--[[           ]]	 	 --[[ ]]				
---[[]] 				--[[]]	   --[[]]	--[[           ]]	--[[           ]]		 --[[ ]]		
 
 --[[------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
@@ -365,7 +412,13 @@ if _Spec == 2 and CML_Frost_config == nil then
 			{ 	name	= "Player Status", 
 				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",
@@ -453,6 +506,14 @@ if _Spec == 2 and CML_Frost_config == nil then
 end	
 
 
+--[[]]	   --[[]]	--[[]]	   --[[]]	--[[]]	   --[[]]	 --[[         ]] 	--[[]]				--[[]]	  --[[]]
+--[[]]	   --[[]]	--[[  ]]   --[[]]	--[[]]	   --[[]]	--[[           ]] 	--[[]]				--[[]]	  --[[]]
+--[[]]	   --[[]]	--[[  ]]   --[[]]	--[[           ]]	--[[]]	   --[[]]	--[[]]				   --[[    ]]		   
+--[[]]	   --[[]]	--[[           ]]	 --[[         ]]	--[[]]	   --[[]]	--[[]]				   --[[    ]]
+--[[]]	   --[[]]	--[[           ]]	--[[           ]]	--[[]]	   --[[]]	--[[]]			  		 --[[]] 
+--[[           ]]	--[[]]	 --[[  ]]	--[[]]	   --[[]]	--[[           ]]	--[[           ]]		 --[[]]	
+--[[           ]]	--[[]]	   --[[]]	--[[]]	   --[[]]	 --[[         ]]	--[[           ]]		 --[[]]
+
 --[[           ]]	--[[         ]]		--[[           ]] 	
 --[[           ]]	--[[          ]]	--[[           ]] 	
 --[[]]				--[[]]	   --[[]]	--[[]]				
@@ -478,6 +539,16 @@ if _Spec == 3 and CML_Cooldowns_Config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFSet Strategy to use"..PlayerHex.." Automatic Death And Decay |cffFFFFFF on "..PlayerHex.."cursor.",	
 				},
+			},				{ 	name	= "Active Presence",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFActive Presence.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cff0DFF00Active will use Unholy presence when not in melee range and use Blood presence when low HP.|cffD90000Disable will never change presence.",	
+				},
+				newSection = true,
 			},	
 			{ 	name	= "UnholyFrenzy",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic UnholyFrenzy.",
@@ -489,7 +560,17 @@ if _Spec == 3 and CML_Cooldowns_Config == nil then
 					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
 				},
 				newSection = true,
-			},			
+			},		
+			{ 	name	= "Raise Dead",
+				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Raise Dead.",
+				enable	= true,
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},		
 			{ 	name	= "Racials",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFAutomatic Racials.",
 				enable	= true,
@@ -529,15 +610,15 @@ if _Spec == 3 and CML_Cooldowns_Config == nil then
 					width = 70,
 					tooltip = "|cffFFFFFFSet way to use|cff7EBF37 Potions.",	
 				},
-			},				
+			},		
 			{ 	name	= "Interrupt",
-				tooltip	= "|cff7EBF37Toggle |cffFFFFFFAutomatic Counter Shot |cff7EBF37On target.",
+				tooltip	= PlayerHex.."Toggle Automatic Interrupt On Target/Mouseover/Focus.",
 				enable	= true,
 				widget = { type = 'select',
 					values = {PlayerHex.."Random","|cff00CC0030","|cff00CC000"},
 					value = 1,
 					width = 70,
-					tooltip = "|cffFFFFFFSet Treshold to use|cff7EBF37 Counter Shot |cffFFFFFF on |cff7EBF37Target/Mouseover/Focus.",	
+					tooltip = "|cffFFFFFFSet Treshold to use Interrupt on "..PlayerHex.."Target/Mouseover/Focus.",	
 				},
 				newSection = true,
 			},
@@ -545,14 +626,6 @@ if _Spec == 3 and CML_Cooldowns_Config == nil then
 	}
 	CODEMYLIFE_COOLDOWNS = PQI:AddRotation(CML_Cooldowns_Config)
 end
-
---[[]]	   --[[]]	--[[]]	   --[[]]	--[[]]	   --[[]]	 --[[         ]] 	--[[]]				--[[]]	  --[[]]
---[[]]	   --[[]]	--[[  ]]   --[[]]	--[[]]	   --[[]]	--[[           ]] 	--[[]]				--[[]]	  --[[]]
---[[]]	   --[[]]	--[[  ]]   --[[]]	--[[           ]]	--[[]]	   --[[]]	--[[]]				   --[[    ]]		   
---[[]]	   --[[]]	--[[           ]]	 --[[         ]]	--[[]]	   --[[]]	--[[]]				   --[[    ]]
---[[]]	   --[[]]	--[[           ]]	--[[           ]]	--[[]]	   --[[]]	--[[]]			  		 --[[]] 
---[[           ]]	--[[]]	 --[[  ]]	--[[]]	   --[[]]	--[[           ]]	--[[           ]]		 --[[]]	
---[[           ]]	--[[]]	   --[[]]	--[[]]	   --[[]]	 --[[         ]]	--[[           ]]		 --[[]]
 	
 --[[------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------
@@ -568,7 +641,13 @@ if _Spec == 3 and CML_Unholy_config == nil then
 			{ 	name	= "Player Status", 
 				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",
@@ -631,11 +710,17 @@ if _Spec == 3 and CML_Unholy_config == nil then
 					step	= 5,
 					tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to use this Cooldown.",
 				},
-			},				
+			},	
 			{ 	name	= "Raise Dead",
-				tooltip	= "|cffFFFFFFCheck "..PlayerHex.."to use when we |cffFFFFFFRaise Dead.",
+				tooltip	= PlayerHex.."Toggle |cffFFFFFFAutomatic Raise Dead.",
 				enable	= true,
-			},							
+				widget = { type = 'select',
+					values = {"|cff0DFF00Active","|cffFFE100On CD","|cffD90000Disable"},
+					value = 2,
+					width = 70,
+					tooltip = "|cffFFFFFFChoose desired Cooldowns Options.|cff0DFF00Active will use when you activate Active Cooldowns macro.|cffFFE100On CD will fire on Cooldown regardless of Active Cooldowns.|cffD90000Disable will never use this Cooldown.",	
+				},
+			},								
 			{ 	name	= "Pet Passive Behaviour",
 				tooltip	= PlayerHex.."toggle |cffFFFFFFPet Passive Behaviour|cff7EBF37.",
 				enable	= true,

@@ -4,22 +4,11 @@ ProbablyEngine.rotation.register_custom(252, "CodeMyLife Unholy", {
     {"49576","queuecast(49576)","target"}, -- Death Grip
     {"43265","queuecast(43265)","ground"}, -- Death and Decay 
     -- Frost Presence
-    {"48266",{
-        "player.seal != 2",
-        "target.range <= 5",
-    }},
+    {"48266",{"player.seal != 2","target.range <= 5"}},
     -- Unholy Presence
-    {"48265",{
-        "player.seal != 3",
-        "player.health >= 60",
-        "target.range > 5",
-    }}, 
+    {"48265",{"ActivePresence.pqivalue = 1","player.seal != 3","player.health >= 60","target.range > 5"}}, 
     -- Blood Presence
-    {"48263",{
-        "player.seal != 1",
-        "player.health < 60",
-        "target.range > 5",
-    }},    
+    {"48263",{"ActivePresence.pqivalue = 1","player.seal != 1","player.health < 60","target.range > 5"}},    
     {"PetMover",{
         "PetMoveToMouse.pqicheck",
         "PetMoveToMouse.pqikeybind",

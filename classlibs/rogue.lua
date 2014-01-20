@@ -3,7 +3,7 @@ function CML.RogueStartup()
 --PQR_BotLoaded()
 PQR_RotationChanged("Mystic")
 
-_RangeSpell = 1766
+_RangeSpell = 1752
 
 if _Spec == 1 then PQIprefix = "PQI_Skorp05MysticAssassination_" Coolprefix = "PQI_Skorp05MysticCooldownsAssa_" PQR_Text("Skorp05 Mystic(Assassination)",nil,"fff569") end
 if _Spec == 2 then PQIprefix = "PQI_Skorp05MysticCombat_" Coolprefix = "PQI_Skorp05MysticCooldownsComb_" PQR_Text("Skorp05 Mystic(Combat)",nil,"fff569") end
@@ -31,10 +31,16 @@ if _Spec == 1 and CML_Assass_config == nil then
 		name	= "Assassination",
 		author	= "Skorp05Mystic",
 		abilities = {
-	{ 	name	= "Player Status", 
+			{ 	name	= "Player Status", 
 				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",
@@ -273,10 +279,16 @@ if _Spec == 2 and CML_Combat_config == nil then
 		name	= "Combat",
 		author	= "Skorp05Mystic",
 		abilities = {
-	{ 	name	= "Player Status", 
+			{ 	name	= "Player Status", 
 				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",
@@ -528,7 +540,13 @@ if _Spec == 3 and CML_Sub_config == nil then
 			{ 	name	= "Player Status", 
 				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",

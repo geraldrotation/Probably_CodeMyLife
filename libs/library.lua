@@ -48,6 +48,10 @@ function CML.ChopChop()
 end
 
 function CML.CombatCheck()
+	if SpellIsTargeting() and PQIprefix then
+		if _G[PQIprefix.."AoEHelper_value"] == 1 then CameraOrSelectOrMoveStart() CameraOrSelectOrMoveStop() end
+		if _G[PQIprefix.."AoEHelper_value"] == 2 then return true end
+	end
 	--if  then CameraOrSelectOrMoveStart() CameraOrSelectOrMoveStop() return true end
 	if UnitBuffID("player",104934) or UnitBuffID("player",80169) or UnitBuffID("player",87959)
 	  or UnitBuffID("player",11392) or UnitBuffID("player",11392) --or UnitChannelInfo("player") 
@@ -59,6 +63,7 @@ function CML.CombatCheck()
 	  		RunMacroText("/StopAttack")
 	  		PetFollow()
 	  	end
+
 	  	return true
 	end
 	if PQIprefix and (_G[PQIprefix.."Pause_enable"] and PQI:IsHotkeys(_G[PQIprefix.."Pause_key"])) then
@@ -68,55 +73,57 @@ function CML.CombatCheck()
 end
 
 function CML.Cooldowns()
-	if _MyClass == 2 and _Spec == 3 and UnitBuffID("player",84963) == nil then return false end
-	-- DPS Potions
-	if _G[Coolprefix.."DPSPotion_enable"] 
-	  and not UnitBuffID("player",CML.DPSPotionsSet[CML.DPSPotionSelect()].Buff) 
-	  and ProbablyEngine.module.player.potionused ~= true -- and CML.HasHero() 
-	  and GetItemCooldown(CML.DPSPotionsSet[CML.DPSPotionSelect()].Item) == 0 
-	  and GetItemCount(CML.DPSPotionsSet[CML.DPSPotionSelect()].Item,false,true) > 0 then 
-		if _G[Coolprefix.."DPSPotion_value"] == 1 and UnitExists("boss1") then
-		  	if CML_Debug then print("Using Potion(Opening Boss)") end
-			UseItemByName(CML.DPSPotionsSet[CML.DPSPotionSelect()].Item)
-		elseif _G[Coolprefix.."DPSPotion_value"] == 2 and CML.HasHero() then
-		  	if CML_Debug then print("Using Potion(Heroism)") end
-			UseItemByName(CML.DPSPotionsSet[CML.DPSPotionSelect()].Item)
-		end
-	end
-	-- Professions CDs
-	if _G[Coolprefix.."ProfessionsCDs_enable"] then
-		if (_G[Coolprefix.."ProfessionsCDs_value"] == 1 and macros["ActiveCooldowns"]) or _G[Coolprefix.."ProfessionsCDs_value"] == 2 then
-	  		if IsPlayerSpell(126731) ~= false and (not ProbablyEngine.module.player.synapseused or ProbablyEngine.module.player.synapseused <= GetTime() - 60) then
-				RunMacroText("/use 10")
-				ProbablyEngine.module.player.synapseused = GetTime()
-			end
-			if IsPlayerSpell(121279) ~= false and (not ProbablyEngine.module.player.lifebloodused or ProbablyEngine.module.player.lifebloodused <= GetTime() - 120) then
-				local LifeBlood = GetSpellInfo(121279)
-				RunMacroText("/cast "..LifeBlood)
+	if _RangeSpell and IsSpellInRange(GetSpellInfo(_RangeSpell),"target") == 1 then
+		if _MyClass == 2 and _Spec == 3 and UnitBuffID("player",84963) == nil then return false end
+		-- DPS Potions
+		if _G[Coolprefix.."DPSPotion_enable"] 
+		  and not UnitBuffID("player",CML.DPSPotionsSet[CML.DPSPotionSelect()].Buff) 
+		  and ProbablyEngine.module.player.potionused ~= true -- and CML.HasHero() 
+		  and GetItemCooldown(CML.DPSPotionsSet[CML.DPSPotionSelect()].Item) == 0 
+		  and GetItemCount(CML.DPSPotionsSet[CML.DPSPotionSelect()].Item,false,true) > 0 then 
+			if _G[Coolprefix.."DPSPotion_value"] == 1 and UnitExists("boss1") then
+			  	if CML_Debug then print("Using Potion(Opening Boss)") end
+				UseItemByName(CML.DPSPotionsSet[CML.DPSPotionSelect()].Item)
+			elseif _G[Coolprefix.."DPSPotion_value"] == 2 and CML.HasHero() then
+			  	if CML_Debug then print("Using Potion(Heroism)") end
+				UseItemByName(CML.DPSPotionsSet[CML.DPSPotionSelect()].Item)
 			end
 		end
+		-- Professions CDs
+		if _G[Coolprefix.."ProfessionsCDs_enable"] then
+			if (_G[Coolprefix.."ProfessionsCDs_value"] == 1 and macros["ActiveCooldowns"]) or _G[Coolprefix.."ProfessionsCDs_value"] == 2 then
+		  		if IsPlayerSpell(126731) ~= false and (not ProbablyEngine.module.player.synapseused or ProbablyEngine.module.player.synapseused <= GetTime() - 60) then
+					RunMacroText("/use 10")
+					--ProbablyEngine.module.player.synapseused = GetTime()
+				end
+				if IsPlayerSpell(121279) ~= false and (not ProbablyEngine.module.player.lifebloodused or ProbablyEngine.module.player.lifebloodused <= GetTime() - 120) then
+					local LifeBlood = GetSpellInfo(121279)
+					RunMacroText("/cast "..LifeBlood)
+				end
+			end
+		end
+	    -- Racials
+	  	if _G[Coolprefix.."Racials_enable"] then
+			if (_G[Coolprefix.."Racials_value"] == 1 and macros["ActiveCooldowns"]) or _G[Coolprefix.."Racials_value"] == 2 then
+				if _Racial == nil then
+					if IsPlayerSpell(20572) == true and CML.GetSpellCD(20572) <= 2 then
+						_Racial = select(1,GetSpellInfo(20572))
+						_RacialNum = 20572
+					elseif IsPlayerSpell(26297) == true and CML.GetSpellCD(26297) <= 2 then
+						_Racial = select(1,GetSpellInfo(26297))
+						_RacialNum = 26297
+					else
+						_Racial = ""
+						_RacialNum = nil
+					end	
+				end
+				if not macrosracials and CML_Debug then macrosracials = true end
+				if _RacialNum and CML.GetSpellCD(_Racial) <= 2 then
+					RunMacroText("/cast ".._Racial) 
+				end
+	        end
+	    end  
 	end
-    -- Racials
-  	if _G[Coolprefix.."Racials_enable"] then
-		if (_G[Coolprefix.."Racials_value"] == 1 and macros["ActiveCooldowns"]) or _G[Coolprefix.."Racials_value"] == 2 then
-			if not _Racial then
-				if IsPlayerSpell(20572) == true and CML.GetSpellCD(20572) == 0 then
-					_Racial = select(1,GetSpellInfo(20572))
-					_RacialNum = 20572
-				elseif IsPlayerSpell(26297) == true and CML.GetSpellCD(26297) == 0 then
-					_Racial = select(1,GetSpellInfo(26297))
-					_RacialNum = 26297
-				else
-					_Racial = ""
-					_RacialNum = nil
-				end	
-			end
-			if not macrosracials and CML_Debug then print("/cast ".._Racial) macrosracials = true end
-			if _RacialNum and CML.GetSpellCD(_Racial) <= 2 then
-				RunMacroText("/cast ".._Racial) 
-			end
-        end
-    end  
 end
 
 function CML.Dispel()
@@ -171,15 +178,16 @@ function CML.ForceMouseCast()
 end
 
 -- /dump CML.GetDistance("player","target")
+-- /dump GetPlayerMapPosition("player")
 function CML.GetDistance(T1,T2)
-	Zone1, T1X, T1Y = CML.UnitInfo(T1) 
-	Zone2, T2X, T2Y = CML.UnitInfo(T2) 
-	if T1X == nil or T2X == nil or Zone1 ~= Zone2 then return 0 end
-	XDist = math.abs(T1X - T2X)
-	YDist = math.abs(T1Y - T2Y)
-	Distance = 500*(XDist + YDist) -- World 1975.27205951036  Soo 500 
-	return Distance
+	return 0
 end	
+
+-- /run print()
+-- /run print("X = "..16/math.abs(select(1,GetPlayerMapPosition("player"))-select(1,GetPlayerMapPosition("target"))).." Y = "..math.abs(select(2,GetPlayerMapPosition("player"))-select(2,GetPlayerMapPosition("target"))))
+-- /run print("X + Y = "..(math.abs(select(1,GetPlayerMapPosition("player"))-select(1,GetPlayerMapPosition("target")))/100*800+(math.abs(select(2,GetPlayerMapPosition("player"))-select(2,GetPlayerMapPosition("target")))/100*600)))
+-- /dump GetPlayerMapPosition("target")
+-- /run print(select(4,GetCurrentMapDungeonLevel())-select(2,GetCurrentMapDungeonLevel()).." "..select(5,GetCurrentMapDungeonLevel())-select(3,GetCurrentMapDungeonLevel()))
 
 function CML.GetHP(unit)
 	local hp = 100 * UnitHealth(unit) / UnitHealthMax(unit)
@@ -239,8 +247,8 @@ end
 
 function CML.HealthStone()
 	if not PQIprefix then return false end
-    if _G[PQIprefix.."Healthstone_enable"] and GetItemCount(5512, false, true) > 0 and select(2,GetItemCooldown(5512)) == 0 and _HP < _G[PQIprefix.."Healthstone_value"] then
-    	UseItemByName(GetItemInfo(5512))
+    if _G[PQIprefix.."Healthstone_enable"] and GetItemCount(5512, false, true) > 0 and select(2,GetItemCooldown(5512)) <= 2 and _HP < _G[PQIprefix.."Healthstone_value"] then
+    	UseItemByName(5512)
         return true
     end
 end
@@ -270,11 +278,13 @@ function CML.Interrupts()
 		-- Mage
 		elseif _MyClass == 8 and GetSpellInfo(2139) ~= nil and CML.GetSpellCD(2139) == 0 then return 2139
 		-- Warlock
-		elseif _MyClass == 9 and GetSpellInfo(19647) ~= nil and CML.GetSpellCD(19647) == 0 then if _Spec == 3 then return 19647 end
+		elseif _MyClass == 9 and IsSpellKnown(19647) ~= nil and CML.GetSpellCD(19647) == 0 then if _Spec == 3 then return 19647 end
 		-- Monk 
 		elseif _MyClass == 10 and GetSpellInfo(116705) ~= nil and CML.GetSpellCD(116705) == 0 then return 116705	
 		-- Druid
-		elseif _MyClass == 11 then if UnitBuffID("player", 768) ~= nil and GetSpellInfo(80965) ~= nil and CML.GetSpellCD(80965) == 0 then return 80965 elseif GetSpellInfo(80964) ~= nil and CML.GetSpellCD(80964) == 0 then return 80964 elseif _Spec == 1 then return 78675 end
+		elseif _MyClass == 11 and UnitBuffID("player", 768) ~= nil and IsPlayerSpell(80965) ~= nil and CML.GetSpellCD(80965) == 0 then return 80965
+		elseif _MyClass == 11 and UnitBuffID("player", 5487) ~= nil and IsPlayerSpell(80964) ~= nil and CML.GetSpellCD(80964) == 0 then return 80964
+		elseif _MyClass == 11 and _Spec == 1 then return 78675
 		else return 0 end   
 	end   
 	local interruptSpell = CML.InterruptSpell()
@@ -438,36 +448,6 @@ function CML.SnapShot()
 	if not PlayerMastery or (PlayerMastery and GetMastery() > PlayerMastery) then PlayerMastery = GetMastery() end
 end
 
-function CML.StopCasting(var)
-	if UnitBuffID("player", 31821) then return true end
-	if UnitBuffID("player", 122291) then return true end
-	if UnitBuffID("player", 1022) then return true end
-	local Boss1Cast,Boss1CastEnd,StopCasting,PlayerCastEnd
-	local ShouldStop = {
-		137457,
-		138763,
-		143343,
-	}
-	local Boss1Cast,_,_,_,_,Boss1CastEnd = UnitCastingInfo("boss1")
-	local StopCasting = false
-	for i = 1, #ShouldStop do
-		if Boss1Cast == GetSpellInfo(ShouldStop[i]) then StopCasting = true end
-	end
-	if not StopCasting then return true end
-	if UnitCastingInfo("player") then
-		PlayerCastEnd = select(6,UnitCastingInfo("player"))
-	elseif UnitChannelInfo("player") then
-		PlayerCastEnd = select(6,UnitChannelInfo("player"))
-	end
-	if PlayerCastEnd ~= nil then
-		if Boss1CastEnd < PlayerCastEnd then
-	    	RunMacroText("/stopcasting")
-	    	return (false == var)
-	    end
-	end
-	return (true == var)
-end
-
 function CML.StopDotsCheck(unit)
 	local NoDotsBuffs = {
 		145065,
@@ -579,13 +559,13 @@ function CML.PQIConfing()
 	if not UnitAffectingCombat("player") and ProbablyEngine.module.player.potionused and not SchedulePotion then SchedulePotion = GetTime() end
 	if SchedulePotion and SchedulePotion <= GetTime() - 60 then ProbablyEngine.module.player.potionused = false SchedulePotion = false end
 	if PlayerStatus == nil then return true end
-	if not UnitAffectingCombat("player") then CML.SnapShot() ProbablyEngine.module.player.battlerezfail = false end
-	--if CML.PokeEngine ~= nil then CML.PokeEngine() end
+	if not UnitAffectingCombat("player") then CML.SnapShot() ProbablyEngine.module.player.battlerezfail = 0 end
 	return false
 end
 
 function CML.Status()
 	if PQIprefix == nil then return true end
+
 	-- Bubba's update our users Health and Sort
 	if NovaEngineUpdate == nil then NovaEngineUpdate = 0 end
 	if NovaEngineUpdate and NovaEngineUpdate <= GetTime() - 0.2 then
@@ -595,9 +575,6 @@ function CML.Status()
 
 	-- Globals
 	_HP = ( 100 * UnitHealth("player") / UnitHealthMax("player") )
-	if macros["ActiveHealing"] ~= nil then
-		_ActiveHealing = macros["ActiveHealing"]
-	end
 	_Mana = (100 * UnitPower("player") / UnitPowerMax("player"))
 
 	-- Classes/Spec Specific
@@ -629,11 +606,10 @@ function CML.Status()
 	elseif _MyClass == 10 then	
 		_Chi = UnitPower("player",12) 
 	elseif _MyClass == 11 then
-		if _Spec == 3 then
-			_Rage = UnitPower("player")
-			_RageMax = UnitPowerMax("player")
-		end
+		_Rage = UnitPower("player")
+		_RageMax = UnitPowerMax("player")
 	end
+	
 	-- LastTarget Holder
 	if UnitExists("target") and UnitName("target") ~= CML_Target then 
 		LastTarget = GetTime() 
@@ -643,16 +619,25 @@ function CML.Status()
 
 	-- Show/Hide
 	if _G[PQIprefix.."PlayerStatus_enable"] then
-		CML_VengeanceFrame:Show()
+		if _G[PQIprefix.."PlayerStatus_value"] == 1 then
+			CML_VengeanceFrame:Show()
+			CML_MiniFrame:Hide()
+		elseif _G[PQIprefix.."PlayerStatus_value"] == 2 then
+			CML_MiniFrame:Show()
+			CML_VengeanceFrame:Hide()
+		end
 	else
 		CML_VengeanceFrame:Hide()
 	end
 	local StatusX,StatusY = tonumber(_G[PQIprefix.."PlayerStatusX_value"]),tonumber(_G[PQIprefix.."PlayerStatusY_value"])
 	CML_VengeanceFrame:ClearAllPoints();
 	CML_VengeanceFrame:SetPoint("BOTTOMLEFT", "UIParent", "BOTTOMLEFT",StatusX,StatusY)
+	CML_MiniFrame:ClearAllPoints();
+	CML_MiniFrame:SetPoint("BOTTOMLEFT", "UIParent", "BOTTOMLEFT",StatusX,StatusY)
 	
 
 	UiBar_ActiveCooldowns()
+	--UiBar_SetDistance("target")
 	UiBar_Borders()
 	UiBar_SetHealth()
 	UiBar_SetPower()
@@ -669,6 +654,7 @@ function CML.Status()
 			UiBar_SetDebuff(86346)
 		end
 	elseif _MyClass == 2 then -- Paladin
+
 		if _Spec == 1 then
 			UiBar_ActiveDispel()
 			UiBar_ActiveDPS()
@@ -752,7 +738,7 @@ function CML.Status()
 		UiBar_SetEnergy()
 		UiBar_ActiveHealing()
 		UiBar_SetPower()
-		UiBar_SetDebuff(1943)
+		UiBar_SetBuff(125359)
 	elseif _MyClass == 11 then -- Druid
 		if UnitBuffID("player",5487) then
 			UiBar_SetRage()
@@ -825,11 +811,6 @@ local UnitDebuff = function(target, spell, owner)
   return debuff, count, expires, caster
 end
 
-
-
-
-
-
 -- activestance == returns macros["Stance"] can be compared	   	"player.activestance = 1"
 -- aoe 			== returns macros["AoE"] can be compared	   	"player.aoe = 1"
 -- macros		== made to read my macros table 				"macros(ActiveCooldowns)"
@@ -864,8 +845,8 @@ end)
 ProbablyEngine.condition.register("automouse", function(spell,pqiname)
 	if not Coolprefix or not PQIprefix then return false end
 	local PQICheck = _G[PQIprefix..pqiname.."Key_enable"]
-	local CoolCheck = _G[Coolprefix..pqiname.."_enable"]
   	local PQIValue = PQI:IsHotkeys(_G[PQIprefix..pqiname.."Key_key"])
+	local CoolCheck = _G[Coolprefix..pqiname.."_enable"]
   	local CoolValue = _G[Coolprefix..pqiname.."_value"] == 2
   	if PQICheck and CoolCheck and (PQIValue or (CoolValue and UnitIsUnit("target","mouseover") == 1)) then
   		_Queues[tonumber(spell)] = true
@@ -878,18 +859,41 @@ ProbablyEngine.condition.register("canattack", function(target)
   	return (UnitExists(target) and UnitHealth(target) > 0 and UnitCanAttack("player", target) == 1)
 end)
 
+ProbablyEngine.condition.register("cancelaura", function()
+	if GetShapeshiftForm() ~= 0 then
+		if GetShapeshiftForm() == 1 then _MyShape = select(1,GetSpellInfo(5487)) end
+		if GetShapeshiftForm() == 2 then _MyShape = select(1,GetSpellInfo(1066)) end
+		if GetShapeshiftForm() == 3 then _MyShape = select(1,GetSpellInfo(768)) end
+		if GetShapeshiftForm() == 4 then _MyShape = select(1,GetSpellInfo(783)) end
+		if GetShapeshiftForm() == 5 then _MyShape = select(1,GetSpellInfo(40120)) end
+		RunMacroText("/cancelaura ".._MyShape)
+	end
+end)
+
+ProbablyEngine.condition.register("coolcheck", function(name,value)
+	if Coolprefix ~= nil then
+		local CoolCheck = _G[Coolprefix..name.."_enable"]
+		return CoolCheck
+	else
+		return false
+	end
+end)
+
 ProbablyEngine.condition.register("coolHealing", function(name,value)
 	if Coolprefix == nil then return false end
-	if nNova[tonumber(value)] ~= nil and _G[Coolprefix..name.."_enable"] then
-		local PQICheck = _G[Coolprefix..name.."_enable"]
-		if value == "0" then rawunit = "player" elseif value == "69" then rawunit = "pet" 
-		elseif value and #nNova >= tonumber(value) and nNova[tonumber(value)].unit ~= nil then rawunit = tostring(nNova[tonumber(value)].unit) end
-		if value and value ~= "0" and value ~= "69" and #nNova >= tonumber(value) then
-			if nNova[tonumber(value)].range == 0 then return false end
+	if _G[Coolprefix..name.."_enable"] then
+		local CoolCheck = _G[Coolprefix..name.."_enable"]
+		if tonumber(value) == 0 then 
+			rawunit = "player" 
+		elseif tonumber(value) == 69 then 
+			rawunit = "pet" 
+		elseif tonumber(value) and #nNova >= tonumber(value) and nNova[tonumber(value)].unit ~= nil then
+			rawunit = tostring(nNova[tonumber(value)].unit) 
 		end
-	  	local PQIValue = _G[Coolprefix..name.."_value"]
-	  	if PQICheck and UnitExists(rawunit) == 1 and CML.GetHP(rawunit) ~= nil and tonumber(PQIValue) ~= nil then
-	  		if (CML.GetHP(rawunit) <= tonumber(PQIValue)) then
+		if not (nNova and (tonumber(value) == 0 or tonumber(value) == 69 or nNova[tonumber(value)].range == 1)) then return false end
+	  	local CoolValue = _G[Coolprefix..name.."_value"]
+	  	if CoolValue and UnitExists(rawunit) == 1 and CML.GetHP(rawunit) ~= nil and tonumber(CoolValue) ~= nil then
+	  		if (CML.GetHP(rawunit) <= tonumber(CoolValue)) then
 	        	ProbablyEngine.dsl.parsedTarget = rawunit
 	        	return true
 	        end
@@ -901,10 +905,10 @@ end)
 
 ProbablyEngine.condition.register("coolvalue", function(name,value)
 	if not Coolprefix then return false end
-	local PQICheck = _G[Coolprefix..name.."_enable"]
-  	local PQIValue = _G[Coolprefix..name.."_value"] 
-  	if PQICheck and PQIValue then
-  		return PQIValue
+	local CoolCheck = _G[Coolprefix..name.."_enable"]
+  	local CoolValue = _G[Coolprefix..name.."_value"] 
+  	if CoolCheck and CoolValue then
+  		return CoolValue
   	end
 end)
 
@@ -955,8 +959,8 @@ ProbablyEngine.condition.register("isinfront", function(target, time)
   	return (ProbablyEngine.module.player.notinfront[UnitName(tostring(target))] == nil or ProbablyEngine.module.player.notinfront[UnitName(tostring(target))] < GetTime() - time)
 end)
 
-ProbablyEngine.condition.register("iamtarget", function()
-	return (UnitExists("targettarget") and UnitIsUnit("player","targettarget"))
+ProbablyEngine.condition.register("iamtarget", function(target)
+	return (UnitExists(target.."target") and UnitIsUnit("player",target.."target"))
 end)
 
 ProbablyEngine.condition.register("macros", function(name)
@@ -976,12 +980,20 @@ ProbablyEngine.condition.register("modifier.same", function(target, spell)
 end)
 
 ProbablyEngine.condition.register("multidot", function(spell,time)
-	local AllTargets = {"target","focus","mouseover","boss1","boss2","boss3","boss4","boss5"}
+	local AllTargets = {"target","focus","mouseover","boss1","boss2","boss3","boss4","boss5","pettarget"}
 	local Spell = tonumber(spell)
-	local Time = tonumber(time)
+	local Time = tonumber(time)	
+	local SkipNova = true
+	if CoolPrefix and CoolPrefix.."MultiDotting_enable" ~= nil and not _G[CoolPrefix.."MultiDotting_enable"] then
+		if _G[CoolPrefix.."MultiDotting_value"] == 1 then
+			SkipNova = false
+		elseif _G[CoolPrefix.."MultiDotting_value"] == 3 then
+			AllTargets = {"target"}
+		end
+	end
 	for i = 1, #AllTargets do
 		local Target = AllTargets[i]
-		if UnitExists(Target) == 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target) and CML.IsInFront(Target)  then
+		if UnitExists(Target) == 1 and UnitIsUnit(Target,"player") ~= 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target) and CML.IsInFront(Target)  then
 			if not UnitDebuffID(Target,Spell) or (UnitDebuffID(Target,Spell) and select(7,UnitDebuffID(Target,Spell)) - GetTime() <= tonumber(Time)) then
 				if CML.StopDotsCheck(Target) == true then
 					ProbablyEngine.dsl.parsedTarget = Target
@@ -990,14 +1002,15 @@ ProbablyEngine.condition.register("multidot", function(spell,time)
 			end
 		end
 	end
-	for i = 1, #nNova do
-		local Target = nNova[i].target
-		if UnitIsUnit(Target,nNova[i].target) ~= 1 and UnitExists(Target) == 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target) and CML.IsInFront(Target) then
-			if not UnitDebuffID(Target,Spell) or (UnitDebuffID(Target,Spell) and select(7,UnitDebuffID(Target,Spell)) - GetTime() <= tonumber(Time)) then
-				if CML.StopDotsCheck(Target) == true then
-					ProbablyEngine.dsl.parsedTarget = Target
-					print(Target)
-					return true
+	if SkipNova == false then
+		for i = 1, #nNova do
+			local Target = nNova[i].target
+			if UnitExists(Target) == 1 and UnitIsUnit(Target,"player") ~= 1 and UnitExists(Target) == 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target) and CML.IsInFront(Target) then
+				if not UnitDebuffID(Target,Spell) or (UnitDebuffID(Target,Spell) and select(7,UnitDebuffID(Target,Spell)) - GetTime() <= tonumber(Time)) then
+					if CML.StopDotsCheck(Target) == true then
+						ProbablyEngine.dsl.parsedTarget = Target
+						return true
+					end
 				end
 			end
 		end
@@ -1005,12 +1018,20 @@ ProbablyEngine.condition.register("multidot", function(spell,time)
 end)
 
 ProbablyEngine.condition.register("multidot360", function(spell,time)
-	local AllTargets = {"target","focus","mouseover","boss1","boss2","boss3","boss4","boss5"}
+	local AllTargets = {"target","focus","mouseover","boss1","boss2","boss3","boss4","boss5","pettarget"}
 	local Spell = tonumber(spell)
-	local Time = tonumber(time)
+	local Time = tonumber(time)	
+	local SkipNova = true
+	if CoolPrefix and CoolPrefix.."MultiDotting_enable" ~= nil and not _G[CoolPrefix.."MultiDotting_enable"] then
+		if _G[CoolPrefix.."MultiDotting_value"] == 1 then
+			SkipNova = false
+		elseif _G[CoolPrefix.."MultiDotting_value"] == 3 then
+			AllTargets = {"target"}
+		end
+	end
 	for i = 1, #AllTargets do
 		local Target = AllTargets[i]
-		if UnitExists(Target) == 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target) and CML.IsInRange(Target)  then
+		if UnitExists(Target) == 1 and UnitIsUnit(Target,"player") ~= 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target) and CML.IsInRange(Target)  then
 			if not UnitDebuffID(Target,Spell) or (UnitDebuffID(Target,Spell) and select(7,UnitDebuffID(Target,Spell)) - GetTime() <= tonumber(Time)) then
 				if CML.StopDotsCheck(Target) == true then
 					ProbablyEngine.dsl.parsedTarget = Target
@@ -1019,14 +1040,15 @@ ProbablyEngine.condition.register("multidot360", function(spell,time)
 			end
 		end
 	end
-	for i = 1, #nNova do
-		local Target = nNova[i].target
-		if UnitIsUnit(Target,nNova[i].target) ~= 1 and UnitExists(Target) == 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target)  then
-			if not UnitDebuffID(Target,Spell) or (UnitDebuffID(Target,Spell) and select(7,UnitDebuffID(Target,Spell)) - GetTime() <= tonumber(Time)) then
-				if CML.StopDotsCheck(Target) == true then
-					ProbablyEngine.dsl.parsedTarget = Target
-					print(Target)
-					return true
+	if SkipNova == false then
+		for i = 1, #nNova do
+			local Target = nNova[i].target
+			if UnitExists(Target) == 1 and UnitIsUnit(Target,"player") ~= 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target)  then
+				if not UnitDebuffID(Target,Spell) or (UnitDebuffID(Target,Spell) and select(7,UnitDebuffID(Target,Spell)) - GetTime() <= tonumber(Time)) then
+					if CML.StopDotsCheck(Target) == true then
+						ProbablyEngine.dsl.parsedTarget = Target
+						return true
+					end
 				end
 			end
 		end
@@ -1034,12 +1056,20 @@ ProbablyEngine.condition.register("multidot360", function(spell,time)
 end)
 
 ProbablyEngine.condition.register("multirefresh", function(spell,time)
-	local AllTargets = {"target","focus","mouseover","boss1","boss2","boss3","boss4","boss5"}
+	local AllTargets = {"target","focus","mouseover","boss1","boss2","boss3","boss4","boss5","pettarget"}
 	local Spell = tonumber(spell)
-	local Time = tonumber(time)
+	local Time = tonumber(time)	
+	local SkipNova = true
+	if CoolPrefix and CoolPrefix.."MultiDotting_enable" ~= nil and not _G[CoolPrefix.."MultiDotting_enable"] then
+		if _G[CoolPrefix.."MultiDotting_value"] == 1 then
+			SkipNova = false
+		elseif _G[CoolPrefix.."MultiDotting_value"] == 3 then
+			AllTargets = {"target"}
+		end
+	end
 	for i = 1, #AllTargets do
 		local Target = AllTargets[i]
-		if UnitExists(Target) == 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target) and CML.IsInRange(Target)  then
+		if UnitExists(Target) == 1 and UnitIsUnit(Target,"player") ~= 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target) and CML.IsInRange(Target)  then
 			if UnitDebuffID(Target,Spell) == true and select(7,UnitDebuffID(Target,Spell)) - GetTime() <= tonumber(Time) and select(7,UnitDebuffID(Target,Spell)) - GetTime() >= 1 then
 				if CML.StopDotsCheck(Target) == true then
 					ProbablyEngine.dsl.parsedTarget = Target
@@ -1048,14 +1078,15 @@ ProbablyEngine.condition.register("multirefresh", function(spell,time)
 			end
 		end
 	end
-	for i = 1, #nNova do
-		local Target = nNova[i].target
-		if UnitIsUnit(Target,nNova[i].target) ~= 1 and UnitExists(Target) == 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target)  then
-			if UnitDebuffID(Target,Spell) and select(7,UnitDebuffID(Target,Spell)) - GetTime() <= tonumber(Time) and select(7,UnitDebuffID(Target,Spell)) - GetTime() >= 1 then
-				if CML.StopDotsCheck(Target) == true then
-					ProbablyEngine.dsl.parsedTarget = Target
-					print(Target)
-					return true
+	if SkipNova == false then
+		for i = 1, #nNova do
+			local Target = nNova[i].target
+			if UnitExists(Target) == 1 and UnitIsUnit(Target,"player") ~= 1 and UnitExists(Target) == 1 and CML.IsInSight(Target, 1) and CML.IsInRange(Target)  then
+				if UnitDebuffID(Target,Spell) and select(7,UnitDebuffID(Target,Spell)) - GetTime() <= tonumber(Time) and select(7,UnitDebuffID(Target,Spell)) - GetTime() >= 1 then
+					if CML.StopDotsCheck(Target) == true then
+						ProbablyEngine.dsl.parsedTarget = Target
+						return true
+					end
 				end
 			end
 		end
@@ -1083,24 +1114,50 @@ end)
 
 ProbablyEngine.condition.register("notontarget", function(Spell)
 	if UnitExists("target") then
-		if not UnitIsUnit("target","mouseover") then
+		if UnitExists("focus") and not UnitIsUnit("target","mouseover") then
 			if not UnitDebuffID("mouseover", Spell) and CML.IsInRange("mouseover") then
 				ProbablyEngine.dsl.parsedTarget = "mouseover"
 				return true
 			end
 		elseif UnitExists("focus") and not UnitIsUnit("target","focus") then
-			if not UnitDebuffID("focus", Spell) and CML.IsInRange("focus") then
+			if (not UnitDebuffID("focus", Spell)) and CML.IsInRange("focus") then
 				ProbablyEngine.dsl.parsedTarget = "focus"
 				return true
 			end
 		else
 			for i = 1, #nNova do
-				if not UnitIsUnit("target",nNova[i].target) then
-					if not UnitDebuffID(nNova[i].target, Spell) and CML.IsInRange(nNova[i].target) then
+				if UnitExists(nNova[i].target) and not UnitIsUnit("target",nNova[i].target) then
+					if (not UnitDebuffID(nNova[i].target, Spell)) and CML.IsInRange(nNova[i].target) then
 						ProbablyEngine.dsl.parsedTarget = nNova[i].target
 						return true
 					end
 				end
+			end
+		end
+	end
+end)
+
+ProbablyEngine.condition.register("multiTarget", function(spell, mode)
+	local AllTargets = {"target","focus","mouseover","boss1","boss2","boss3","boss4","boss5"}
+
+	local spell = tonumber(spell)
+	local mode = tonumber(mode)
+	if mode ~= 360 and mode ~= 20 then mode = 100 end	
+	for i = 1, #AllTargets do
+		local Target = tostring(AllTargets[i])
+		if UnitExists(Target) == 1 and CML.IsInSight(Target, 1) and IsSpellInRange(GetSpellInfo(spell),Target) == 1 then
+			if (CML.IsInFront(Target, 1) == true or mode == 360) and CML.GetHP(Target) <= mode then
+				ProbablyEngine.dsl.parsedTarget = Target
+				return true
+			end
+		end
+	end
+	for i = 1, #nNova do
+		local Target = tostring(nNova[i].target)
+		if UnitExists(Target) == 1 and CML.IsInSight(Target, 1) and IsSpellInRange(GetSpellInfo(spell),Target) == 1 then
+			if (CML.IsInFront(Target, 1) == true or mode == 360) and CML.GetHP(Target) <= mode then
+				ProbablyEngine.dsl.parsedTarget = Target
+				return true
 			end
 		end
 	end
@@ -1114,7 +1171,7 @@ ProbablyEngine.condition.register("novaBuff", function(target, value)
 		rawunit = "player" 
 	elseif target == "69" then 
 		rawunit = "pet" 
-	else
+	elseif nNova[tonumber(target)] ~= nil then
 		rawunit = tostring(nNova[tonumber(target)].unit) 
 	end
 	if UnitExists(rawunit) == 1 then
@@ -1221,7 +1278,7 @@ ProbablyEngine.condition.register("novaTank", function(name,value)
 		elseif tonumber(value) and #nNova >= tonumber(value) and nNova[tonumber(value)].unit ~= nil then
 			rawunit = tostring(nNova[tonumber(value)].unit) 
 		end
-		if not nNova and (tonumber(value) == 0 or tonumber(value) == 69 or nNova[tonumber(value)].range == 1) then print(value) return false end
+		if not nNova and (tonumber(value) == 0 or tonumber(value) == 69 or nNova[tonumber(value)].range == 1) then return false end
 	  	local PQIValue = _G[PQIprefix..name.."_value"]
 	  	if PQICheck and UnitExists(rawunit) == 1 and CML.GetHP(rawunit) ~= nil and tonumber(PQIValue) ~= nil then
 	  		if (CML.GetHP(rawunit) <= tonumber(PQIValue)) and nNova[tonumber(value)].role == "TANK" then
@@ -1246,7 +1303,7 @@ ProbablyEngine.condition.register("novaHealing", function(name,value)
 		elseif tonumber(value) and #nNova >= tonumber(value) and nNova[tonumber(value)].unit ~= nil then
 			rawunit = tostring(nNova[tonumber(value)].unit) 
 		end
-		if not (nNova and (tonumber(value) == 0 or tonumber(value) == 69 or nNova[tonumber(value)].range == 1)) then print(value) return false end
+		if not (nNova and (tonumber(value) == 0 or tonumber(value) == 69 or nNova[tonumber(value)].range == 1)) then return false end
 	  	local PQIValue = _G[PQIprefix..name.."_value"]
 	  	if PQICheck and UnitExists(rawunit) == 1 and CML.GetHP(rawunit) ~= nil and tonumber(PQIValue) ~= nil then
 	  		if (CML.GetHP(rawunit) <= tonumber(PQIValue)) then
@@ -1340,7 +1397,11 @@ end)
 
 
 ProbablyEngine.condition.register("petinmelee", function(target)
-  	return (IsSpellInRange(GetSpellInfo(2649), target) == 1)
+	if _MyClass == 4 then
+  		return (IsSpellInRange(GetSpellInfo(2649), target) == 1)
+  	elseif _MyClass == 9 then
+  		return (IsSpellInRange(GetSpellInfo(30213), target) == 1)
+  	end
 end)
 
 ProbablyEngine.condition.register("pqicheck", function(name,value)
@@ -1386,11 +1447,11 @@ end)
 
 ProbablyEngine.condition.register("snapboost", function(element)
 	if element == nil then element = "all" end
-	if (element == "spellhaste" or element == "all") and PlayerSpellHaste then return (UnitSpellHaste("player") - PlayerSpellHaste)  end
-	if (element == "meleehaste" or element == "all") and PlayerMeleeHaste then return (GetMeleeHaste() - PlayerMeleeHaste) end	
-	if (element == "attackpower" or element == "all") and PlayerAttackPower then return (UnitAttackPower("player") - PlayerAttackPower) end	
-	if (element == "spellpower" or element == "all") and PlayerSpellPower then return (GetSpellBonusDamage(2) - PlayerSpellPower) end	
-	if (element == "mastery" or element == "all") and PlayerMastery then return (GetMastery() - PlayerMastery) end	
+	if (element == "spellhaste" or element == "all") and PlayerSpellHaste then return (UnitSpellHaste("player") - PlayerSpellHaste) >= _G[PQIprefix.."SnapBoost_value"] end
+	if (element == "meleehaste" or element == "all") and PlayerMeleeHaste then return (GetMeleeHaste() - PlayerMeleeHaste) >= _G[PQIprefix.."SnapBoost_value"] end	
+	if (element == "attackpower" or element == "all") and PlayerAttackPower then return (UnitAttackPower("player") - PlayerAttackPower) >= _G[PQIprefix.."SnapBoost_value"] end	
+	if (element == "spellpower" or element == "all") and PlayerSpellPower then return (GetSpellBonusDamage(2) - PlayerSpellPower) >= _G[PQIprefix.."SnapBoost_value"] end	
+	if (element == "mastery" or element == "all") and PlayerMastery then return (GetMastery() - PlayerMastery) >= _G[PQIprefix.."SnapBoost_value"] end	
     return false
 end)
 
@@ -1430,6 +1491,40 @@ end)
 
 ProbablyEngine.condition.register("spell.casttime", function(target, spell)
   	return (select(7,GetSpellInfo(spell))/1000)
+end)
+
+ProbablyEngine.condition.register("stopcasting", function(spell,var)
+	local Boss1Cast, Boss1CastEnd, PlayerCastEnd,StopCasting = Boss1Cast, Boss1CastEnd, PlayerCastEnd, false
+	local MySpellCastTime = (GetTime()*1000) + select(7,GetSpellInfo(spell))
+	local ShouldContinue = {
+		1022, -- Hand of Protection
+		31821, -- Devotion
+		122291, -- Unending Resolve
+	}
+	local ShouldStop = {
+		137457, -- Piercing Roar(Oondasta)
+		138763, -- Interrupting Jolt(Dark Animus)
+		143343, -- Deafening Screech(Thok)
+	}
+	if UnitCastingInfo("boss1") then Boss1Cast,_,_,_,_,Boss1CastEnd = UnitCastingInfo("boss1") elseif UnitChannelInfo("boss1") then Boss1Cast,_,_,_,_,Boss1CastEnd = UnitChannelInfo("boss1") else return true end
+	if UnitCastingInfo("player") then PlayerCastEnd = select(6,UnitCastingInfo("player")) elseif UnitChannelInfo("player") then PlayerCastEnd = select(6,UnitChannelInfo("player")) else PlayerCastEnd = select(7,GetSpellInfo(spell)) + GetTime() end
+	for i = 1, #ShouldContinue do
+		if UnitBuffID("player", ShouldContinue[i]) and (select(7,UnitBuffID("player", ShouldContinue[i]))*1000)+50 > Boss1CastEnd then xrn:message("\124cFFFFFFFFStopper Safety Found") return true end
+	end
+	if not UnitCastingInfo("player") and not UnitChannelInfo("player") and MySpellCastTime and SetStopTime and MySpellCastTime > Boss1CastEnd then xrn:message("\124cFFD93B3BStop for "..Boss1Cast) return false end
+
+	for j = 1, #ShouldStop do
+		if Boss1Cast == select(1,GetSpellInfo(ShouldStop[j])) then 
+			SetStopTime = Boss1CastEnd
+			if PlayerCastEnd ~= nil then
+				if Boss1CastEnd < PlayerCastEnd then
+					StopCasting = true 
+					RunMacroText("/stopcasting")
+				end
+			end
+		end
+	end
+	return StopCasting == false
 end)
 
 ProbablyEngine.condition.register("talent", function(target,index)

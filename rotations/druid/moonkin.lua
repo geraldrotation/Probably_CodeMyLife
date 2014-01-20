@@ -48,11 +48,11 @@ ProbablyEngine.rotation.register_custom(102, "FriedChicken Moonkin", {
 		"Rejuvenation.novaHealing(0)",
 	}},
 	-- Cenarion Ward
-	{"Cenarion Ward",{ 
-		"player.spell(108238).exists",
-		"player.health <= 75",
-	}}, 
-		-- jade_serpent_potion,if=buff.bloodlust.react|target.time_to_die<=40|buff.celestial_alignment.up
+	{"Cenarion Ward",{"player.spell(108238).exists","player.health <= 75"}}, 
+
+    {"102793","queuecast(102793)","ground"}, -- Ursol's Vortex
+
+	-- jade_serpent_potion,if=buff.bloodlust.react|target.time_to_die<=40|buff.celestial_alignment.up
 --[[{"#76093",{
         "DPSPotiononHeroism.pqicheck",
         "@CML.DPSPotion(76093)",
@@ -110,6 +110,7 @@ ProbablyEngine.rotation.register_custom(102, "FriedChicken Moonkin", {
   		"player.buff(48518)",
   		"target.isinfront",
   		"@CML.StopDotsCheck('target')",
+
  	},"target"},
  	{"8921",{
   		"player.aoe = 2 ", 
@@ -186,39 +187,35 @@ ProbablyEngine.rotation.register_custom(102, "FriedChicken Moonkin", {
 		"player.mana > 25",
 	}},
 	 -- healing_touch,if=talent.dream_of_cenarius.enabled&!buff.dream_of_cenarius.up&mana.pct>25
-	{"5185",{
-		"player.spell(108373).exists",
-		"player.spell(5185).exists",
-		"!player.buff(145151)",
-		"player.mana > 25",
-	},"player"},
+	{"5185",{"!player.moving","player.spell(108373).exists","player.spell(5185).exists","!player.buff(145151)","player.mana > 25"},"player"},
+	{"5185",{"player.buff(132158)","player.spell(108373).exists","player.spell(5185).exists","!player.buff(145151)","player.mana > 25"},"player"},
 	-- starsurge,if=cooldown_react
-	{"78674","!player.moving"},	
+	{"78674","!player.moving","78674.stopcasting"},	
 	-- starfire,if=buff.celestial_alignment.up&cast_time<buff.celestial_alignment.remains
 	{"2912",{
 		"!player.moving",
 		"player.buff(112071)",
 		"player.spell(2912).quickcast",
-		"@CML.StopCasting()",
+		"2912.stopcasting",
 	}},
 	-- wrath,if=buff.celestial_alignment.up&cast_time<buff.celestial_alignment.remains
 	{"5176",{
 		"!player.moving",
 		"player.buff(112071)",
 		"player.spell(5176).quickcast",
-		"@CML.StopCasting()",
+		"5176.stopcasting",
 	}},	
 	-- starfire,if=eclipse_dir=1|(eclipse_dir=0&eclipse>0)
 	{"2912",{
 		"!player.moving",
 		"player.balance.sun",
-		"@CML.StopCasting()",
+		"2912.stopcasting"
 	}},
 	-- wrath,if=eclipse_dir=-1|(eclipse_dir=0&eclipse<=0)
 	{"5176",{
 		"!player.moving",
 		"player.balance.moon",
-		"@CML.StopCasting()",
+		"5176.stopcasting"
 	}},
 	-- moonfire,moving=1,cycle_targets=1,if=ticks_remain<2
 	{"8921",{ 
@@ -270,6 +267,30 @@ ProbablyEngine.rotation.register_custom(102, "FriedChicken Moonkin", {
 		"player.moving",
   		"93402.multidot(1)",
  	}},
+	-- moonfire,moving=1,if=buff.lunar_eclipse.up
+	{"8921",{ 
+		"player.buff(48518)",
+		"target.isinfront",
+		"@CML.StopDotsCheck('target')",
+		"!8921.stopcasting"
+	},"target"},
+ 	{"8921",{
+  		"player.aoe = 2 ",
+		"player.buff(48518)", 
+  		"8921.multidot(1)",
+		"!8921.stopcasting"
+ 	}},
+	-- sunfire,moving=1
+	{"93402",{ 
+		"target.isinfront",
+		"!93402.stopcasting",
+		"@CML.StopDotsCheck('target')",
+	},"target"},
+ 	{"93402",{
+  		"player.aoe = 2 ", 
+		"!93402.stopcasting",
+  		"93402.multidot(1)",
+ 	}}, 	
 },
 {
 	{"TaMere","@CML.PQIConfing()"},{"TaMere","@CML.Status()"},{"pause","@CML.CombatCheck()"}, -- Combat Check/Pause

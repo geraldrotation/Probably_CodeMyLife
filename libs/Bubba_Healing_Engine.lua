@@ -145,6 +145,7 @@ if not metaTable1 then
 		 and CheckBadDebuff(tar)
 		 and CheckCreatureType(tar)
 		 and CML.IsInSight(tar, 3)
+		 and not UnitCanAttack("player",tar)
 		then return true else return false end
 	end
 
@@ -255,10 +256,15 @@ if not metaTable1 then
 			o.guid = o:nGUID()
 			o.guidsh = select(2, o:nGUID())
 			local InRangeNow = 1
-			if IsSpellInRange(tostring(GetSpellInfo(_HealingRangeSpell)),o.unit) == 0 or CML.IsInSight(UnitName(o.unit), 2) == false then
-				InRangeNow = 0
-			end
+			if IsSpellInRange(tostring(GetSpellInfo(_HealingRangeSpell)),o.unit) == 0 or CML.IsInSight(UnitName(o.unit), 2) == false then InRangeNow = 0 end
 			o.range = InRangeNow
+			if o.unit == "focus" or o.unit == "target" or o.unit == "mouseover" then
+				o.group = 0
+			elseif IsInRaid() then 
+				o.group = select(3,GetRaidRosterInfo(string.sub(tostring(o.unit), 5))) 
+			else 
+				o.group = 1 
+			end
 			o.dispel = o:Dispel()
 			o.hp = o:CalcHP()
 			o.absorb = select(3, o:CalcHP())
@@ -282,7 +288,7 @@ if not metaTable1 then
 
 
 			-- This is for special situations, IE world healing or NPC healing in encounters
-			local SpecialTargets = { "focus" }
+			local SpecialTargets = { "focus","mouseover","target" }
 			for p=1, #SpecialTargets do
 				-- Checking if Unit Exists and it's possible to heal them
 				if UnitExists(SpecialTargets[p]) and HealCheck(SpecialTargets[p]) then

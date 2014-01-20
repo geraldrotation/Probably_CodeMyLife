@@ -175,13 +175,13 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
         "player.buff(84963)",
         "AvengingWrath.coolvalue = 1",
         "@CML.ActiveCooldowns()",
-        "@CML.Melee(true)",
+        "target.range <= 5",
         "player.holypower <= 2",
     }},
     {"31884",{ -- On CD
         "player.buff(84963)",
         "AvengingWrath.coolvalue = 2",
-        "@CML.Melee(true)",
+        "target.range <= 5",
         "player.holypower <= 2",
     }},    
     -- guardian_of_ancient_kings,if=buff.inquisition.up
@@ -189,13 +189,13 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
         "player.buff(84963)",
         "GuardianOfAncientKings.coolvalue = 1",
         "@CML.ActiveCooldowns()",
-        "@CML.Melee(true)",
+        "target.range <= 5",
         "player.holypower <= 2",
     }},
     {"86698",{ -- On CD
         "player.buff(84963)",
         "GuardianOfAncientKings.coolvalue = 2",
-        "@CML.Melee(true)",
+        "target.range <= 5",
         "player.holypower <= 2",
     }},    
     -- holy_avenger,if=talent.holy_avenger.enabled&(buff.inquisition.up&holy_power<=2)
@@ -205,7 +205,7 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
         "!player.buff(86698)",
         "HolyAvenger.coolvalue = 1",
         "@CML.ActiveCooldowns()",
-        "@CML.Melee(true)",
+        "target.range <= 5",
         "player.holypower <= 2",
     }},
     {"105809",{ -- On CD
@@ -213,7 +213,7 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
         "player.buff(84963)",
         "!player.buff(86698)",
         "HolyAvenger.coolvalue = 2",
-        "@CML.Melee(true)",
+        "target.range <= 5",
         "player.holypower <= 2",
     }},
     -- execution_sentence,if=talent.execution_sentence.enabled&(buff.inquisition.up&(buff.ancient_power.down|buff.ancient_power.stack=12))
@@ -246,42 +246,42 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
     {"53385",{ -- holy_power=5
         "player.holypower = 5",
         "player.aoe != 1",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},
     {"53385",{ -- buff.divine_purpose.react
         "player.buff(86172)",
         "player.aoe != 1",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},
     {"53385",{ -- buff.holy_avenger.up&holy_power>=3
         "player.buff(105809)",
         "player.holypower >= 3",
         "player.aoe != 1",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},
     -- divine_storm,if=buff.divine_crusader.react&holy_power=5
     {"53385",{
         "player.holypower = 5",
         "player.buff(144595)",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }}, 
     -- templars_verdict,if=holy_power=5|buff.holy_avenger.up&holy_power>=3
     {"85256",{ -- holy_power=5
         "player.holypower = 5",
         "player.aoe = 1",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},
     {"85256",{ -- buff.holy_avenger.up&holy_power>=3
         "player.buff(105809)",
         "player.holypower >= 3",
         "player.aoe = 1",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},
     -- templars_verdict,if=buff.divine_purpose.react&buff.divine_purpose.remains<4
     {"85256",{
         "player.buff(86172)",
         "player.buff(86172).duration < 4",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},
     -- hammer_of_wrath
     {"24275",{
@@ -303,34 +303,34 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
     {"53385",{
         "player.buff(144595)", 
         "player.buff(31884)",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},     
     -- templars_verdict,if=buff.avenging_wrath.up
     {"85256",{
         "player.buff(31884)",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},    
     -- hammer_of_the_righteous,if=active_enemies>=4
     {"53595",{
         "player.aoe != 1",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},      
     -- crusader_strike
     {"35395",{
         "player.aoe = 1",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     },"target"},
  
     -- wait,sec=cooldown.crusader_strike.remains,if=cooldown.crusader_strike.remains>0&cooldown.crusader_strike.remains<=0.2
     {"pause",{
         "spell.cooldown(31935) <= 0.2",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},  
     -- exorcism,if=active_enemies>=2&active_enemies<=4&set_bonus.tier15_2pc_melee&glyph.mass_exorcism.enabled
     {"879",{
         "player.spell(122032).cooldown = 0",
         "@CML.IsGlyphed(122028,true)",
-        "@CML.Melee(true)",
+        "target.range <= 5",
         "player.aoe = 2",
     }},
     -- judgment
@@ -340,13 +340,13 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
     -- divine_storm,if=buff.divine_crusader.react
     {"53385",{
         "player.buff(144595)",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }}, 
     -- templars_verdict,if=buff.divine_purpose.react
     {"85256",{
         "player.aoe = 1",
         "player.buff(86172)",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},
     -- exorcism
     {"879",{
@@ -356,7 +356,7 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
     {"879",{
         "player.spell(122032).cooldown = 0",
         "@CML.IsGlyphed(122028,true)",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},       
     -- wait,sec=cooldown.exorcism.remains,if=cooldown.exorcism.remains>0&cooldown.exorcism.remains<=0.2
     {"pause",{"spell.cooldown(879) <= 0.5","@CML.IsGlyphed(122028,false)"}},
@@ -364,19 +364,19 @@ ProbablyEngine.rotation.register_custom(70, "CodeMyLife Retribution", {
     {"85256",{
         "player.aoe = 1",
         "player.buff(86172)",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},
     -- divine_storm,if=active_enemies>=2&buff.inquisition.remains>4
     {"53385",{
         "player.aoe = 2",
         "player.buff(53385)",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},    
     -- templars_verdict,if=buff.inquisition.remains>4
     {"85256",{
         "player.aoe = 1",
         "player.buff(84963).duration > 4",
-        "@CML.Melee(true)",
+        "target.range <= 5",
     }},
     -- holy_prism,if=talent.holy_prism.enabled                                                                   
     {"114165",{

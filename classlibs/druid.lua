@@ -30,7 +30,13 @@ if _Spec == 1 and CML_Moon_config == nil then
 			{ 	name	= "Player Status", 
 				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",
@@ -62,7 +68,28 @@ if _Spec == 1 and CML_Moon_config == nil then
 					width	= 70,
 					tooltip	= PlayerHex.."Select what spells you want to be shown in chat.",
 				},
-			},			
+			},				
+			{ 	name	= "AoE Helper",
+				tooltip	= PlayerHex.."Enables AoE Helper.",
+				enable	= false,
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Forced","|cffD90000Stop"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select how you want the profile to react when you use mouseover ground effects spells.",
+				},
+			},	
+            {   name    = "Multi Dotting",
+                tooltip = PlayerHex.."Dotting on Mouse Over/focus/multi boss unit.",
+                enable  = true,
+                widget 	= { type = 'select',
+                    values 	= {"|cff0DFF00All Targets","|cffFFE100My Targets","|cffD90000Disable"},
+                    value 	= 2,
+                    width 	= 70,
+                    tooltip = "|cffFFFFFFChoose desired Multi Dotting Options.|cff0DFF00All Targets will dot as much targets as it can find.|cffFFE100My Targets will use Mouseover/Focus/PetTarget and bosses.|cffD90000Disable will never use Multi Dotting.",    
+                },    
+                newSection = true,
+            },		
 			{ 	name	= "Barkskin",
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFBarkskin |cffff7d0aon me.",
 				enable	= true,
@@ -368,7 +395,13 @@ if _Spec == 3 and CML_Guardian_config == nil then
 			{ 	name	= "Player Status", 
 				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",
@@ -400,7 +433,17 @@ if _Spec == 3 and CML_Guardian_config == nil then
 					width	= 70,
 					tooltip	= PlayerHex.."Select what spells you want to be shown in chat.",
 				},
-			},
+			},	
+			{ 	name	= "AoE Helper",
+				tooltip	= PlayerHex.."Enables AoE Helper.",
+				enable	= false,
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Forced","|cffD90000Stop"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select how you want the profile to react when you use mouseover ground effects spells.",
+				},
+			},	
 			{ 	name	= "Frenzied Regen",
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFFrenzied Regen on me.",
 				enable	= true,
@@ -520,7 +563,13 @@ if _Spec == 4 and CML_Resto_config == nil then
 			{ 	name	= "Player Status", 
 				tooltip	= PlayerHex.."Enables |cffFFFFFFPlayer Bar.",
 				enable	= true,
-			},
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Full Bar","|cffFFFFFFMini Bar","|cffD90000Disable"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select what bar style you want.",
+				},
+			},	   
 			{ 	name	= "Player Status X", 
 				enable	= true,
 				widget	= { type = "numBox",
@@ -552,7 +601,17 @@ if _Spec == 4 and CML_Resto_config == nil then
 					width	= 70,
 					tooltip	= PlayerHex.."Select what spells you want to be shown in chat.",
 				},
-			},			
+			},				
+			{ 	name	= "AoE Helper",
+				tooltip	= PlayerHex.."Enables AoE Helper.",
+				enable	= false,
+				widget = { type = 'select',
+					values 	= {PlayerHex.."Forced","|cffD90000Stop"},
+					value	= 1,
+					width	= 70,
+					tooltip	= PlayerHex.."Select how you want the profile to react when you use mouseover ground effects spells.",
+				},
+			},	
 			{ 	name	= "Barkskin",
 				tooltip	= "|cffFFFFFFHealth value "..PlayerHex.."to cast |cffFFFFFFBarkskin.",
 				enable	= true,
@@ -828,8 +887,24 @@ if not DruidFunction then
 	} 
 	_Queues = {	
 		[11]					= false,
+		[740]					= false, -- Tranquility
+		[16689]					= false, -- Nature's Grasp
+		[77761]					= false, -- Stampeding Roar
+		[102793]				= false, -- Ursol's Vortex
+		[132469]				= false, -- Typhoon
 	}
 
+
+	function CML.IronBark()	
+		if _G[PQIprefix.."Ironbark_enable"] and nNova[1].hp < _G[PQIprefix.."Ironbark_value"] then
+			if UnitGUID(nNova[1].unit) ~= UnitGUID("player") and nNova[1].range == 1 and UnitThreatSituation(nNova[1].unit) == 3
+			  and (nNova[1].role == "TANK" 
+			  or nNova[1].role == "NONE") then
+			  	ProbablyEngine.dsl.parsedTarget = nNova[1].unit
+				return true
+			end
+		end
+	end
 
 	function  CML.LifeBlooms()
 		local Blooms = false
@@ -858,6 +933,19 @@ if not DruidFunction then
 		end	
 	end	
 
+	function CML.Rebirth()
+		if ProbablyEngine.module.player.battlerezfail >= 2 then return false end
+		for i = 1, #nNova do
+			if nNova[i].role == "TANK" and 
+				UnitIsDeadOrGhost(nNova[i].unit) == 1
+			  and IsSpellInRange(GetSpellInfo(20484), nNova[i].unit) == 1 then
+				ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+				CastSpellByName(GetSpellInfo(132158))
+				CastSpellByName(GetSpellInfo(20484),nNova[i].unit)
+				return true
+			end
+		end
+	end	
 
 	function CML.Rejuvenation()
 		if _G[PQIprefix.."Rejuvenation_enable"] and macros["ActiveHealing"] then
@@ -875,6 +963,17 @@ if not DruidFunction then
 		end
 		return false
 	end 
+
+	function CML.Rez()
+		for i = 1, #nNova do
+			if UnitIsDeadOrGhost(nNova[i].unit) == 1
+			  and IsSpellInRange(GetSpellInfo(50769), nNova[i].unit) == 1 then
+				ProbablyEngine.dsl.parsedTarget = nNova[i].unit
+				CastSpellByName(GetSpellInfo(50769),nNova[i].unit)
+				return true
+			end
+		end
+	end	
 
 	function CML.WildGrowth(members)
 		if _G[PQIprefix.."WildGrowth_enable"] and macros["ActiveHealing"] then
@@ -898,41 +997,6 @@ if not DruidFunction then
 		end
 		return false
 	end 	
-
-	function CML.IronBark()	
-		if _G[PQIprefix.."Ironbark_enable"] and nNova[1].hp < _G[PQIprefix.."Ironbark_value"] then
-			if UnitGUID(nNova[1].unit) ~= UnitGUID("player") and nNova[1].range == 1 and UnitThreatSituation(nNova[1].unit) == 3
-			  and (nNova[1].role == "TANK" 
-			  or nNova[1].role == "NONE") then
-			  	ProbablyEngine.dsl.parsedTarget = nNova[1].unit
-				return true
-			end
-		end
-	end
-
-	function CML.Rebirth()
-		for i = 1, #nNova do
-			if nNova[i].role == "TANK" and 
-				UnitIsDeadOrGhost(nNova[i].unit) == 1
-			  and IsSpellInRange(GetSpellInfo(20484), nNova[i].unit) == 1 then
-				ProbablyEngine.dsl.parsedTarget = nNova[i].unit
-				CastSpellByName(GetSpellInfo(132158))
-				CastSpellByName(GetSpellInfo(20484),nNova[i].unit)
-				return true
-			end
-		end
-	end
-
-	function CML.Rez()
-		for i = 1, #nNova do
-			if UnitIsDeadOrGhost(nNova[i].unit) == 1
-			  and IsSpellInRange(GetSpellInfo(50769), nNova[i].unit) == 1 then
-				ProbablyEngine.dsl.parsedTarget = nNova[i].unit
-				CastSpellByName(GetSpellInfo(50769),nNova[i].unit)
-				return true
-			end
-		end
-	end	
 
 	function CML.NotEclipse()
 	  	if math.abs(UnitPower("player",8)) < 20 then return true end
